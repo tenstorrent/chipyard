@@ -10,19 +10,52 @@ Chipyard is developed and tested on Linux-based systems.
 
 .. Warning:: Working under Windows is not recommended.
 
+Running on AWS EC2 with FireSim
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In CentOS-based platforms, we recommend installing the following dependencies:
+If you plan on using Chipyard alongside FireSim, you should refer to the `FireSim documentation `<https://docs.fires.im/>`__
+on "Initial Setup/Simulation".
+When you reach Section 2.3.2 on "Setting up the FireSim Repo"
+you can continue to :ref:`Setting up the Chipyard Repo` to continue to setup the repository with Chipyard as the top-level repository.
 
-.. include:: /../scripts/centos-req.sh
-   :code: bash
+Default Requirements Installation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In Ubuntu/Debian-based platforms (Ubuntu), we recommend installing the following dependencies.
-These dependencies were written based on Ubuntu 16.04 LTS and 18.04 LTS - If they don't work for you, you can try out the Docker image (:ref:`Chipyard-Basics/Initial-Repo-Setup:Pre-built Docker Image`) before manually installing or removing dependencies:
+In Chipyard, we use `Conda <https://docs.conda.io/en/latest/>`__ to help manage system dependencies (``make``, ``gcc``, etc).
+We **highly** recommend running the following script to setup Chipyard's Conda environment.
 
-.. include:: /../scripts/ubuntu-req.sh
-   :code: bash
+.. code-block:: shell
 
-.. Note:: When running on an Amazon Web Services EC2 FPGA-development instance (for FireSim), FireSim includes a machine setup script that will install all of the aforementioned dependencies (and some additional ones).
+    ./scripts/machine-launch-script.sh
+
+.. Warning:: If you have ``sudo`` priveleges then this script should work fine.
+    However, if you are not a system administrator (i.e. you are on a shared system), you
+    should run ``./scripts/machine-launch-script.sh --help`` to view relevant configuration parameters.
+
+.. Note:: When running on an Amazon Web Services EC2 FPGA-development instance
+    (for FireSim), FireSim includes a similar machine setup script that will install all
+    of the aforementioned dependencies (and some additional ones).
+
+Depending on where you ran the machine launch script,
+you should find a file called ``machine-launch-status.log`` and ``machine-launch-status`` indicating
+if things completed properly.
+
+.. code-block:: shell
+
+    cat ./machine-launch-status # should have "started" and "completed"
+
+Once run, please confirm that you "activated" the proper Conda environment and the prior script completed.
+By running the following command you should see "chipyard" output (the default environment is called "chipyard").
+
+.. code-block:: shell
+
+    echo $CONDA_DEFAULT_ENV
+
+.. Note:: If you don't have a Conda environment set (and the machine launch script completed),
+    you can run ``conda activate chipyard`` to "enter" the proper environment.
+
+.. Note:: Refer to FireSim's `Conda documentation <https://docs.fires.im/en/latest/Advanced-Usage/Conda.html>`__ on more information
+    on how to use Conda and some of its benefits.
 
 Setting up the Chipyard Repo
 -------------------------------------------
@@ -60,7 +93,8 @@ This will take about 20-30 minutes. You can expedite the process by setting a ``
     ./scripts/build-toolchains.sh riscv-tools # for a normal risc-v toolchain
 
 .. Note:: If you are planning to use the Hwacha vector unit, or other RoCC-based accelerators, you should build the esp-tools toolchain by adding the ``esp-tools`` argument to the script above.
-  If you are running on an Amazon Web Services EC2 instance, intending to use FireSim, you can also use the ``--ec2fast`` flag for an expedited installation of a pre-compiled toolchain.
+
+.. Note:: If you are running on an Amazon Web Services EC2 instance, intending to use FireSim, you can also use the ``--ec2fast`` flag for an expedited installation of a pre-compiled toolchain.
 
 Once the script is run, a ``env.sh`` file is emitted that sets the ``PATH``, ``RISCV``, and ``LD_LIBRARY_PATH`` environment variables.
 You can put this in your ``.bashrc`` or equivalent environment setup file to get the proper variables, or directly include it in your current environment:
