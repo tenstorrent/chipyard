@@ -82,6 +82,8 @@ do
     shift
 done
 
+source $CHIPYARD_DIR/scripts/conda-activate-env.sh"
+
 if [ -z "$RISCV" ] ; then
       INSTALL_DIR="$TOOLCHAIN-install"
       RISCV="$(pwd)/$INSTALL_DIR"
