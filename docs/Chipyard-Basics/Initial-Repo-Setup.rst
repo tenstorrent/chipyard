@@ -6,61 +6,41 @@ Requirements
 
 Chipyard is developed and tested on Linux-based systems.
 
-.. Warning:: It is possible to use this on macOS or other BSD-based systems, although GNU tools will need to be installed; it is also recommended to install the RISC-V toolchain from ``brew``.
+.. Warning:: It is possible to use this on macOS or other BSD-based systems, although GNU tools will need to be installed;
+    it is also recommended to install the RISC-V toolchain from ``brew``.
 
 .. Warning:: Working under Windows is not recommended.
 
 Running on AWS EC2 with FireSim
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you plan on using Chipyard alongside FireSim, you should refer to the `FireSim documentation `<https://docs.fires.im/>`__
-on "Initial Setup/Simulation".
-When you reach Section 2.3.2 on "Setting up the FireSim Repo"
-you can continue to :ref:`Setting up the Chipyard Repo` to continue to setup the repository with Chipyard as the top-level repository.
+If you plan on using Chipyard alongside FireSim, you should refer to the :fsim_doc:`FireSim documentation <>`.
+Specifically, you should follow the :fsim_doc:`Initial Setup/Simulation <Initial-Setup/index.html>`
+section of the docs up until :fsim_doc:`Setting up the FireSim Repo <Initial-Setup/Setting-up-your-Manager-Instance.html#setting-up-the-firesim-repo>`.
+At that point, instead of checking out FireSim you can checkout Chipyard by following :ref:`Chipyard-Basics/Initial-Repo-Setup:Setting up the Chipyard Repo`.
 
 Default Requirements Installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In Chipyard, we use `Conda <https://docs.conda.io/en/latest/>`__ to help manage system dependencies (``make``, ``gcc``, etc).
-We **highly** recommend running the following script to setup Chipyard's Conda environment.
+In Chipyard, we use the `Conda <https://docs.conda.io/en/latest/>`__ package manager to help manage system dependencies.
+Conda allows users to create an "environment" that holds system dependencies like ``make``, ``gcc``, etc.
+
+First Chipyard requires there to be Conda installed on the system.
+Please refer to the `Conda installation instructions <https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html>`__ on how to install Conda.
+Afterwards, verify that Conda is a sufficient version (we test on version 4.12.0).
 
 .. code-block:: shell
 
-    ./scripts/machine-launch-script.sh
+    conda --version # must be version 4.12.0 or higher
 
-.. Warning:: If you have ``sudo`` priveleges then this script should work fine.
-    However, if you are not a system administrator (i.e. you are on a shared system), you
-    should run ``./scripts/machine-launch-script.sh --help`` to view relevant configuration parameters.
-
-.. Note:: When running on an Amazon Web Services EC2 FPGA-development instance
-    (for FireSim), FireSim includes a similar machine setup script that will install all
-    of the aforementioned dependencies (and some additional ones).
-
-Depending on where you ran the machine launch script,
-you should find a file called ``machine-launch-status.log`` and ``machine-launch-status`` indicating
-if things completed properly.
-
-.. code-block:: shell
-
-    cat ./machine-launch-status # should have "started" and "completed"
-
-Once run, please confirm that you "activated" the proper Conda environment and the prior script completed.
-By running the following command you should see "chipyard" output (the default environment is called "chipyard").
-
-.. code-block:: shell
-
-    echo $CONDA_DEFAULT_ENV
-
-.. Note:: If you don't have a Conda environment set (and the machine launch script completed),
-    you can run ``conda activate chipyard`` to "enter" the proper environment.
-
-.. Note:: Refer to FireSim's `Conda documentation <https://docs.fires.im/en/latest/Advanced-Usage/Conda.html>`__ on more information
-    on how to use Conda and some of its benefits.
+After Conda is installed and is on your ``PATH``, we need to install a version of ``git`` to initially checkout the repository.
+For this you can use the system package manager like ``yum`` or ``apt`` to install ``git``.
+This ``git`` is only used to first checkout the repository, we will later install a newer version of ``git`` with Conda.
 
 Setting up the Chipyard Repo
 -------------------------------------------
 
-Start by fetching Chipyard's sources. Run:
+Start by checkout out the proper Chipyard's version. Run:
 
 .. parsed-literal::
 
@@ -69,15 +49,47 @@ Start by fetching Chipyard's sources. Run:
     # checkout latest official chipyard release
     # note: this may not be the latest release if the documentation version != "stable"
     git checkout |version|
+
+If you are running Chipyard alongside FireSim on AWS EC2, you should skip the :ref:`Chipyard-Basics/Initial-Repo-Setup:Conda Environment Setup` section and instead jump to :ref:`Chipyard-Basics/Initial-Repo-Setup:Fetch Chipyard Sources`.
+
+Conda Environment Setup
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. Warning:: When running on an Amazon Web Services EC2 FPGA-development instance
+    (for FireSim), FireSim includes a similar machine setup script that will install all
+    of the aforementioned dependencies (and some additional ones). Skip this section.
+
+Next run the following script to setup Chipyard's Conda environment.
+This script creates a Conda environment that sets up Chipyard's necessary prerequisite libraries and tools needed for building critical Chipyard components like the RISC-V toolchain.
+
+.. code-block:: shell
+
+    ./scripts/conda-env-setup.sh
+
+The script should complete successfully.
+By running the following command you should see a "chipyard" environment listed (the default environment is called "chipyard").
+
+.. code-block:: shell
+
+    conda env list
+
+.. Note:: Refer to FireSim's :fsim_doc:`Conda documentation <Advanced-Usage/Conda.html>` on more information
+    on how to use Conda and some of its benefits.
+
+Fetch Chipyard Sources
+~~~~~~~~~~~~~~~~~~~~~~
+
+To fetch all Chipyard sources, run the following:
+
+.. code-block:: shell
+
     ./scripts/init-submodules-no-riscv-tools.sh
 
 This will initialize and checkout all of the necessary git submodules.
 This will also validate that you are on a tagged branch, otherwise it will prompt for confirmation.
 
 When updating Chipyard to a new version, you will also want to rerun this script to update the submodules.
-Using git directly will try to initialize all submodules; this is not recommended unless you expressly desire this behavior.
-
-.. _build-toolchains:
+Using ``git`` directly will try to initialize all submodules; this is not recommended unless you expressly desire this behavior.
 
 Building a Toolchain
 ------------------------
@@ -149,20 +161,22 @@ In order to upgrade between Chipyard versions, we recommend using a fresh clone 
 
 
 Chipyard is a complex framework that depends on a mix of build systems and scripts. Specifically, it relies on git submodules, on sbt build files, and on custom written bash scripts and generated files.
-For this reason, upgrading between Chipyard versions is **not** as trivial as just running ``git submodule update -recursive``. This will result in recursive cloning of large submodules that are not necessarily used within your specific Chipyard environments. Furthermore, it will not resolve the status of stale state generated files which may not be compatible between release versions.
+For this reason, upgrading between Chipyard versions is **not** as trivial as just running ``git submodule update --recursive``. This will result in recursive cloning of large submodules that are not necessarily used within your specific Chipyard environments.
+Furthermore, it will not resolve the status of stale state generated files which may not be compatible between release versions.
 
 
-If you are an advanced git user, an alternative approach to a fresh repository clone may be to run ``git clean -dfx``, and then run the standard Chipyard setup sequence. This approach is dangerous, and **not-recommended** for users who are not deeply familiar with git, since it "blows up" the repository state and removes all untracked and modified files without warning. Hence, if you were working on custom un-committed changes, you would lose them.
+If you are an advanced git user, an alternative approach to a fresh repository clone may be to run ``git clean -dfx``, and then run the standard Chipyard setup sequence.
+This approach is dangerous, and **not-recommended** for users who are not deeply familiar with git, since it "blows up" the repository state and removes all untracked and modified files without warning.
+Hence, if you were working on custom un-committed changes, you would lose them.
 
 If you would still like to try to perform an in-place manual version upgrade (**not-recommended**), we recommend at least trying to resolve stale state in the following areas:
 
 * Delete stale ``target`` directories generated by sbt.
-
-* Delete jar collateral generated by FIRRTL (``lib/firrtl.jar``)
 
 * Re-generate generated scripts and source files (for example, ``env.sh``)
 
 * Re-generating/deleting target software state (Linux kernel binaries, Linux images) within FireMarshal
 
 
-This is by no means a comprehensive list of potential stale state within Chipyard. Hence, as mentioned earlier, the recommended method for a Chipyard version upgrade is a fresh clone (or a merge, and then a fresh clone).
+This is by no means a comprehensive list of potential stale state within Chipyard.
+Hence, as mentioned earlier, the recommended method for a Chipyard version upgrade is a fresh clone (or a merge, and then a fresh clone).
