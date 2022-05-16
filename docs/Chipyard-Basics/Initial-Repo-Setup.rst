@@ -57,7 +57,8 @@ Conda Environment Setup
 
 .. Warning:: When running on an Amazon Web Services EC2 FPGA-development instance
     (for FireSim), FireSim includes a similar machine setup script that will install all
-    of the aforementioned dependencies (and some additional ones). Skip this section.
+    of the aforementioned dependencies (and some additional ones) and will activate the
+    proper conda environment. Skip this section.
 
 Next run the following script to setup Chipyard's Conda environment.
 This script creates a Conda environment that sets up Chipyard's necessary prerequisite libraries and tools needed for building critical Chipyard components like the RISC-V toolchain.
@@ -75,6 +76,14 @@ By running the following command you should see a "chipyard" environment listed 
 
 .. Note:: Refer to FireSim's :fsim_doc:`Conda documentation <Advanced-Usage/Conda.html>` on more information
     on how to use Conda and some of its benefits.
+
+Next go ahead and activate the conda environment that was setup.
+
+.. code-block:: shell
+
+    conda activate chipyard
+
+We recommend that you add this "activate" command your ``.bashrc`` (or other environment setup file).
 
 Fetch Chipyard Sources
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -94,7 +103,11 @@ Using ``git`` directly will try to initialize all submodules; this is not recomm
 Building a Toolchain
 ------------------------
 
-The `toolchains` directory contains toolchains that include a cross-compiler toolchain, frontend server, and proxy kernel, which you will need in order to compile code to RISC-V instructions and run them on your design.
+.. Note:: If you already have built a toolchain with Chipyard in a different location (ex. different Chipyard repo), you can
+    most likely skip this step and instead run the `source ./env.sh` in that Chipyard's location. This assumes that you didn't
+    make any toolchain specific modifications.
+
+The ``toolchains`` directory contains toolchains that include a cross-compiler toolchain, frontend server, and proxy kernel, which you will need in order to compile code to RISC-V instructions and run them on your design.
 Currently there are two toolchains, one for normal RISC-V programs, and another for Hwacha (``esp-tools``).
 For custom installations, Each tool within the toolchains contains individual installation procedures within its README file.
 To get a basic installation (which is the only thing needed for most Chipyard use-cases), just the following steps are necessary.
@@ -108,14 +121,25 @@ This will take about 20-30 minutes. You can expedite the process by setting a ``
 
 .. Note:: If you are running on an Amazon Web Services EC2 instance, intending to use FireSim, you can also use the ``--ec2fast`` flag for an expedited installation of a pre-compiled toolchain.
 
-Once the script is run, a ``env.sh`` file is emitted that sets the ``PATH``, ``RISCV``, and ``LD_LIBRARY_PATH`` environment variables.
-You can put this in your ``.bashrc`` or equivalent environment setup file to get the proper variables, or directly include it in your current environment:
+Once the script is run, a ``env.sh`` file is appended to that sets the ``PATH``, ``RISCV``, and ``LD_LIBRARY_PATH`` environment variables.
+
+Sourcing ``env.sh``
+-------------------
+
+Once setup is complete, an emitted ``env.sh`` file should exist in the top-level repository.
+This sets up necessary environment variables needed for future Chipyard steps (needed for the ``make`` system to work properly).
+You can source this file in your ``.bashrc`` or equivalent environment setup file to get the proper variables, or directly include it in your current environment:
 
 .. code-block:: shell
 
     source ./env.sh
 
-These variables need to be set for the ``make`` system to work properly.
+.. Warning:: This ``env.sh`` file should always be sourced before running any ``make`` commands.
+
+.. Warning:: ``env.sh`` files are generated per-Chipyard repository.
+    In a multi-Chipyard repository setup, it is possible to source multiple ``env.sh`` files (in any order).
+    However, it is recommended that the final ``env.sh`` file sourced is the ``env.sh`` located in the
+    Chipyard repo that you expect to run ``make`` commands in.
 
 Pre-built Docker Image
 -------------------------------------------
