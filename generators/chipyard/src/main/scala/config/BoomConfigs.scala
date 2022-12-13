@@ -10,6 +10,11 @@ class SmallBoomConfig extends Config(
   new boom.common.WithNSmallBooms(1) ++                          // small boom config
   new chipyard.config.AbstractConfig)
 
+class SmallBoomVecConfig extends Config(
+  new boom.common.WithVector(1) ++                               // Add vector 
+  new boom.common.WithNSmallBooms(1) ++                          // small boom config
+  new chipyard.config.AbstractConfig)
+
 class MediumBoomConfig extends Config(
   new boom.common.WithNMediumBooms(1) ++                         // medium boom config
   new chipyard.config.AbstractConfig)
