@@ -121,3 +121,9 @@
 [submodule "tools/cde"]
 	path = tools/cde
 	url = https://github.com/chipsalliance/cde.git
+[submodule "sims/cosim"]
+	path = sims/cosim
+	url = https://github.com/tenstorrent/cosim-arch-checker
+[submodule "sims/whisper"]
+	path = sims/whisper
+	url = https://github.com/tenstorrent/whisper
