@@ -134,3 +134,9 @@
 [submodule "generators/fft-generator"]
 	path = generators/fft-generator
 	url = https://github.com/ucb-bar/FFTGenerator.git
+[submodule "sims/cosim"]
+	path = sims/cosim
+	url = https://github.com/tenstorrent/cosim-arch-checker
+[submodule "sims/whisper"]
+	path = sims/whisper
+	url = https://github.com/tenstorrent/whisper

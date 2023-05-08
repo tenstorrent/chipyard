@@ -67,14 +67,16 @@ model_dir_debug = $(build_dir)/$(long_name).debug
 #########################################################################################
 # vcs simulator rules
 #########################################################################################
-$(sim): $(sim_vsrcs) $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS)
-	rm -rf $(model_dir)
-	$(VCS) $(VCS_OPTS) $(EXTRA_SIM_SOURCES) -o $@ -Mdir=$(model_dir)
+VERDI_OPTS = -debug_access+all -kdb
 
-$(sim_debug): $(sim_vsrcs) $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS)
+$(sim): $(sim_vsrcs) $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS) $(cosimso)
+	rm -rf $(model_dir)
+	$(VCS) $(VCS_OPTS) $(VERDI_OPTS) $(EXTRA_SIM_SOURCES) -o $@ -Mdir=$(model_dir) $(COSIM_OPTS) -l compile.log
+
+$(sim_debug): $(sim_vsrcs) $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS) $(cosimso)
 	rm -rf $(model_dir_debug)
-	$(VCS) $(VCS_OPTS) $(EXTRA_SIM_SOURCES) -o $@ -Mdir=$(model_dir_debug)  \
-	+define+DEBUG -debug_access+all -kdb -lca
+	$(VCS) $(VCS_OPTS) $(VERDI_OPTS) $(EXTRA_SIM_SOURCES) -o $@ -Mdir=$(model_dir_debug)  \
+	+define+DEBUG +define+FSDB $(COSIM_OPTS) -l compile.log
 
 #########################################################################################
 # create vcs vpd/fsdb rules
@@ -100,3 +102,7 @@ clean-sim:
 
 clean-sim-debug:
 	rm -rf $(model_dir_debug) $(build_dir)/vc_hdrs.h $(sim_debug) $(sim_debug).daidir ucli.key
+
+clean-cosim:
+	$(MAKE) -C $(cosimdir) clean
+	$(MAKE) -C $(whisperdir) -f GNUmakefile clean
