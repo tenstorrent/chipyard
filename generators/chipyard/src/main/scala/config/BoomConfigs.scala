@@ -1,10 +1,16 @@
 package chipyard
 
 import org.chipsalliance.cde.config.{Config}
+import freechips.rocketchip.devices.tilelink.{BootROMLocated}
 
 // ---------------------
 // BOOM Configs
 // ---------------------
+
+class WithCustomBootROM extends Config((site, here, up) => {
+    case BootROMLocated(x) => up(BootROMLocated(x), site)
+        .map(_.copy(contentFileName = s"generators/boom/src/main/resources/bootrom/bootrom.rv64.img"))
+})
 
 class SmallBoomConfig extends Config(
   new boom.common.WithNSmallBooms(1) ++                          // small boom config
@@ -12,6 +18,7 @@ class SmallBoomConfig extends Config(
 
 class SmallBoomVecConfig extends Config(
   new boom.common.WithBoomDebugHarness ++                        // Enable debug harness
+  new WithCustomBootROM ++                                       // Use custom BootROM to enable COSIM
   new boom.common.WithVector(1) ++                               // Add vector 
   new boom.common.WithNSmallBooms(1) ++                          // small boom config
   new chipyard.config.AbstractConfig)
@@ -22,6 +29,7 @@ class MediumBoomConfig extends Config(
 
 class MediumBoomVecConfig extends Config(
   new boom.common.WithBoomDebugHarness ++                        // Enable debug harness
+  new WithCustomBootROM ++                                       // Use custom BootROM to enable COSIM
   new boom.common.WithVector(2) ++                               // Add vector 
   new boom.common.WithNMediumBooms(1) ++                         // medium boom config
   new chipyard.config.AbstractConfig)
