@@ -1,6 +1,6 @@
 [submodule "rocket-chip"]
 	path = generators/rocket-chip
-	url = https://github.com/tenstorrent/rocket-chip.git
+	url = git@github.com:tenstorrent/rocket-chip.git
 [submodule "testchipip"]
 	path = generators/testchipip
 	url = https://github.com/ucb-bar/testchipip.git
@@ -12,7 +12,7 @@
 	url = https://github.com/ucb-bar/riscv-torture.git
 [submodule "generators/boom"]
 	path = generators/boom
-	url = https://github.com/tenstorrent/riscv-ocelot.git
+	url = git@github.com:tenstorrent/riscv-ocelot.git
 [submodule "generators/sifive-blocks"]
 	path = generators/sifive-blocks
 	url = https://github.com/chipsalliance/rocket-chip-blocks.git
@@ -123,7 +123,7 @@
 	url = https://github.com/chipsalliance/cde.git
 [submodule "sims/cosim"]
 	path = sims/cosim
-	url = https://github.com/tenstorrent/cosim-arch-checker
+	url = git@github.com:tenstorrent/cosim-arch-checker.git
 [submodule "sims/whisper"]
 	path = sims/whisper
-	url = https://github.com/tenstorrent/whisper
+	url = git@github.com:tenstorrent/whisper.git
