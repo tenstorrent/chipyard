@@ -21,7 +21,11 @@ RUN echo "Installing required packages..." && \
     fontconfig \
     bash \
     build-essential \
-    cpio
+    libelf1 \
+    time \
+    cpio && \
+    echo "dash dash/sh boolean false" | debconf-set-selections && \
+    dpkg-reconfigure -p critical dash
 
 # Configure environment
 ENV CONDA_DIR=/opt/conda \
@@ -37,7 +41,7 @@ RUN echo "Cleaning up Conda..." && \
     rm ~/miniconda.sh && \
     conda clean --all -y
 
-# If you need to update Conda in the future, you can uncomment the following line:
+# Update Conda
 RUN conda update -n base conda -y
 
 RUN echo "Installing and activating conda-lock..." && \
@@ -55,5 +59,5 @@ RUN echo "Cloning Chipyard repository..." && \
 # Install Chipyard and its dependencies
 RUN echo "Installing Chipyard and its dependencies..." && \
     cd chipyard && \
-    ./build-setup.sh riscv-tools -s 8 -s 9
+    ./build-setup.sh riscv-tools -s 4 -s 6 -s 7 -s 8 -s 9
 
