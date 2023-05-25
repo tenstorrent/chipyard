@@ -21,9 +21,19 @@ RUN echo "Installing required packages..." && \
     fontconfig \
     bash \
     build-essential \
-    libelf1 \
+    cpio \
     time \
-    cpio && \
+    libelf1 \
+    libxml2 \
+    libxss1 \
+    libxft2 \
+    libxt6 \
+    libxmu6 \
+    libnuma1 \
+    software-properties-common && \
+    add-apt-repository -y ppa:linuxuprising/libpng12 && \
+    apt-get update && \
+    apt-get install -y libpng12-0 && \
     echo "dash dash/sh boolean false" | debconf-set-selections && \
     dpkg-reconfigure -p critical dash
 
@@ -48,7 +58,7 @@ RUN echo "Installing and activating conda-lock..." && \
     conda install -n base conda-lock -y && \
     conda init bash && \
     echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    echo "conda activate base" >> ~/.bashrc
+    echo "conda activate /chipyard/.conda-env" >> ~/.bashrc
 
 # Clone Chipyard repository
 RUN echo "Cloning Chipyard repository..." && \
