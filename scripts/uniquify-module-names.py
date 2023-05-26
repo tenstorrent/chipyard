@@ -46,14 +46,34 @@ def bfs_collect_modules(tree, child_to_ignore = None):
         q.append((c['instance_name'], c['module_name'], c['instances']))
   return modules
 
+#def get_modules_in_verilog_file(file):
+#  module_names = list()
+#  with open(file) as f:
+#    lines = f.readlines()
+#    for line in lines:
+#      words = line.split()
+#      if len(words) > 0 and words[0] == "module":
+#        module_names.append(words[1].replace("(", "").replace(")", "").replace(";", ""))
+#  return module_names
 def get_modules_in_verilog_file(file):
   module_names = list()
   with open(file) as f:
     lines = f.readlines()
-    for line in lines:
-      words = line.split()
-      if len(words) > 0 and words[0] == "module":
-        module_names.append(words[1].replace("(", "").replace(")", "").replace(";", ""))
+
+  reading_module = False
+  for line in lines:
+    words = line.split()
+    if len(words) > 0:
+      if words[0] == "module":
+        reading_module = True
+      if reading_module:
+        if "(" in words[0] or ";" in words[0]:  # Module name is on a new line
+          module_names.append(words[0].replace("(", "").replace(")", "").replace(";", ""))
+          reading_module = False
+        elif len(words) > 1:  # Module name is on the same line
+          module_names.append(words[1].replace("(", "").replace(")", "").replace(";", ""))
+          reading_module = False
+
   return module_names
 
 def get_modules_in_filelist(verilog_module_filename, cc_filelist):
