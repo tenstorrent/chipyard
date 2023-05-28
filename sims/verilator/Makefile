@@ -158,7 +158,7 @@ PREPROC_DEFINES := \
 	+define+STOP_COND=\$$c\(\"done_reset\"\)
 
 VERILATOR_NONCC_OPTS = \
-	-I$(build_dir) \
+	-I$(build_dir)/gen-collateral \
 	$(RUNTIME_PROFILING_VFLAGS) \
 	$(RUNTIME_THREADS) \
 	$(VERILATOR_OPT_FLAGS) \
