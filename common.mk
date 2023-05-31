@@ -284,12 +284,28 @@ $(sim_common_files): $(sim_files) $(ALL_MODS_FILELIST) $(TOP_SMEMS_FILE) $(MODEL
 verilog: $(sim_common_files)
 
 #########################################################################################
+# cosim build
+#########################################################################################
+
+cosimsoname = cosim
+cosimdir = $(base_dir)/sims/cosim
+cosimso = $(sim_dir)/lib$(cosimsoname).so
+whisperdir = $(base_dir)/sims/whisper
+
+COSIM_OPTS = -LDFLAGS "-L$(sim_dir) -Wl,-rpath,$(sim_dir) -l$(cosimsoname)"
+
+$(cosimso):
+	$(MAKE) -C $(cosimdir)
+	cp $(cosimdir)/lib/libcosim.so $(cosimso)
+	$(MAKE) -C $(whisperdir) -f GNUmakefile
+
+#########################################################################################
 # helper rules to run simulations
 #########################################################################################
 .PHONY: run-binary run-binary-fast run-binary-debug run-fast
 
 check-binary:
-ifeq (,$(BINARY))
+ifeq (,$(firstword $(BINARY)))
 	$(error BINARY variable is not set. Set it to the simulation binary)
 endif
 
@@ -301,21 +317,29 @@ endif
 
 # run normal binary with hardware-logged insn dissassembly
 run-binary: $(SIM_PREREQ) check-binary | $(output_dir)
-	(set -o pipefail && $(NUMA_PREFIX) $(sim) $(PERMISSIVE_ON) $(SIM_FLAGS) $(EXTRA_SIM_FLAGS) $(SEED_FLAG) $(VERBOSE_FLAGS) $(PERMISSIVE_OFF) $(BINARY) </dev/null 2> >(spike-dasm > $(sim_out_name).out) | tee $(sim_out_name).log)
+	(set -o pipefail && $(NUMA_PREFIX) $(sim) $(PERMISSIVE_ON) $(SIM_FLAGS) $(EXTRA_SIM_FLAGS) $(SEED_FLAG) $(VERBOSE_FLAGS) $(PERMISSIVE_OFF) $(firstword $(BINARY)) </dev/null 2> >(spike-dasm > $(sim_out_name).out) | tee $(sim_out_name).log)
 
 # run simulator as fast as possible (no insn disassembly)
 run-binary-fast: $(SIM_PREREQ) check-binary | $(output_dir)
-	(set -o pipefail && $(NUMA_PREFIX) $(sim) $(PERMISSIVE_ON) $(SIM_FLAGS) $(EXTRA_SIM_FLAGS) $(SEED_FLAG) $(PERMISSIVE_OFF) $(BINARY) </dev/null | tee $(sim_out_name).log)
+	(set -o pipefail && $(NUMA_PREFIX) $(sim) $(PERMISSIVE_ON) $(SIM_FLAGS) $(EXTRA_SIM_FLAGS) $(SEED_FLAG) $(PERMISSIVE_OFF) $(firstword $(BINARY)) </dev/null | tee $(sim_out_name).log)
 
 # run simulator with as much debug info as possible
 run-binary-debug: $(SIM_DEBUG_PREREQ) check-binary | $(output_dir)
-	(set -o pipefail && $(NUMA_PREFIX) $(sim_debug) $(PERMISSIVE_ON) $(SIM_FLAGS) $(EXTRA_SIM_FLAGS) $(SEED_FLAG) $(VERBOSE_FLAGS) $(WAVEFORM_FLAG) $(PERMISSIVE_OFF) $(BINARY) </dev/null 2> >(spike-dasm > $(sim_out_name).out) | tee $(sim_out_name).log)
+	(set -o pipefail && $(NUMA_PREFIX) $(sim_debug) $(PERMISSIVE_ON) $(SIM_FLAGS) $(EXTRA_SIM_FLAGS) $(SEED_FLAG) $(VERBOSE_FLAGS) $(WAVEFORM_FLAG) $(PERMISSIVE_OFF) $(firstword $(BINARY)) </dev/null 2> >(spike-dasm > $(sim_out_name).out) | tee $(sim_out_name).log)
 
 run-fast: run-asm-tests-fast run-bmark-tests-fast
 
 #########################################################################################
 # helper rules to run simulator with fast loadmem via hex files
 #########################################################################################
+WHISPER = /root/my-chipyard/sims/whisper/build-Linux/whisper
+ifeq (,$(WHISPER))
+	$(error WHISPER variable is not set. Set it to the path to whisper executable.)
+endif
+
+WHISPER_JSON = /root/my-chipyard/sims/cosim/bridge/whisper/config/boom.json
+BOOTCODE = /root/my-chipyard/sims/cosim/bootrom/bootrom
+
 $(binary_hex): $(firstword $(BINARY)) | $(output_dir)
 	$(base_dir)/scripts/smartelf2hex.sh $(firstword $(BINARY)) > $(binary_hex)
 
@@ -324,19 +348,19 @@ run-binary-hex: $(SIM_PREREQ) $(binary_hex) | $(output_dir)
 run-binary-hex: run-binary
 run-binary-hex: override LOADMEM_ADDR = 80000000
 run-binary-hex: override LOADMEM = $(binary_hex)
-run-binary-hex: override SIM_FLAGS += +loadmem=$(LOADMEM) +loadmem_addr=$(LOADMEM_ADDR)
+run-binary-hex: override SIM_FLAGS += +loadmem=$(LOADMEM) +loadmem_addr=$(LOADMEM_ADDR) +testfile=$(firstword $(BINARY)) +whisper_path=$(WHISPER) +whisper_json_path=$(WHISPER_JSON) +bootcode=$(BOOTCODE)
 run-binary-debug-hex: check-binary
 run-binary-debug-hex: $(SIM_DEBUG_REREQ) $(binary_hex) | $(output_dir)
 run-binary-debug-hex: run-binary-debug
 run-binary-debug-hex: override LOADMEM_ADDR = 80000000
 run-binary-debug-hex: override LOADMEM = $(binary_hex)
-run-binary-debug-hex: override SIM_FLAGS += +loadmem=$(LOADMEM) +loadmem_addr=$(LOADMEM_ADDR)
+run-binary-debug-hex: override SIM_FLAGS += +loadmem=$(LOADMEM) +loadmem_addr=$(LOADMEM_ADDR) +testfile=$(firstword $(BINARY)) +whisper_path=$(WHISPER) +whisper_json_path=$(WHISPER_JSON) +bootcode=$(BOOTCODE)
 run-binary-fast-hex: check-binary
 run-binary-fast-hex: $(SIM_PREREQ) $(binary_hex) | $(output_dir)
 run-binary-fast-hex: run-binary-fast
 run-binary-fast-hex: override LOADMEM_ADDR = 80000000
 run-binary-fast-hex: override LOADMEM = $(binary_hex)
-run-binary-fast-hex: override SIM_FLAGS += +loadmem=$(LOADMEM) +loadmem_addr=$(LOADMEM_ADDR)
+run-binary-fast-hex: override SIM_FLAGS += +loadmem=$(LOADMEM) +loadmem_addr=$(LOADMEM_ADDR) +testfile=$(firstword $(BINARY)) +whisper_path=$(WHISPER) +whisper_json_path=$(WHISPER_JSON) +bootcode=$(BOOTCODE)
 
 #########################################################################################
 # run assembly/benchmarks rules

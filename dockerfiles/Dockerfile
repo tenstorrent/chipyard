@@ -1,65 +1,73 @@
-### This is a full chipyard setup
+# Start from an Ubuntu base image
+FROM ubuntu:20.04
 
-# BUILD BASE FOR CI
+# Set the maintainer of the Dockerfile
+LABEL maintainer="dxie@tenstorrent.com"
 
-FROM ubuntu:20.04 as base
-ARG CHIPYARD_HASH
+# Avoid timezone interactive dialog
+ENV DEBIAN_FRONTEND=noninteractive
 
-MAINTAINER https://groups.google.com/forum/#!forum/chipyard
-
-SHELL ["/bin/bash", "-c"]
-
-# Install dependencies for ubuntu-req.sh
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+# Install required packages
+RUN echo "Installing required packages..." && \
+    apt-get update && apt-get install -y \
     curl \
-    wget \
     git \
-    sudo \
+    vim \
+    wget \
+    bzip2 \
     ca-certificates \
-    keyboard-configuration \
-    console-setup \
-    bc \
-    unzip
+    sudo \
+    locales \
+    fontconfig \
+    bash \
+    build-essential \
+    cpio \
+    time \
+    libelf1 \
+    libxml2 \
+    libxss1 \
+    libxft2 \
+    libxt6 \
+    libxmu6 \
+    libnuma1 \
+    software-properties-common && \
+    add-apt-repository -y ppa:linuxuprising/libpng12 && \
+    apt-get update && \
+    apt-get install -y libpng12-0 && \
+    echo "dash dash/sh boolean false" | debconf-set-selections && \
+    dpkg-reconfigure -p critical dash
 
-WORKDIR /root
+# Configure environment
+ENV CONDA_DIR=/opt/conda \
+    PATH=/opt/conda/bin:$PATH
 
-# Install Chipyard and run ubuntu-req.sh to install necessary dependencies
-RUN git clone https://github.com/ucb-bar/chipyard.git && \
-        cd chipyard && \
-        git checkout $CHIPYARD_HASH
+# Install Conda
+RUN echo "Installing Conda..." && \
+    wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O ~/miniconda.sh && \
+    /bin/bash ~/miniconda.sh -b -p $CONDA_DIR
 
-RUN ./chipyard/.github/scripts/install-conda.sh
+# Clean Conda installation
+RUN echo "Cleaning up Conda..." && \
+    rm ~/miniconda.sh && \
+    conda clean --all -y
 
-# BUILD IMAGE WITH TOOLCHAINS
+# Update Conda
+RUN conda update -n base conda -y
 
-# Use above build as base
-FROM base as base-with-tools
+RUN echo "Installing and activating conda-lock..." && \
+    conda install -n base conda-lock -y && \
+    conda init bash && \
+    echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate /chipyard/.conda-env" >> ~/.bashrc
 
-SHELL ["/bin/bash", "-cl"]
+# Clone Chipyard repository
+RUN echo "Cloning Chipyard repository..." && \
+    git clone https://github.com/ucb-bar/chipyard.git && \
+    cd chipyard && \
+    git checkout 1.9.1
 
-# Initialize repo
-RUN cd chipyard && \
-        export MAKEFLAGS=-"j $(nproc)" && \
-        conda activate base && \
-        ./setup.sh --env-name chipyard --skip-validate
+# Install Chipyard and its dependencies
+RUN echo "Installing Chipyard and its dependencies..." && \
+    cd chipyard && \
+    ./build-setup.sh riscv-tools -s 4 -s 6 -s 7 -s 8 -s 9
 
-SHELL ["/opt/conda/bin/conda", "run", "-n", "chipyard", "/bin/bash", "-cl"]
-
-# Set up FireMarshal. Building and cleaning br-base.json builds the underlying
-# buildroot image (which takes a long time) but doesn't keep all the br-base
-# stuff around (since that's faster to rebuild).
-RUN cd chipyard && \
-        source env.sh && \
-        cd software/firemarshal && \
-        ./init-submodules.sh && \
-        pip3 install -r python-requirements.txt && \
-        ./marshal build br-base.json && \
-        ./marshal clean br-base.json
-
-# Run script to set environment variables on entry
-ENTRYPOINT ["chipyard/scripts/entrypoint.sh"]
-
-# END IMAGE CUSTOMIZATIONS
-
-CMD ["/bin/sh"]

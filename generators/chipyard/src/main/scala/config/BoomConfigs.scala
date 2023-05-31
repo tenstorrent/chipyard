@@ -1,30 +1,46 @@
 package chipyard
 
 import org.chipsalliance.cde.config.{Config}
+import freechips.rocketchip.devices.tilelink.{BootROMLocated}
 
 // ---------------------
 // BOOM Configs
 // ---------------------
 
+class WithCustomBootROM extends Config((site, here, up) => {
+    case BootROMLocated(x) => up(BootROMLocated(x), site)
+        .map(_.copy(contentFileName = s"generators/boom/src/main/resources/bootrom/bootrom.rv64.img"))
+})
+
 class SmallBoomConfig extends Config(
+  new boom.common.WithBoomDebugHarness ++                        // Enable debug harness
+  new WithCustomBootROM ++                                       // Use custom BootROM to enable COSIM
   new boom.common.WithNSmallBooms(1) ++                          // small boom config
   new chipyard.config.AbstractConfig)
 
 class MediumBoomConfig extends Config(
+  new boom.common.WithBoomDebugHarness ++                        // Enable debug harness
+  new WithCustomBootROM ++                                       // Use custom BootROM to enable COSIM
   new boom.common.WithNMediumBooms(1) ++                         // medium boom config
   new chipyard.config.AbstractConfig)
 
 class LargeBoomConfig extends Config(
+  new boom.common.WithBoomDebugHarness ++                        // Enable debug harness
+  new WithCustomBootROM ++                                       // Use custom BootROM to enable COSIM
   new boom.common.WithNLargeBooms(1) ++                          // large boom config
   new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)
 
 class MegaBoomConfig extends Config(
+  new boom.common.WithBoomDebugHarness ++                        // Enable debug harness
+  new WithCustomBootROM ++                                       // Use custom BootROM to enable COSIM
   new boom.common.WithNMegaBooms(1) ++                           // mega boom config
   new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)
 
 class DualSmallBoomConfig extends Config(
+  new boom.common.WithBoomDebugHarness ++                        // Enable debug harness
+  new WithCustomBootROM ++                                       // Use custom BootROM to enable COSIM
   new boom.common.WithNSmallBooms(2) ++                          // 2 boom cores
   new chipyard.config.AbstractConfig)
 
