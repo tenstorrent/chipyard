@@ -17,6 +17,15 @@ _start:
     # Move immediate to vector register
     vmv.v.i v2, 12
     
+    os_end_test:
+        auipc ra, 0x0
+        addi  ra, ra, 196
+        sw    gp, 0(ra)
+
+    _exit:
+        j os_end_test
+
+
     # End
     # Usually, you would call an exit syscall here to terminate the program
 
