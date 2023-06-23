@@ -337,7 +337,16 @@ ifeq (,$(WHISPER))
 	$(error WHISPER variable is not set. Set it to the path to whisper executable.)
 endif
 
-WHISPER_JSON = /root/my-chipyard/sims/cosim/bridge/whisper/config/boom.json
+ifneq (,$(findstring Ocelot,$(CONFIG)))
+  WHISPER_JSON = /root/my-chipyard/sims/cosim/bridge/whisper/config/ocelot.json
+else
+  ifneq (,$(findstring Bobcat,$(CONFIG)))
+    WHISPER_JSON = /root/my-chipyard/sims/cosim/bridge/whisper/config/bobcat.json
+  else
+    WHISPER_JSON = /root/my-chipyard/sims/cosim/bridge/whisper/config/boom.json
+  endif
+endif
+
 BOOTCODE = /root/my-chipyard/sims/cosim/bootrom/bootrom
 
 $(binary_hex): $(firstword $(BINARY)) | $(output_dir)
