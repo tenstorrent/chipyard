@@ -61,7 +61,9 @@ main:
                   vsetvli x8, x9, e32, m1
                   vmv.v.i v2, 12
                   vmv.x.s x8, v2
+                  addw x8, x8, x8
                   vfmv.f.s f8, v2
+                  fadd.s f8, f8, f8
 
                   lui        t4, 655069
                   la x15, test_done
