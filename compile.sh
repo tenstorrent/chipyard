@@ -1,0 +1,3 @@
+#riscv64-unknown-elf-gcc -march=rv64imafdcv -mabi=lp64d -Wl,--no-relax -nostdlib -T tests/rvv/bringup_tests/bobcat_linker.ld tests/rvv/bringup_tests/ms3p5_pureload.S -o tests/rvv/bringup_tests/ms3p5_pureload.elf
+#riscv64-unknown-elf-gcc -march=rv64imafdcv -mabi=lp64d -Wl,--no-relax -nostdlib -T tests/rvv/bringup_tests/bobcat_linker.ld tests/rvv/bringup_tests/ms4_vle64.S -o tests/rvv/bringup_tests/ms4_vle64.elf
+riscv64-unknown-elf-gcc -march=rv64imafdcv -mabi=lp64d -Wl,--no-relax -nostdlib -T tests/rvv/bringup_tests/bobcat_linker.ld tests/rvv/bringup_tests/ms4p5_vle64_2.S -o tests/rvv/bringup_tests/ms4p5_vle64_2.elf
