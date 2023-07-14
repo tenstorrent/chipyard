@@ -1,6 +1,5 @@
 simSetSimulator "-vcssv" -exec "sims/vcs/simv-chipyard-SmallBobcatConfig-debug" \
-           -args \
-           "+permissive +cosim +dramsim +dramsim_ini_dir=/root/my-chipyard/generators/testchipip/src/main/resources/dramsim2_ini +max-cycles=10000000 +loadmem=/root/my-chipyard/sims/vcs/output/chipyard.TestHarness.SmallBobcatConfig/ms3p5_pureload.loadmem_hex +loadmem_addr=80000000 +testfile=/root/my-chipyard/tests/rvv/bringup_tests/ms3p5_pureload.elf +whisper_path=/root/my-chipyard/sims/whisper/build-Linux/whisper +whisper_json_path=/root/my-chipyard/sims/cosim/bridge/whisper/config/bobcat.json +bootcode=/root/my-chipyard/sims/cosim/bootrom/bootrom +ntb_random_seed_automatic +verbose +fsdbfile=/root/my-chipyard/sims/vcs/output/chipyard.TestHarness.SmallBobcatConfig/ms3p5_pureload.fsdb +permissive-off /root/my-chipyard/tests/rvv/bringup_tests/ms3p5_pureload.elf"
+           -args
 debImport "-dbdir" "sims/vcs/simv-chipyard-SmallBobcatConfig-debug.daidir/"
 debLoadSimResult \
            /root/my-chipyard/sims/vcs/output/chipyard.TestHarness.SmallBobcatConfig/ms3p5_pureload.fsdb
@@ -8,257 +7,18 @@ wvCreateWindow
 verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
 verdiSetActWin -dock widgetDock_<Inst._Tree>
 srcHBSelect \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core" \
-           -win $_nTrace1
-srcHBSelect \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0" \
-           -win $_nTrace1
-srcHBSelect \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0.sv_pipeline" \
+           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.lsu" \
            -win $_nTrace1
 srcSetScope \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0.sv_pipeline" \
+           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.lsu" \
            -delim "." -win $_nTrace1
 srcHBSelect \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0.sv_pipeline" \
+           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.lsu" \
            -win $_nTrace1
+srcDeselectAll -win $_nTrace1
+verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
 srcDeselectAll -win $_nTrace1
 srcSelect -signal "clock" -line 72 -pos 1 -win $_nTrace1
-verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-srcAddSelectedToWave -clipboard -win $_nTrace1
-wvDrop -win $_nWave2
-srcDeselectAll -win $_nTrace1
-uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ElCount" -next
-srcHBSelect \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0.sv_pipeline.vpuModule" \
-           -win $_nTrace1
-srcSetScope \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0.sv_pipeline.vpuModule" \
-           -delim "." -win $_nTrace1
-srcHBSelect \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0.sv_pipeline.vpuModule" \
-           -win $_nTrace1
-verdiSetActWin -dock widgetDock_<Inst._Tree>
-srcDeselectAll -win $_nTrace1
-srcSelect -signal "completed_vstart" -line 25 -pos 1 -win $_nTrace1
-verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-srcDeselectAll -win $_nTrace1
-srcDeselectAll -win $_nTrace1
-srcSelect -signal "load_seq_id" -line 32 -pos 1 -win $_nTrace1
-srcAddSelectedToWave -clipboard -win $_nTrace1
-wvDrop -win $_nWave2
-verdiSetActWin -win $_nWave2
-wvZoom -win $_nWave2 941924.460366 1034479.396003
-srcDeselectAll -win $_nTrace1
-srcSelect -signal "load_valid" -line 34 -pos 1 -win $_nTrace1
-verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-srcAddSelectedToWave -clipboard -win $_nTrace1
-wvDrop -win $_nWave2
-wvZoomAll -win $_nWave2
-verdiSetActWin -win $_nWave2
-wvZoom -win $_nWave2 2000610.531843 2648495.081301
-wvZoom -win $_nWave2 2245542.495661 2268806.642763
-wvZoom -win $_nWave2 2253896.152818 2259822.520914
-wvSelectSignal -win $_nWave2 {( "G1" 2 )} 
-wvSelectSignal -win $_nWave2 {( "G1" 2 )} 
-wvSetRadix -win $_nWave2 -format UDec
-wvSelectSignal -win $_nWave2 {( "G1" 2 )} 
-wvSetRadix -win $_nWave2 -format Bin
-wvZoom -win $_nWave2 2254369.941052 2255863.578540
-wvSetCursor -win $_nWave2 2254877.939710 -snap {("G1" 2)}
-srcHBSelect \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0.sv_pipeline.vIdGen" \
-           -win $_nTrace1
-srcSetScope \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0.sv_pipeline.vIdGen" \
-           -delim "." -win $_nTrace1
-srcHBSelect \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0.sv_pipeline.vIdGen" \
-           -win $_nTrace1
-verdiSetActWin -dock widgetDock_<Inst._Tree>
-srcDeselectAll -win $_nTrace1
-srcSelect -signal "io_outID" -line 78 -pos 1 -win $_nTrace1
-verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-srcAddSelectedToWave -clipboard -win $_nTrace1
-wvDrop -win $_nWave2
-wvZoomOut -win $_nWave2
-verdiSetActWin -win $_nWave2
-wvZoomOut -win $_nWave2
-wvZoomOut -win $_nWave2
-wvZoomAll -win $_nWave2
-wvZoom -win $_nWave2 2043328.194444 2463385.210027
-wvZoom -win $_nWave2 2197007.590389 2269009.233304
-srcHBSelect \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0.sv_pipeline" \
-           -win $_nTrace1
-srcSetScope \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0.sv_pipeline" \
-           -delim "." -win $_nTrace1
-srcHBSelect \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0.sv_pipeline" \
-           -win $_nTrace1
-verdiSetActWin -dock widgetDock_<Inst._Tree>
-srcDeselectAll -win $_nTrace1
-verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-srcDeselectAll -win $_nTrace1
-srcSelect -signal "io_vGenIO_resp_bits_elemID" -line 175 -pos 1 -win $_nTrace1
-srcAddSelectedToWave -clipboard -win $_nTrace1
-wvDrop -win $_nWave2
-verdiSetActWin -win $_nWave2
-wvZoom -win $_nWave2 2253155.213013 2262228.590779
-wvZoom -win $_nWave2 2254132.629724 2259025.860551
-srcDeselectAll -win $_nTrace1
-verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "seq" -next
-debReload
-srcHBSelect \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0.sv_pipeline.vpuModule" \
-           -win $_nTrace1
-srcSetScope \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0.sv_pipeline.vpuModule" \
-           -delim "." -win $_nTrace1
-srcHBSelect \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.core.vec_exe_unit.iresp_fu_units_0.sv_pipeline.vpuModule" \
-           -win $_nTrace1
-verdiSetActWin -dock widgetDock_<Inst._Tree>
-srcDeselectAll -win $_nTrace1
-verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-srcDeselectAll -win $_nTrace1
-srcSelect -signal "issue_scalar_opnd" -line 10 -pos 1 -win $_nTrace1
-srcAddSelectedToWave -clipboard -win $_nTrace1
-wvDrop -win $_nWave2
-wvZoomOut -win $_nWave2
-verdiSetActWin -win $_nWave2
-wvZoomAll -win $_nWave2
-wvZoom -win $_nWave2 2014849.752710 2620016.639566
-wvZoom -win $_nWave2 2177211.600403 2236662.276957
-debReload
-debReload
-debReload
-srcDeselectAll -win $_nTrace1
-srcSelect -signal "load_data" -line 33 -pos 1 -win $_nTrace1
-verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-srcAddSelectedToWave -clipboard -win $_nTrace1
-wvDrop -win $_nWave2
-srcDeselectAll -win $_nTrace1
-srcSelect -signal "load_valid" -line 34 -pos 1 -win $_nTrace1
-srcAddSelectedToWave -clipboard -win $_nTrace1
-wvDrop -win $_nWave2
-wvZoomAll -win $_nWave2
-verdiSetActWin -win $_nWave2
-wvZoom -win $_nWave2 2185720.403117 2342351.832656
-wvZoom -win $_nWave2 2247057.101133 2273056.220535
-srcDeselectAll -win $_nTrace1
-srcSelect -signal "load_seq_id" -line 32 -pos 1 -win $_nTrace1
-verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-srcAddSelectedToWave -clipboard -win $_nTrace1
-wvDrop -win $_nWave2
-debReload
-wvScrollUp -win $_nWave2 1
-verdiSetActWin -win $_nWave2
-wvScrollUp -win $_nWave2 1
-wvScrollUp -win $_nWave2 1
-wvScrollUp -win $_nWave2 1
-wvScrollDown -win $_nWave2 1
-wvScrollDown -win $_nWave2 1
-wvScrollDown -win $_nWave2 1
-wvScrollDown -win $_nWave2 1
-wvScrollDown -win $_nWave2 1
-wvScrollDown -win $_nWave2 0
-wvScrollDown -win $_nWave2 0
-wvScrollDown -win $_nWave2 0
-wvScrollDown -win $_nWave2 0
-wvScrollDown -win $_nWave2 0
-wvScrollDown -win $_nWave2 0
-wvScrollDown -win $_nWave2 0
-wvScrollDown -win $_nWave2 0
-wvScrollDown -win $_nWave2 0
-wvScrollDown -win $_nWave2 0
-wvScrollDown -win $_nWave2 0
-wvScrollDown -win $_nWave2 0
-wvScrollDown -win $_nWave2 0
-wvZoomAll -win $_nWave2
-wvZoom -win $_nWave2 2093165.467480 2285394.949187
-wvSelectSignal -win $_nWave2 {( "G1" 8 )} 
-wvZoomAll -win $_nWave2
-wvZoom -win $_nWave2 1972132.090108 2413547.936992
-wvZoom -win $_nWave2 2178784.088886 2241288.094305
-wvSelectSignal -win $_nWave2 {( "G1" 9 )} 
-wvSelectSignal -win $_nWave2 {( "G1" 8 )} 
-wvSelectSignal -win $_nWave2 {( "G1" 7 )} 
-debReload
-wvZoomAll -win $_nWave2
-wvSetCursor -win $_nWave2 2662734.302168 -snap {("G1" 5)}
-wvSetCursor -win $_nWave2 2676973.523035
-wvZoom -win $_nWave2 2143002.740515 2385069.495257
-wvZoom -win $_nWave2 2249767.955512 2262560.101088
-debReload
-wvZoomIn -win $_nWave2
-wvZoomAll -win $_nWave2
-wvSetCursor -win $_nWave2 3232303.136856 -snap {("G1" 6)}
-wvSetCursor -win $_nWave2 3111269.759485 -snap {("G1" 6)}
-wvSetCursor -win $_nWave2 1552075.074526 -snap {("G1" 5)}
-wvSetCursor -win $_nWave2 3139748.201220 -snap {("G1" 6)}
-wvSetCursor -win $_nWave2 1416802.476287 -snap {("G1" 5)}
-debReload
-debReload
-wvSetCursor -win $_nWave2 2826485.342141 -snap {("G1" 5)}
-debReload
-wvZoom -win $_nWave2 2086045.857046 2470504.820461
-debReload
-wvZoom -win $_nWave2 2249668.889258 2263496.187755
-wvSelectSignal -win $_nWave2 {( "G1" 7 )} 
-wvSelectSignal -win $_nWave2 {( "G1" 5 )} 
-wvSelectSignal -win $_nWave2 {( "G1" 9 )} 
-debReload
-debReload
-wvZoomAll -win $_nWave2
-debReload
-wvZoom -win $_nWave2 2036208.584011 2434906.768293
-wvZoomAll -win $_nWave2
-debReload
-wvZoomAll -win $_nWave2
-wvZoom -win $_nWave2 1967467.682927 2345278.506098
-wvSelectSignal -win $_nWave2 {( "G1" 2 )} 
-wvZoomAll -win $_nWave2
-debReload
-wvZoomAll -win $_nWave2
-wvZoom -win $_nWave2 487391.375339 577768.584011
-wvZoomAll -win $_nWave2
-srcDeselectAll -win $_nTrace1
-verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-srcHBSelect \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.lsu" \
-           -win $_nTrace1
-srcSetScope \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.lsu" \
-           -delim "." -win $_nTrace1
-srcHBSelect \
-           "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.lsu" \
-           -win $_nTrace1
-verdiSetActWin -dock widgetDock_<Inst._Tree>
-srcDeselectAll -win $_nTrace1
-verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-wvSelectSignal -win $_nWave2 {( "G1" 2 )} 
-verdiSetActWin -win $_nWave2
-wvSelectSignal -win $_nWave2 {( "G1" 2 3 4 5 6 7 8 9 )} 
-wvCut -win $_nWave2
-wvSetPosition -win $_nWave2 {("G1" 1)}
-srcDeselectAll -win $_nTrace1
-verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-srcDeselectAll -win $_nTrace1
-srcSelect -signal "io_dmem_req_valid" -line 504 -pos 1 -win $_nTrace1
-srcAddSelectedToWave -clipboard -win $_nTrace1
-wvDrop -win $_nWave2
-wvZoom -win $_nWave2 905385.965447 1024812.991192
-verdiSetActWin -win $_nWave2
-srcDeselectAll -win $_nTrace1
-srcSelect -signal "io_dmem_req_bits_0_bits_uop_stq_idx" -line 541 -pos 1 -win \
-          $_nTrace1
-verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-srcDeselectAll -win $_nTrace1
-srcSelect -signal "io_dmem_req_bits_0_bits_uop_uses_stq" -line 566 -pos 1 -win \
-          $_nTrace1
 srcAddSelectedToWave -clipboard -win $_nTrace1
 wvDrop -win $_nWave2
 srcDeselectAll -win $_nTrace1
@@ -267,23 +27,16 @@ srcSelect -signal "io_dmem_req_bits_0_bits_uop_uses_ldq" -line 565 -pos 1 -win \
 srcAddSelectedToWave -clipboard -win $_nTrace1
 wvDrop -win $_nWave2
 srcDeselectAll -win $_nTrace1
+srcSelect -signal "io_dmem_req_bits_0_bits_uop_uses_stq" -line 566 -pos 1 -win \
+          $_nTrace1
+srcAddSelectedToWave -clipboard -win $_nTrace1
+wvDrop -win $_nWave2
+srcDeselectAll -win $_nTrace1
+srcDeselectAll -win $_nTrace1
 srcSelect -signal "io_dmem_req_bits_0_bits_uop_is_vec" -line 562 -pos 1 -win \
           $_nTrace1
 srcAddSelectedToWave -clipboard -win $_nTrace1
 wvDrop -win $_nWave2
-wvZoomAll -win $_nWave2
-verdiSetActWin -win $_nWave2
-wvZoom -win $_nWave2 2175508.523035 2277182.882791
-wvZoomOut -win $_nWave2
-wvSelectSignal -win $_nWave2 {( "G1" 3 )} 
-wvSelectSignal -win $_nWave2 {( "G1" 4 )} 
-wvSelectSignal -win $_nWave2 {( "G1" 5 )} 
-srcDeselectAll -win $_nTrace1
-verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-srcDeselectAll -win $_nTrace1
-srcSelect -signal "io_core_exe_0_iresp_bits_uop_uses_stq" -line 461 -pos 1 -win \
-          $_nTrace1
-srcDeselectAll -win $_nTrace1
 srcDeselectAll -win $_nTrace1
 srcSelect -signal "io_dmem_req_bits_0_bits_uop_stq_idx" -line 541 -pos 1 -win \
           $_nTrace1
@@ -294,49 +47,158 @@ srcSelect -signal "io_dmem_req_bits_0_bits_uop_ldq_idx" -line 540 -pos 1 -win \
           $_nTrace1
 srcAddSelectedToWave -clipboard -win $_nTrace1
 wvDrop -win $_nWave2
-wvSetCursor -win $_nWave2 2235576.301970 -snap {("G2" 0)}
+wvZoomAll -win $_nWave2
 verdiSetActWin -win $_nWave2
-wvSetCursor -win $_nWave2 2231167.657644 -snap {("G1" 6)}
+wvZoom -win $_nWave2 2146458.705962 2354649.061653
 srcDeselectAll -win $_nTrace1
 verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
 srcDeselectAll -win $_nTrace1
-srcSelect -signal "io_dmem_req_bits_0_bits_addr" -line 589 -pos 1 -win $_nTrace1
+srcSelect -signal "io_dmem_req_valid" -line 504 -pos 1 -win $_nTrace1
 srcAddSelectedToWave -clipboard -win $_nTrace1
 wvDrop -win $_nWave2
+wvSetPosition -win $_nWave2 {("G1" 6)}
+wvSetPosition -win $_nWave2 {("G1" 5)}
+wvSetPosition -win $_nWave2 {("G1" 4)}
+wvSetPosition -win $_nWave2 {("G1" 3)}
 verdiSetActWin -win $_nWave2
-wvZoom -win $_nWave2 2204440.251421 2239433.865754
+wvSetPosition -win $_nWave2 {("G1" 2)}
+wvSetPosition -win $_nWave2 {("G1" 1)}
+wvMoveSelected -win $_nWave2
+wvSetPosition -win $_nWave2 {("G1" 1)}
+wvSetPosition -win $_nWave2 {("G1" 2)}
 srcDeselectAll -win $_nTrace1
 verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_tail" -next
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "can_fire_vector_load" \
+           -next
 srcDeselectAll -win $_nTrace1
-srcSelect -signal "ldq_tail" -line 4103 -pos 1 -win $_nTrace1
-srcDeselectAll -win $_nTrace1
-srcSelect -signal "ldq_tail" -line 4103 -pos 1 -win $_nTrace1
+srcSelect -signal "can_fire_vector_load_0" -line 4560 -pos 1 -win $_nTrace1
 srcAddSelectedToWave -clipboard -win $_nTrace1
 wvDrop -win $_nWave2
-srcDeselectAll -win $_nTrace1
-srcSelect -signal "ldq_head" -line 4102 -pos 1 -win $_nTrace1
-srcAddSelectedToWave -clipboard -win $_nTrace1
-wvDrop -win $_nWave2
-wvZoomOut -win $_nWave2
+wvSetPosition -win $_nWave2 {("G1" 4)}
+wvSetPosition -win $_nWave2 {("G1" 5)}
+wvSetPosition -win $_nWave2 {("G1" 6)}
+wvSetPosition -win $_nWave2 {("G1" 7)}
 verdiSetActWin -win $_nWave2
+wvSetPosition -win $_nWave2 {("G2" 0)}
+wvSetPosition -win $_nWave2 {("G1" 8)}
+wvMoveSelected -win $_nWave2
+wvSetPosition -win $_nWave2 {("G1" 8)}
+uniFindSearchString -win nWave_2 -pattern "dlq_finish" -next
 srcDeselectAll -win $_nTrace1
 verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "dlq_finish" -next
 srcDeselectAll -win $_nTrace1
-srcSelect -signal "ldq_0_bits_isVector" -line 730 -pos 1 -win $_nTrace1
+srcSelect -signal "dlq_finished" -line 4671 -pos 1 -win $_nTrace1
 srcAddSelectedToWave -clipboard -win $_nTrace1
 wvDrop -win $_nWave2
 debReload
-wvSelectSignal -win $_nWave2 {( "G1" 9 )} 
 verdiSetActWin -win $_nWave2
-wvSelectSignal -win $_nWave2 {( "G1" 10 )} 
-wvSelectSignal -win $_nWave2 {( "G1" 11 )} 
-wvSelectSignal -win $_nWave2 {( "G1" 10 )} 
+wvZoom -win $_nWave2 2205558.813709 2221356.455875
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+uniFindSearchString -win nWave_2 -pattern "can_fire_vector_load" -next
+wvSelectSignal -win $_nWave2 {( "G1" 8 )} 
 srcDeselectAll -win $_nTrace1
 verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
-wvZoomOut -win $_nWave2
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "can_fire_vector_load" \
+           -next
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "can_fire_vector_load" \
+           -previous
+srcDeselectAll -win $_nTrace1
+srcSelect -signal "_GEN_312\[ldq_head\]" -line 4586 -pos 1 -win $_nTrace1
+srcAddSelectedToWave -clipboard -win $_nTrace1
+wvDrop -win $_nWave2
+srcDeselectAll -win $_nTrace1
+srcSelect -signal "_GEN_313\[ldq_head\]" -line 4586 -pos 1 -win $_nTrace1
+srcAddSelectedToWave -clipboard -win $_nTrace1
+wvDrop -win $_nWave2
+wvSelectSignal -win $_nWave2 {( "G1" 10 )} 
 verdiSetActWin -win $_nWave2
-wvZoomOut -win $_nWave2
-wvZoomOut -win $_nWave2
-wvZoomOut -win $_nWave2
+wvCut -win $_nWave2
+wvSetPosition -win $_nWave2 {("G2" 0)}
+wvSetPosition -win $_nWave2 {("G1" 10)}
+wvSelectSignal -win $_nWave2 {( "G1" 10 )} 
+wvCut -win $_nWave2
+wvSetPosition -win $_nWave2 {("G2" 0)}
+wvSetPosition -win $_nWave2 {("G1" 9)}
+srcDeselectAll -win $_nTrace1
+verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" -next
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" -next
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" \
+           -previous
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" -next
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" -next
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "ldq_0*vectorNoYoung" -next
+srcDeselectAll -win $_nTrace1
+srcSelect -signal "ldq_0_bits_vectorNoYoung" -line 733 -pos 1 -win $_nTrace1
+srcAddSelectedToWave -clipboard -win $_nTrace1
+wvDrop -win $_nWave2
+srcDeselectAll -win $_nTrace1
+srcSelect -signal "ldq_0_bits_vectorHasCross" -line 732 -pos 1 -win $_nTrace1
+srcAddSelectedToWave -clipboard -win $_nTrace1
+wvDrop -win $_nWave2
+srcDeselectAll -win $_nTrace1
+srcSelect -signal "ldq_0_bits_vectorCanGo" -line 731 -pos 1 -win $_nTrace1
+srcAddSelectedToWave -clipboard -win $_nTrace1
+wvDrop -win $_nWave2
+srcDeselectAll -win $_nTrace1
+uniFindSearchString -widget MTB_SOURCE_TAB_1 -pattern "stq_head" -next
+srcDeselectAll -win $_nTrace1
+srcSelect -signal "stq_head" -line 4104 -pos 1 -win $_nTrace1
+srcAddSelectedToWave -clipboard -win $_nTrace1
+wvDrop -win $_nWave2
+wvSetCursor -win $_nWave2 2225530.629618 -snap {("G1" 13)}
+verdiSetActWin -win $_nWave2
+wvSelectSignal -win $_nWave2 {( "G1" 11 )} 
 debExit

@@ -2,7 +2,7 @@ Magic 271485
 Revision Verdi_T-2022.06
 
 ; Window Layout <x> <y> <width> <height> <signalwidth> <valuewidth>
-viewPort 0 25 1920 560 353 65
+viewPort 0 25 1920 411 353 65
 
 ; File list:
 ; openDirFile [-d delimiter] [-s time_offset] [-rf auto_bus_rule_file] path_name file_name
@@ -16,8 +16,8 @@ signalSpacing 5
 
 ; windowTimeUnit is used for zoom, cursor & marker
 ; waveform viewport range
-zoom 1262289.341328 2382085.000000
-cursor 2231500.000000
+zoom 2181862.350460 2245052.919125
+cursor 2225500.000000
 marker 0.000000
 
 ; user define markers
@@ -25,7 +25,7 @@ marker 0.000000
 ; visible top row signal index
 top 0
 ; marker line index
-markerPos 11
+markerPos 13
 
 ; event list
 ; addEvent event_name event_expression
@@ -47,17 +47,19 @@ curSTATUS ByChange
 
 addGroup "G1"
 activeDirFile "" "/root/my-chipyard/sims/vcs/output/chipyard.TestHarness.SmallBobcatConfig/ms3p5_pureload.fsdb"
-addSignal -h 15 /TestDriver/testHarness/chiptop/system/tile_prci_domain/tile_reset_domain_boom_tile/core/vec_exe_unit/iresp_fu_units_0/sv_pipeline/clock
-addSignal -h 15 /TestDriver/testHarness/chiptop/system/tile_prci_domain/tile_reset_domain_boom_tile/lsu/io_dmem_req_valid
-addSignal -h 15 -holdScope io_dmem_req_bits_0_bits_uop_uses_stq
+addSignal -h 15 /TestDriver/testHarness/chiptop/system/tile_prci_domain/tile_reset_domain_boom_tile/lsu/clock
+addSignal -h 15 -holdScope io_dmem_req_valid
 addSignal -h 15 -holdScope io_dmem_req_bits_0_bits_uop_uses_ldq
+addSignal -h 15 -holdScope io_dmem_req_bits_0_bits_uop_uses_stq
 addSignal -h 15 -holdScope io_dmem_req_bits_0_bits_uop_is_vec
 addSignal -h 15 -UNSIGNED -HEX -holdScope io_dmem_req_bits_0_bits_uop_stq_idx[2:0]
 addSignal -h 15 -UNSIGNED -HEX -holdScope io_dmem_req_bits_0_bits_uop_ldq_idx[2:0]
-addSignal -h 15 -UNSIGNED -HEX -holdScope io_dmem_req_bits_0_bits_addr[39:0]
-addSignal -h 15 -UNSIGNED -HEX -holdScope ldq_tail[2:0]
-addSignal -h 15 -UNSIGNED -HEX -holdScope ldq_head[2:0]
-addSignal -h 15 -holdScope ldq_0_bits_isVector
+addSignal -h 15 -holdScope can_fire_vector_load_0
+addSignal -h 15 -holdScope dlq_finished
+addSignal -h 15 -holdScope ldq_0_bits_vectorNoYoung
+addSignal -h 15 -holdScope ldq_0_bits_vectorHasCross
+addSignal -h 15 -holdScope ldq_0_bits_vectorCanGo
+addSignal -h 15 -UNSIGNED -HEX -holdScope stq_head[2:0]
 addGroup "G2"
 
 ; getSignalForm Scope Hierarchy Status

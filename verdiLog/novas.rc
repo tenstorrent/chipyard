@@ -468,15 +468,15 @@ NoAppendOption = FALSE
 invokeSimPath = work
 restoreSimState = FALSE
 enableReverseDebug = FALSE
+vcs_svOption = +permissive +cosim +dramsim +dramsim_ini_dir=/root/my-chipyard/generators/testchipip/src/main/resources/dramsim2_ini +max-cycles=10000000 +loadmem=/root/my-chipyard/sims/vcs/output/chipyard.TestHarness.SmallBobcatConfig/ms3p5_pureload.loadmem_hex +loadmem_\
+addr=80000000 +testfile=/root/my-chipyard/tests/rvv/bringup_tests/ms3p5_pureload.elf +whisper_path=/root/my-chipyard/sims/whisper/build-Linux/whisper +whisper_json_path=/root/my-chipyard/sims/cosim/bridge/whisper/config/bobcat.json +bootcode=/root/my-chipy\
+ard/sims/cosim/bootrom/bootrom +ntb_random_seed_automatic +verbose +fsdbfile=/root/my-chipyard/sims/vcs/output/chipyard.TestHarness.SmallBobcatConfig/ms3p5_pureload.fsdb +permissive-off /root/my-chipyard/tests/rvv/bringup_tests/ms3p5_pureload.elf
 simType = vcssv
 bSVTBMode = TRUE
 SimMode = TRUE
 interactiveDebugging = TRUE
 KeepBreakPoints = FALSE
 vcs_svPath = sims/vcs/simv-chipyard-SmallBobcatConfig-debug
-vcs_svOption = +permissive +cosim +dramsim +dramsim_ini_dir=/root/my-chipyard/generators/testchipip/src/main/resources/dramsim2_ini +max-cycles=10000000 +loadmem=/root/my-chipyard/sims/vcs/output/chipyard.TestHarness.SmallBobcatConfig/ms3p5_pureload.loadmem_hex +loadmem_\
-addr=80000000 +testfile=/root/my-chipyard/tests/rvv/bringup_tests/ms3p5_pureload.elf +whisper_path=/root/my-chipyard/sims/whisper/build-Linux/whisper +whisper_json_path=/root/my-chipyard/sims/cosim/bridge/whisper/config/bobcat.json +bootcode=/root/my-chipy\
-ard/sims/cosim/bootrom/bootrom +ntb_random_seed_automatic +verbose +fsdbfile=/root/my-chipyard/sims/vcs/output/chipyard.TestHarness.SmallBobcatConfig/ms3p5_pureload.fsdb +permissive-off /root/my-chipyard/tests/rvv/bringup_tests/ms3p5_pureload.elf
 [SimulationPlus2]
 eventDumpUnfinish = FALSE
 [Source]
@@ -684,28 +684,28 @@ isOneSearchVisible = TRUE
 [VIA.oneSearch.preference.vgifColumnSettingRC.setting0]
 parRuleSets = ""
 [VIA.oneSearch.preference.vgifColumnSettingRC.setting0.column0]
-name = Type
-width = 60
-visualIndex = 3
-isHidden = TRUE
-isUserChangeColumnVisible = FALSE
-[VIA.oneSearch.preference.vgifColumnSettingRC.setting0.column1]
-name = Message
-width = 2000
-visualIndex = 4
-isHidden = FALSE
-isUserChangeColumnVisible = FALSE
-[VIA.oneSearch.preference.vgifColumnSettingRC.setting0.column2]
 name = Time
 width = 60
 visualIndex = 0
 isHidden = TRUE
 isUserChangeColumnVisible = FALSE
-[VIA.oneSearch.preference.vgifColumnSettingRC.setting0.column3]
+[VIA.oneSearch.preference.vgifColumnSettingRC.setting0.column1]
 name = Code
 width = 60
 visualIndex = 2
 isHidden = TRUE
+isUserChangeColumnVisible = FALSE
+[VIA.oneSearch.preference.vgifColumnSettingRC.setting0.column2]
+name = Type
+width = 60
+visualIndex = 3
+isHidden = TRUE
+isUserChangeColumnVisible = FALSE
+[VIA.oneSearch.preference.vgifColumnSettingRC.setting0.column3]
+name = Message
+width = 2000
+visualIndex = 4
+isHidden = FALSE
 isUserChangeColumnVisible = FALSE
 [VIA.oneSearch.preference.vgifColumnSettingRC.setting0.column4]
 name = Severity
@@ -795,7 +795,7 @@ scope_to_save_with_macro
 open_file_dir
 open_rc_file_dir
 getSignalForm = 347 106 800 479 245 381 505 183
-viewPort = 0 25 1920 560 353 65
+viewPort = 0 25 1920 411 353 65
 legendBackground = -c ID_BLACK
 valueBackground = -c ID_BLACK
 curveBackground = -c ID_BLACK
@@ -1329,7 +1329,7 @@ AddImportArgument = FALSE
 LineBreakWithScope = TRUE
 StopAfterCompileOption = -s
 [wave.0]
-viewPort = 0 25 1920 560 353 65
+viewPort = 0 25 1920 411 353 65
 [wave.1]
 viewPort = 127 219 960 332 100 65
 [wave.2]

@@ -60,10 +60,10 @@ main:
 		  li x9, 8
                   vsetvli x8, x9, e64, m2
                   vmv.v.i v2, 12
-                  li x6, 0x80002010
+                  li x6, 0x80002000
                   vse64.v v2, (x6)
                   ld t2, (x6)
-                  vle64.v v3, (x6)
+                  vle64.v v4, (x6)
                   lui        t4, 655069
                   la x15, test_done
                   jalr x0, x15, 0

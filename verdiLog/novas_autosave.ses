@@ -26,15 +26,15 @@ fdb_campaign =
 fdb_tool = 
 [hb]
 postSimFile = /root/my-chipyard/sims/vcs/output/chipyard.TestHarness.SmallBobcatConfig/ms3p5_pureload.fsdb
-syncTime = 2231500
-viewport = 0 27 1920 977 0 0 215 1918
+syncTime = 2225500
+viewport = 0 27 1920 977 0 0 385 1918
 activeNode = "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.lsu"
 activeScope = "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.lsu"
 activeFile = "/root/my-chipyard/sims/vcs/generated-src/chipyard.TestHarness.SmallBobcatConfig/gen-collateral/LSU.sv"
 interactiveMode = False
 viewType = Source
 simulatorMode = False
-sourceBeginLine = 721
+sourceBeginLine = 4085
 baMode = False
 srcLineNum = True
 AutoWrap = True
@@ -52,6 +52,7 @@ leadingZero = False
 signalPane = False
 SourceVerticalScrollLines = 5
 Scope1 = "TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.lsu"
+multipleSelection = 1 4103 9 0 0
 sdfCheckUndef = FALSE
 simFlow = FALSE
 [hb.design]
@@ -60,13 +61,13 @@ invokeDir = /root/my-chipyard
 [hb.sourceTab.1]
 scope = TestDriver.testHarness.chiptop.system.tile_prci_domain.tile_reset_domain_boom_tile.lsu
 File = /root/my-chipyard/sims/vcs/generated-src/chipyard.TestHarness.SmallBobcatConfig/gen-collateral/LSU.sv
-Line = 722
+Line = 4086
 [nMemoryManager]
 WaveformFile = /root/my-chipyard/sims/vcs/output/chipyard.TestHarness.SmallBobcatConfig/ms3p5_pureload.fsdb
 UserActionNum = 0
 nMemWindowNum = 0
 [wave.0]
-viewPort = 0 25 1920 560 353 65
+viewPort = 0 25 1920 411 353 65
 primaryWindow = TRUE
 SessionFile = /root/my-chipyard/verdiLog/novas_autosave.ses.wave.0
 displayGrid = FALSE
