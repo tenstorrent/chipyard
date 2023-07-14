@@ -1,3 +1,0 @@
-make: Entering directory '/root/my-chipyard/sims/vcs'
-Running with RISCV=/chipyard/.conda-env/riscv-tools
-make: Leaving directory '/root/my-chipyard/sims/vcs'
