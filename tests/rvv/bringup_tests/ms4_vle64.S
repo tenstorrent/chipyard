@@ -57,8 +57,8 @@ init:
                   csrwi vxsat, 0
                   csrwi vxrm, 0
 main:
-		  li x9, 4
-                  vsetvli x8, x9, e64, m1
+		  li x9, 8
+                  vsetvli x8, x9, e64, m2
                   vmv.v.i v2, 12
                   li x6, 0x80002010
                   vse64.v v2, (x6)
