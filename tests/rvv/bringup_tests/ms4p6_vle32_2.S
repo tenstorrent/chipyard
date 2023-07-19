@@ -58,7 +58,7 @@ init:
                   csrwi vxrm, 0
 main:
 		  li x9, 64
-                  vsetvli x8, x9, e32, m8
+                  vsetvli x8, x9, e32, m2
                   vmv.v.i v2, 12
                   la x6, region_0
                   vse32.v v2, (x6)
