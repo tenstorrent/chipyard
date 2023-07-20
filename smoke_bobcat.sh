@@ -1,7 +1,7 @@
 #!/bin/bash
 
 commands=(
-  #"make -C sims/vcs clean"
+  "make -C sims/vcs clean"
 
   "make -C sims/vcs run-binary-hex CONFIG=SmallBoomConfig BINARY=$RISCV/riscv64-unknown-elf/share/riscv-tests/isa/rv64ui-p-lb SIM_FLAGS=\"+cosim\""
   "make -C sims/vcs run-binary-hex CONFIG=SmallBoomConfig BINARY=$RISCV/riscv64-unknown-elf/share/riscv-tests/isa/rv64ui-p-sb SIM_FLAGS=\"+cosim\""
