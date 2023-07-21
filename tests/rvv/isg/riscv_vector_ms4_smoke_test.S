@@ -325,7 +325,7 @@ vmv.v.v v24, v16
                   srli       t1, tp, 23
                   slti       zero, a2, -984
                   vpopc.m zero,v8,v0.t
-                  vfnmsac.vf v0,ft1,v4
+                  #vfnmsac.vf v0,ft1,v4
                   vlse32.v v24,(a3),t4 #end riscv_vector_load_store_instr_stream_0
                   la         t6, region_0+768 #start riscv_vector_load_store_instr_stream_83
                   vmsbc.vx   v2,v12,ra
