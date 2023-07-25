@@ -56,6 +56,7 @@ init:
                   la x4, user_stack_end
                   csrwi vxsat, 0
                   csrwi vxrm, 0
+                  csrwi fcsr, 0 // clears fcsr using a CSR instruction
 li x27, 8
                   vsetvli x24, x27, e32, m2
 vec_reg_init:
