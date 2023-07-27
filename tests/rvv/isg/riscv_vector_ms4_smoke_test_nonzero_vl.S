@@ -17597,7 +17597,6 @@ vec_loop_6:
                   sw x16, 4(x24)
                   la x24, region_0
                   la         a5, region_1+27392 #start riscv_vector_load_store_instr_stream_14
-                  vfncvt.f.xu.w v11,v0,v0.t
                   vse1.v v24,(a5) #end riscv_vector_load_store_instr_stream_14
                   la         t5, region_2+3360 #start riscv_vector_load_store_instr_stream_35
                   mulhsu     s7, s5, zero
@@ -17623,7 +17622,6 @@ vec_loop_6:
                   la         a5, region_2+2496
                   vwmacc.vx  v4,t5,v13,v0.t
                   vslide1up.vx v0,v21,s4
-                  vfncvt.f.f.w v3,v6,v0.t
                   vsbc.vvm   v16,v25,v25,v0
                   vwredsum.vs v8,v6,v18
                   vmacc.vx   v8,s9,v15
@@ -17663,7 +17661,6 @@ vec_loop_6:
                   vor.vx     v12,v16,ra
                   vredminu.vs v8,v14,v12,v0.t
                   mulhu      s11, t6, tp
-                  vfncvt.f.f.w v6,v14
                   vrsub.vi   v28,v20,0
                   vmor.mm    v24,v31,v29
                   vlse16.v v16,(a5),s1 #end riscv_vector_load_store_instr_stream_56
@@ -17726,7 +17723,6 @@ vec_loop_6:
                   vle32.v v24,(s4) #end riscv_vector_load_store_instr_stream_73
                   la         a3, region_0+576 #start riscv_vector_load_store_instr_stream_41
                   vnclip.wv  v21,v16,v15,v0.t
-                  vfncvt.rod.f.f.w v8,v6,v0.t
                   vse16.v v24,(a3) #end riscv_vector_load_store_instr_stream_41
                   li         t3, 0x48 #start riscv_vector_load_store_instr_stream_33
                   la         s2, region_1+50656
@@ -17739,7 +17735,6 @@ vec_loop_6:
                   la         ra, region_2+352 #start riscv_vector_load_store_instr_stream_42
                   vsaddu.vv  v19,v12,v2
                   vfnmsub.vf v24,fa0,v13
-                  vfncvt.f.xu.w v7,v18,v0.t
                   vmornot.mm v8,v6,v14
                   vmfge.vf   v25,v20,ft10
                   vnclipu.wi v14,v30,0
@@ -17757,7 +17752,6 @@ vec_loop_6:
                   vmul.vx    v15,v1,t2,v0.t
                   vcompress.vm v29,v26,v18
                   la         a4, region_0+400 #start riscv_vector_load_store_instr_stream_95
-                  vfncvt.f.x.w v6,v30
                   vmnor.mm   v9,v20,v7
                   sra        t0, a1, t4
                   lui        s0, 329554
@@ -17790,7 +17784,6 @@ vec_loop_6:
                   la         s5, region_0+2752
                   vfnmsub.vf v14,fa1,v1
                   vzext.vf2  v6,v12,v0.t
-                  vfncvt.f.f.w v7,v8
                   vmsbc.vv   v6,v9,v21
                   vfwredosum.vs v22,v7,v30
                   vslide1up.vx v6,v26,s3
@@ -17897,7 +17890,6 @@ vec_loop_6:
                   li         s6, 0x66 #start riscv_vector_load_store_instr_stream_3
                   la         t0, region_1+40368
                   vnsrl.wx   v31,v12,t3,v0.t
-                  vfncvt.f.x.w v15,v30,v0.t
                   vfmsac.vf  v18,fs5,v8
                   xor        s1, zero, t4
                   vmulhsu.vv v18,v2,v13,v0.t
@@ -17909,7 +17901,6 @@ vec_loop_6:
                   vfredmin.vs v1,v1,v28,v0.t
                   vsaddu.vi  v16,v31,0,v0.t
                   vmv.s.x v20,a2
-                  vfncvt.xu.f.w v8,v28
                   la         ra, region_0+3232 #start riscv_vector_load_store_instr_stream_64
                   vzext.vf2  v0,v23
                   sub        s4, a1, a0
@@ -17953,15 +17944,12 @@ vec_loop_6:
                   la         s4, region_2+768 #start riscv_vector_load_store_instr_stream_7
                   vmax.vx    v6,v0,s6
                   vfsgnjn.vv v26,v25,v22,v0.t
-                  vfncvt.f.x.w v2,v10
                   vfredsum.vs v2,v12,v20,v0.t
                   vslideup.vi v13,v20,0
-                  vfncvt.xu.f.w v13,v22,v0.t
                   mulhsu     t6, t4, s4
                   sltu       zero, s11, sp
                   vle32.v v18,(s4) #end riscv_vector_load_store_instr_stream_7
                   la         a2, region_0+448 #start riscv_vector_load_store_instr_stream_74
-                  vfncvt.x.f.w v7,v22
                   vsub.vv    v18,v10,v2,v0.t
                   vle32ff.v v8,(a2) #end riscv_vector_load_store_instr_stream_74
                   la         a2, region_0+1920 #start riscv_vector_load_store_instr_stream_71
@@ -18072,14 +18060,12 @@ vec_loop_6:
                   vfnmadd.vv v5,v30,v20,v0.t
                   vfredsum.vs v19,v13,v29,v0.t
                   vmv8r.v v24,v0
-                  vfncvt.xu.f.w v13,v18
                   mulhu      a4, s2, s10
                   vle1.v v24,(s2) #end riscv_vector_load_store_instr_stream_77
                   la         t3, region_0+2912 #start riscv_vector_load_store_instr_stream_68
                   vsadd.vv   v22,v11,v24,v0.t
                   vmslt.vx   v11,v21,s5,v0.t
                   sltu       s0, s9, s8
-                  vfncvt.x.f.w v27,v12,v0.t
                   vssub.vv   v13,v17,v14
                   vadc.vvm   v18,v25,v7,v0
                   vwsub.vx   v18,v8,sp
@@ -18123,7 +18109,6 @@ vec_loop_6:
                   li         t0, 0x10 #start riscv_vector_load_store_instr_stream_53
                   la         s2, region_0+2976
                   vmv.s.x v6,s11
-                  vfncvt.f.x.w v31,v2,v0.t
                   vfnmadd.vv v14,v10,v28
                   slti       a0, s9, 841
                   vmxor.mm   v17,v24,v1
@@ -18135,7 +18120,6 @@ vec_loop_6:
                   la         ra, region_1+39456 #start riscv_vector_load_store_instr_stream_67
                   vsbc.vxm   v20,v25,a4,v0
                   vsadd.vi   v5,v7,0
-                  vfncvt.f.x.w v2,v22
                   vfwredosum.vs v16,v18,v0
                   la         ra, region_0+1040 #start riscv_vector_load_store_instr_stream_66
                   xor        t6, t2, a5
@@ -18268,7 +18252,6 @@ vec_loop_6:
                   vmaxu.vx   v8,v31,a6,v0.t
                   vsaddu.vx  v11,v22,a1,v0.t
                   vwmaccus.vx v26,a3,v0
-                  vfncvt.xu.f.w v27,v16
                   vredsum.vs v23,v19,v15,v0.t
                   vwaddu.vv  v18,v27,v10,v0.t
                   vfnmacc.vv v30,v28,v25,v0.t
@@ -18351,7 +18334,6 @@ vec_loop_6:
                   vfwnmacc.vf v0,ft11,v25
                   vssub.vx   v16,v12,gp,v0.t
                   vmfle.vv   v26,v22,v19,v0.t
-                  vfncvt.f.x.w v4,v14,v0.t
                   vmsof.m v3,v0,v0.t
                   li         t3, 0x32 #start riscv_vector_load_store_instr_stream_37
                   la         a1, region_1+18192
@@ -18410,7 +18392,6 @@ vec_loop_6:
                   sltiu      t5, t0, -1005
                   vredmax.vs v22,v8,v3,v0.t
                   vand.vi    v8,v7,0
-                  vfncvt.f.xu.w v9,v12
                   vsext.vf2  v4,v12
                   vxor.vx    v12,v11,a7,v0.t
                   vadc.vim   v3,v5,0,v0
@@ -18421,7 +18402,6 @@ vec_loop_6:
                   add        t4, a3, a1
                   vslide1up.vx v2,v30,s0,v0.t
                   vor.vx     v14,v12,ra,v0.t
-                  vfncvt.xu.f.w v26,v6
                   vmandnot.mm v27,v21,v25
                   vmv.x.s zero,v23
                   vmin.vx    v1,v30,a0,v0.t
@@ -18464,7 +18444,6 @@ vec_loop_6:
                   vwredsum.vs v22,v16,v13,v0.t
                   li         s3, 0xa #start riscv_vector_load_store_instr_stream_2
                   la         t5, region_2+7312
-                  vfncvt.f.x.w v3,v16
                   vlse16.v v2,(t5),s3 #end riscv_vector_load_store_instr_stream_2
                   vredmaxu.vs v15,v3,v20
                   vmxnor.mm  v25,v6,v29
@@ -18523,7 +18502,6 @@ vec_loop_6:
                   vmfge.vf   v13,v14,fs11
                   vor.vi     v30,v3,0,v0.t
                   vwredsum.vs v26,v16,v20,v0.t
-                  vfncvt.f.x.w v12,v28,v0.t
                   vfwredosum.vs v8,v19,v6
                   vwmacc.vv  v14,v31,v27,v0.t
                   vmacc.vx   v0,t6,v15
@@ -18566,7 +18544,6 @@ vec_loop_6:
                   sltiu      t0, t2, 283
                   vfmacc.vv  v19,v8,v9,v0.t
                   vwredsumu.vs v2,v16,v21,v0.t
-                  vfncvt.f.xu.w v31,v10,v0.t
                   vwmacc.vx  v12,s8,v6
                   vnsra.wv   v20,v12,v29
                   vfredsum.vs v16,v5,v6
@@ -18580,7 +18557,6 @@ vec_loop_6:
                   vredsum.vs v27,v29,v18,v0.t
                   vfwmsac.vv v20,v30,v26,v0.t
                   vfmacc.vf  v15,ft5,v27
-                  vfncvt.f.xu.w v7,v2
                   vsadd.vv   v4,v23,v8
                   vslideup.vx v13,v28,s10,v0.t
                   sltu       gp, s5, sp
@@ -18627,15 +18603,12 @@ vec_loop_6:
                   vmadd.vv   v3,v2,v10
                   vmslt.vv   v21,v17,v28,v0.t
                   slt        a0, a5, a5
-                  vfncvt.xu.f.w v28,v20
                   vmaxu.vx   v31,v28,a1,v0.t
                   vfmul.vv   v25,v20,v16
                   vredmaxu.vs v16,v2,v18,v0.t
                   vredxor.vs v16,v20,v21,v0.t
-                  vfncvt.f.x.w v9,v10
                   srli       s11, s11, 24
                   viota.m v30,v25
-                  vfncvt.f.x.w v2,v4
                   vmulhu.vx  v17,v16,a2
                   remu       a2, gp, a0
                   vmsbc.vx   v15,v4,t3
@@ -18669,7 +18642,6 @@ vec_loop_6:
                   vsra.vx    v23,v13,a1
                   vmax.vx    v8,v14,s8,v0.t
                   vfwredsum.vs v4,v7,v10,v0.t
-                  vfncvt.xu.f.w v13,v14,v0.t
                   vnclipu.wv v27,v6,v1
                   vmul.vx    v28,v3,s7,v0.t
                   vfwredosum.vs v26,v28,v21
@@ -18684,7 +18656,6 @@ vec_loop_6:
                   vwredsum.vs v28,v23,v17
                   vmadd.vx   v6,t5,v5
                   vfmacc.vf  v9,fa5,v14,v0.t
-                  vfncvt.f.f.w v13,v8,v0.t
                   vrsub.vi   v2,v19,0,v0.t
                   srl        a7, t5, t3
                   vnclipu.wi v22,v6,0,v0.t
@@ -18695,7 +18666,6 @@ vec_loop_6:
                   vwsubu.vx  v4,v13,t6
                   mul        t5, a1, s0
                   vwaddu.wv  v14,v30,v24,v0.t
-                  vfncvt.f.x.w v21,v8
                   vmsne.vv   v4,v30,v8,v0.t
                   vzext.vf2  v12,v23
                   vfnmacc.vv v27,v9,v17
@@ -23389,7 +23359,6 @@ vec_loop_9:
                   la         s0, region_2+7208 #start riscv_vector_load_store_instr_stream_80
                   and        gp, t2, s5
                   srai       s8, a1, 14
-                  vfncvt.x.f.w v8,v20
                   sltiu      a4, t4, -345
                   srai       s9, a2, 23
                   sltiu      s5, ra, -816
@@ -23398,7 +23367,6 @@ vec_loop_9:
                   la         a1, region_0+800 #start riscv_vector_load_store_instr_stream_45
                   xori       s5, a7, -449
                   mulhsu     t1, t6, s9
-                  vfncvt.xu.f.w v28,v16,v0.t
                   div        s7, s3, a2
                   and        t1, s6, s11
                   andi       a3, t4, -635
@@ -23431,17 +23399,14 @@ vec_loop_9:
                   slti       a1, s3, -566
                   vse1.v v24,(t3) #end riscv_vector_load_store_instr_stream_29
                   la         a7, region_2+840 #start riscv_vector_load_store_instr_stream_98
-                  vfncvt.xu.f.w v12,v24
                   rem        s1, zero, s5
                   vle1.v v8,(a7) #end riscv_vector_load_store_instr_stream_98
                   la         t6, region_1+30960 #start riscv_vector_load_store_instr_stream_8
                   slt        s2, s6, a7
-                  vfncvt.x.f.w v12,v0,v0.t
                   sltiu      s6, a2, -277
                   lui        t3, 946446
                   mulh       a2, s3, s9
                   remu       t4, a7, s11
-                  vfncvt.x.f.w v4,v8,v0.t
                   rem        t3, sp, tp
                   lui        a2, 537965
                   sub        a1, s11, t3
@@ -23464,7 +23429,6 @@ vec_loop_9:
                   slli       t5, s9, 12
                   vs4r.v v12,(a3) #end riscv_vector_load_store_instr_stream_63
                   la         s9, region_0+2912 #start riscv_vector_load_store_instr_stream_81
-                  vfncvt.x.f.w v28,v0
                   xori       t6, s4, -761
                   srl        s11, s4, t1
                   srli       s7, s10, 24
@@ -23483,7 +23447,6 @@ vec_loop_9:
                   la         a0, region_0+1024
                   ori        t6, t5, -350
                   xori       s0, s9, -942
-                  vfncvt.xu.f.w v0,v24
                   slti       s8, t3, -215
                   slti       s9, s4, -73
                   add        s3, t1, a4
@@ -23513,13 +23476,11 @@ vec_loop_9:
                   sra        ra, a2, gp
                   add        s5, s8, t3
                   la         s4, region_0+3904 #start riscv_vector_load_store_instr_stream_58
-                  vfncvt.x.f.w v28,v12
                   sll        a2, tp, s3
                   divu       s0, t1, a1
                   mulhsu     ra, s10, ra
                   or         t3, a3, t2
                   sll        ra, s9, t6
-                  vfncvt.xu.f.w v8,v4,v0.t
                   slli       t5, a2, 16
                   divu       s7, t6, a7
                   mulhsu     s7, a3, tp
@@ -23527,9 +23488,7 @@ vec_loop_9:
                   la         a4, region_0+3888 #start riscv_vector_load_store_instr_stream_78
                   lui        s9, 1009188
                   mulhu      s5, s5, t5
-                  vfncvt.x.f.w v28,v12,v0.t
                   sub        zero, s6, a1
-                  vfncvt.x.f.w v16,v24
                   remu       s4, a5, s11
                   srli       a3, s11, 31
                   la         a5, region_0+720 #start riscv_vector_load_store_instr_stream_90
@@ -23546,7 +23505,6 @@ vec_loop_9:
                   rem        s9, t2, a2
                   la         gp, region_2+6368 #start riscv_vector_load_store_instr_stream_75
                   lui        s4, 791126
-                  vfncvt.x.f.w v12,v16,v0.t
                   vse8.v v12,(gp) #end riscv_vector_load_store_instr_stream_75
                   la         s5, region_2+768 #start riscv_vector_load_store_instr_stream_18
                   div        t0, a0, s7
@@ -23649,7 +23607,6 @@ vec_loop_9:
                   vse16.v v20,(a7) #end riscv_vector_load_store_instr_stream_37
                   la         t0, region_2+7504 #start riscv_vector_load_store_instr_stream_50
                   divu       s1, ra, tp
-                  vfncvt.xu.f.w v4,v12,v0.t
                   rem        s7, a2, s0
                   fence
                   vse8.v v12,(t0) #end riscv_vector_load_store_instr_stream_50
@@ -23680,9 +23637,7 @@ vec_loop_9:
                   la         s6, region_1+65360 #start riscv_vector_load_store_instr_stream_12
                   div        s9, a4, t0
                   srli       ra, a2, 5
-                  vfncvt.x.f.w v8,v4,v0.t
                   lui        s4, 18604
-                  vfncvt.xu.f.w v24,v20,v0.t
                   divu       s8, a5, sp
                   remu       s1, a4, s1
                   vle16.v v16,(s6) #end riscv_vector_load_store_instr_stream_12
@@ -23743,7 +23698,6 @@ vec_loop_9:
                   slt        t3, s10, s1
                   or         s11, s5, a1
                   srai       a4, a2, 3
-                  vfncvt.x.f.w v24,v4,v0.t
                   auipc      zero, 110823
                   mulh       t1, t1, s9
                   srai       s6, a1, 9
@@ -23775,7 +23729,6 @@ vec_loop_9:
                   andi       s11, s5, 402
                   add        s1, a5, a6
                   sltiu      s0, t1, 949
-                  vfncvt.x.f.w v24,v28
                   mulh       s6, a2, a7
                   vle8.v v18,(gp) #end riscv_vector_load_store_instr_stream_19
                   la         t5, region_0+416 #start riscv_vector_load_store_instr_stream_41
@@ -23812,7 +23765,6 @@ vec_loop_9:
                   la         s0, region_0+3784 #start riscv_vector_load_store_instr_stream_83
                   fence
                   slt        zero, s10, t2
-                  vfncvt.xu.f.w v24,v8
                   mulhu      t4, s0, a7
                   vse8.v v2,(s0) #end riscv_vector_load_store_instr_stream_83
                   la         t4, region_1+57880 #start riscv_vector_load_store_instr_stream_40
@@ -23829,7 +23781,6 @@ vec_loop_9:
                   la         a1, region_2+1552 #start riscv_vector_load_store_instr_stream_88
                   sra        zero, s9, s6
                   divu       a7, a3, sp
-                  vfncvt.x.f.w v8,v12,v0.t
                   sub        ra, s7, a6
                   andi       s3, s2, 667
                   slli       s5, s7, 4
@@ -23839,11 +23790,9 @@ vec_loop_9:
                   vle16.v v24,(a1) #end riscv_vector_load_store_instr_stream_88
                   la         a2, region_0+3272 #start riscv_vector_load_store_instr_stream_35
                   fence
-                  vfncvt.x.f.w v24,v4
                   xor        s4, s4, a7
                   li         s9, 0x3e #start riscv_vector_load_store_instr_stream_21
                   la         s7, region_0+1632
-                  vfncvt.xu.f.w v28,v12,v0.t
                   srl        a7, t2, t4
                   mulhsu     a1, t4, t6
                   div        a2, a0, a5
@@ -23851,7 +23800,6 @@ vec_loop_9:
                   vsse16.v v12,(s7),s9 #end riscv_vector_load_store_instr_stream_21
                   la         s3, region_1+23120 #start riscv_vector_load_store_instr_stream_3
                   remu       t4, tp, a0
-                  vfncvt.x.f.w v8,v24
                   xor        t1, s7, s0
                   mulhu      s6, s9, s1
                   xor        a3, t1, s0
@@ -23867,10 +23815,8 @@ vec_loop_9:
                   vlse16.v v24,(a2),a4 #end riscv_vector_load_store_instr_stream_10
                   la         s0, region_1+53936 #start riscv_vector_load_store_instr_stream_54
                   slli       s8, s11, 9
-                  vfncvt.xu.f.w v0,v16
                   vs8r.v v16,(s0) #end riscv_vector_load_store_instr_stream_54
                   la         s0, region_0+112 #start riscv_vector_load_store_instr_stream_70
-                  vfncvt.xu.f.w v24,v28,v0.t
                   sra        gp, zero, t0
                   vse1.v v24,(s0) #end riscv_vector_load_store_instr_stream_70
                   la         a2, region_1+53120 #start riscv_vector_load_store_instr_stream_92
@@ -23972,11 +23918,9 @@ vec_loop_9:
                   divu       a0, a4, gp
                   lui        s5, 8057
                   vsse8.v v8,(a3),s7 #end riscv_vector_load_store_instr_stream_57
-                  vfncvt.x.f.w v16,v8,v0.t
                   divu       s8, zero, s6
                   andi       s9, s4, -346
                   add        s11, t5, s7
-                  vfncvt.xu.f.w v24,v12,v0.t
                   la         t3, region_2+2192 #start riscv_vector_load_store_instr_stream_96
                   mulhu      s0, a5, s9
                   slli       a7, s1, 1
@@ -24015,7 +23959,6 @@ vec_loop_9:
                   rem        s9, gp, ra
                   slli       a7, s7, 19
                   divu       s3, s7, t0
-                  vfncvt.x.f.w v12,v24
                   srl        t6, a6, s9
                   remu       gp, tp, s0
                   srai       t6, s11, 30
@@ -24036,7 +23979,6 @@ vec_loop_9:
                   divu       a1, t0, a7
                   sltiu      t5, s2, 656
                   sll        gp, s11, s8
-                  vfncvt.xu.f.w v8,v4
                   srli       t1, s4, 29
                   vle8.v v8,(t3) #end riscv_vector_load_store_instr_stream_99
                   mulhsu     a1, s11, ra
@@ -24054,7 +23996,6 @@ vec_loop_9:
                   srli       zero, s9, 10
                   and        s2, s1, gp
                   srai       s7, s5, 9
-                  vfncvt.xu.f.w v20,v8,v0.t
                   srl        s1, a0, a7
                   slti       s8, a7, 80
                   ori        t6, s3, -176
@@ -24067,13 +24008,10 @@ vec_loop_9:
                   srai       ra, s2, 28
                   lui        sp, 475525
                   sltu       a1, a4, t6
-                  vfncvt.xu.f.w v0,v16
                   auipc      s6, 265363
                   mul        gp, a1, a5
-                  vfncvt.x.f.w v0,v24
                   srai       sp, a7, 23
                   mulhsu     s1, t3, a5
-                  vfncvt.xu.f.w v16,v28,v0.t
                   vse16.v v4,(t0) #end riscv_vector_load_store_instr_stream_74
                   srli       a4, t3, 31
                   divu       a1, t0, s4
@@ -24109,7 +24047,6 @@ vec_loop_9:
                   sltiu      s1, a3, 203
                   slt        t0, s5, t4
                   sll        s6, a2, gp
-                  vfncvt.xu.f.w v8,v12,v0.t
                   mulh       a1, s0, t3
                   xori       s11, s4, -852
                   sub        t0, s1, a0
@@ -24120,7 +24057,6 @@ vec_loop_9:
                   sra        sp, a6, a3
                   srli       a0, a2, 12
                   mulhsu     a7, t5, t6
-                  vfncvt.x.f.w v24,v4
                   auipc      s4, 802634
                   xor        t5, s9, s4
                   andi       s5, a1, 847
@@ -24128,7 +24064,6 @@ vec_loop_9:
                   rem        a1, s9, a0
                   mul        zero, s5, a4
                   xor        ra, a5, s7
-                  vfncvt.xu.f.w v24,v0,v0.t
                   sll        t0, s1, s10
                   rem        s7, s5, t0
                   mulhsu     zero, t3, t4
@@ -24168,7 +24103,6 @@ vec_loop_9:
                   xori       a3, s7, -190
                   rem        t3, s1, a6
                   slt        zero, s8, s4
-                  vfncvt.x.f.w v24,v12,v0.t
                   srai       t4, s0, 25
                   sltiu      a6, t4, -145
                   sra        a0, a1, ra
@@ -24182,7 +24116,6 @@ vec_loop_9:
                   sll        s8, a2, a2
                   remu       s0, a0, s2
                   mul        a7, sp, s8
-                  vfncvt.x.f.w v8,v16
                   andi       s6, zero, -130
                   xor        t4, a5, a0
                   fence
@@ -24235,7 +24168,6 @@ vec_loop_9:
                   mul        s2, a0, zero
                   andi       a1, s6, 973
                   fence
-                  vfncvt.xu.f.w v20,v28
                   addi       t5, s11, 695
                   ori        a7, sp, 107
                   divu       a3, t1, s9
@@ -24263,7 +24195,6 @@ vec_loop_9:
                   xori       t4, a7, 102
                   addi       s6, s0, -992
                   rem        s1, a6, t3
-                  vfncvt.x.f.w v24,v4,v0.t
                   srli       s2, gp, 27
                   divu       a4, s3, s0
                   sltiu      t4, a2, -141
@@ -24309,10 +24240,8 @@ vec_loop_9:
                   addi       a7, s7, -519
                   sra        t0, t0, ra
                   divu       s3, s5, ra
-                  vfncvt.x.f.w v8,v12
                   slti       s6, tp, -383
                   mulhsu     s7, s6, a2
-                  vfncvt.x.f.w v16,v0,v0.t
                   slti       gp, s11, -513
                   slli       t6, s1, 21
                   addi       s0, s3, 647
@@ -24320,10 +24249,8 @@ vec_loop_9:
                   mulhu      a6, tp, s7
                   sra        a0, a0, t5
                   mulh       s5, s7, s4
-                  vfncvt.xu.f.w v24,v4,v0.t
                   fence
                   srai       s8, zero, 31
-                  vfncvt.xu.f.w v20,v0
                   ori        zero, s7, -743
                   xor        gp, s9, a7
                   remu       s6, t0, gp
@@ -24332,7 +24259,6 @@ vec_loop_9:
                   slli       s11, a1, 10
                   sra        s3, t3, s6
                   divu       t0, s7, s1
-                  vfncvt.x.f.w v0,v16
                   mulh       s4, s2, a0
                   divu       s6, a3, a0
                   div        s6, s8, s2
@@ -24349,23 +24275,18 @@ vec_loop_9:
                   slli       s6, s11, 21
                   mulh       a7, t3, t0
                   and        s9, t6, s2
-                  vfncvt.xu.f.w v20,v28
-                  vfncvt.xu.f.w v24,v20,v0.t
                   slti       s5, s5, -452
                   mulhsu     s2, t2, gp
                   srai       a7, t3, 15
                   divu       t4, s3, t3
                   xor        a4, ra, s2
                   add        t5, s3, a6
-                  vfncvt.x.f.w v28,v24,v0.t
                   sra        s8, s8, gp
-                  vfncvt.xu.f.w v24,v0
                   or         t1, a7, a6
                   mulh       t3, t4, sp
                   sra        s9, a5, t1
                   divu       a1, a6, s1
                   slli       s11, zero, 22
-                  vfncvt.xu.f.w v20,v12,v0.t
                   ori        a2, s6, 1006
                   ori        t4, a6, 483
                   mulhu      s8, t6, s6
@@ -24378,7 +24299,6 @@ vec_loop_9:
                   fence
                   mul        s2, a4, a2
                   andi       s8, s2, 92
-                  vfncvt.x.f.w v20,v12,v0.t
                   fence
                   remu       zero, s4, s6
                   mulhsu     a0, s4, s0
@@ -24393,16 +24313,12 @@ vec_loop_9:
                   rem        s5, a0, a1
                   sltu       zero, t3, a0
                   add        a4, gp, s9
-                  vfncvt.xu.f.w v12,v0
-                  vfncvt.x.f.w v0,v24
                   xori       sp, zero, -170
                   sub        s3, tp, t5
                   auipc      s5, 805394
                   and        s11, t5, a3
-                  vfncvt.x.f.w v20,v8,v0.t
                   divu       a4, t1, s9
                   mul        s8, t3, s5
-                  vfncvt.xu.f.w v12,v4
                   div        a1, tp, s4
                   slli       s11, s11, 10
                   remu       s3, t0, a6
@@ -24458,11 +24374,9 @@ vec_loop_9:
                   mulh       a6, s2, a4
                   vle16.v v24,(a3) #end riscv_vector_load_store_instr_stream_26
                   ori        s2, t3, 534
-                  vfncvt.x.f.w v20,v12,v0.t
                   sltiu      s6, s7, -479
                   divu       t6, s5, s0
                   slti       a6, s10, -23
-                  vfncvt.xu.f.w v16,v12,v0.t
                   or         a1, t5, gp
                   mulh       t6, a3, t2
                   div        s11, a6, s6
@@ -42721,10 +42635,8 @@ vec_loop_14:
                   sw x16, 4(x24)
                   la x24, region_0
                   la         s9, region_2+5296 #start riscv_vector_load_store_instr_stream_60
-                  vfncvt.x.f.w v8,v28,v0.t
                   mulh       a3, a6, tp
                   fence
-                  vfncvt.x.f.w v28,v4
                   srli       s7, a1, 27
                   xor        s4, t0, s5
                   vle16.v v12,(s9) #end riscv_vector_load_store_instr_stream_60
@@ -42771,12 +42683,10 @@ vec_loop_14:
                   srli       t6, s5, 31
                   vse8.v v24,(s2) #end riscv_vector_load_store_instr_stream_37
                   la         s4, region_1+38480 #start riscv_vector_load_store_instr_stream_5
-                  vfncvt.xu.f.w v8,v0
                   vle8.v v20,(s4) #end riscv_vector_load_store_instr_stream_5
                   la         t1, region_0+1856 #start riscv_vector_load_store_instr_stream_11
                   mul        ra, s6, t0
                   slli       t6, tp, 16
-                  vfncvt.xu.f.w v24,v16
                   lui        s11, 398423
                   slli       a5, t4, 5
                   sub        s4, s1, s5
@@ -42787,7 +42697,6 @@ vec_loop_14:
                   lui        a4, 252169
                   fence
                   srli       s4, a7, 13
-                  vfncvt.xu.f.w v20,v4,v0.t
                   and        s2, ra, sp
                   rem        sp, t1, s1
                   mul        zero, gp, sp
@@ -42819,7 +42728,6 @@ vec_loop_14:
                   mulhsu     a1, s7, t0
                   vse8.v v16,(gp) #end riscv_vector_load_store_instr_stream_92
                   la         t5, region_1+59112 #start riscv_vector_load_store_instr_stream_67
-                  vfncvt.x.f.w v8,v20,v0.t
                   srl        a5, zero, a0
                   srl        s11, s3, s6
                   add        s2, ra, s3
@@ -42857,7 +42765,6 @@ vec_loop_14:
                   la         s6, region_2+6776 #start riscv_vector_load_store_instr_stream_61
                   div        gp, a5, s7
                   remu       s5, t2, s10
-                  vfncvt.x.f.w v16,v8
                   sub        t3, s8, s1
                   lui        s7, 390823
                   slt        s4, a4, s4
@@ -42867,7 +42774,6 @@ vec_loop_14:
                   vle8ff.v v24,(gp) #end riscv_vector_load_store_instr_stream_39
                   la         s0, region_0+1064 #start riscv_vector_load_store_instr_stream_54
                   mul        t4, t0, t6
-                  vfncvt.x.f.w v16,v24,v0.t
                   auipc      s2, 276310
                   lui        s8, 123855
                   sll        s3, ra, a1
@@ -42900,14 +42806,12 @@ vec_loop_14:
                   addi       gp, s5, 234
                   remu       s4, s5, a3
                   xori       s5, s9, -294
-                  vfncvt.x.f.w v16,v24
                   xor        a4, a2, t6
                   vse8.v v6,(t3) #end riscv_vector_load_store_instr_stream_76
                   la         s6, region_0+2608 #start riscv_vector_load_store_instr_stream_81
                   sub        t5, t2, t6
                   vse16.v v12,(s6) #end riscv_vector_load_store_instr_stream_81
                   la         s7, region_0+3328 #start riscv_vector_load_store_instr_stream_95
-                  vfncvt.xu.f.w v8,v16
                   rem        a1, s8, a3
                   srl        a3, s11, t3
                   rem        t0, a6, s6
@@ -42915,7 +42819,6 @@ vec_loop_14:
                   vse16.v v24,(s7) #end riscv_vector_load_store_instr_stream_95
                   li         t4, 0x33 #start riscv_vector_load_store_instr_stream_86
                   la         s3, region_2+2392
-                  vfncvt.x.f.w v0,v4
                   add        gp, gp, a3
                   sltiu      a4, tp, -374
                   xor        s4, a0, a7
@@ -42994,15 +42897,12 @@ vec_loop_14:
                   li         s1, 0x12 #start riscv_vector_load_store_instr_stream_79
                   la         s4, region_1+20464
                   sltu       s6, t2, t5
-                  vfncvt.xu.f.w v12,v4
                   rem        t3, ra, s8
-                  vfncvt.xu.f.w v28,v4
                   mul        a2, t4, ra
                   ori        gp, a7, -68
                   vlse8.v v16,(s4),s1 #end riscv_vector_load_store_instr_stream_79
                   li         a1, 0x30 #start riscv_vector_load_store_instr_stream_64
                   la         a4, region_2+2672
-                  vfncvt.x.f.w v0,v16
                   fence
                   rem        t1, s3, s4
                   ori        t0, s0, -778
@@ -43012,7 +42912,6 @@ vec_loop_14:
                   mulhsu     s0, a6, t3
                   vsse16.v v16,(a4),a1 #end riscv_vector_load_store_instr_stream_64
                   la         s9, region_0+176 #start riscv_vector_load_store_instr_stream_90
-                  vfncvt.xu.f.w v20,v0,v0.t
                   andi       t0, tp, 132
                   srai       t0, t6, 9
                   andi       s0, sp, 520
@@ -43050,7 +42949,6 @@ vec_loop_14:
                   mulh       ra, t4, t4
                   mul        s11, t1, a0
                   remu       s7, t6, s5
-                  vfncvt.xu.f.w v20,v16,v0.t
                   mul        a6, s10, s4
                   vse16.v v8,(s1) #end riscv_vector_load_store_instr_stream_46
                   la         s7, region_2+6416 #start riscv_vector_load_store_instr_stream_68
@@ -43085,7 +42983,6 @@ vec_loop_14:
                   la         t4, region_1+10384
                   fence
                   slli       a7, s2, 0
-                  vfncvt.xu.f.w v16,v4
                   vlse16.v v4,(t4),a2 #end riscv_vector_load_store_instr_stream_33
                   la         s9, region_2+968 #start riscv_vector_load_store_instr_stream_36
                   xori       a6, sp, -545
@@ -43150,10 +43047,8 @@ vec_loop_14:
                   la         t4, region_0+624 #start riscv_vector_load_store_instr_stream_34
                   mulhsu     a3, a5, sp
                   srai       t5, s0, 14
-                  vfncvt.xu.f.w v12,v8,v0.t
                   xor        a5, t5, a3
                   and        t0, t4, s4
-                  vfncvt.x.f.w v16,v28,v0.t
                   vle1.v v8,(t4) #end riscv_vector_load_store_instr_stream_34
                   la         t0, region_2+7120 #start riscv_vector_load_store_instr_stream_82
                   vle8.v v24,(t0) #end riscv_vector_load_store_instr_stream_82
@@ -43187,7 +43082,6 @@ vec_loop_14:
                   lui        sp, 273683
                   srl        a1, a1, gp
                   mul        t6, s3, s7
-                  vfncvt.x.f.w v28,v24
                   la         gp, region_1+29328 #start riscv_vector_load_store_instr_stream_93
                   vse16.v v16,(gp) #end riscv_vector_load_store_instr_stream_93
                   la         t0, region_2+4008 #start riscv_vector_load_store_instr_stream_8
@@ -43211,7 +43105,6 @@ vec_loop_14:
                   li         a0, 0x34 #start riscv_vector_load_store_instr_stream_89
                   la         t4, region_0+2304
                   div        s11, a5, s2
-                  vfncvt.x.f.w v12,v24,v0.t
                   sltiu      s2, a0, 503
                   fence
                   vsse16.v v16,(t4),a0 #end riscv_vector_load_store_instr_stream_89
@@ -43228,7 +43121,6 @@ vec_loop_14:
                   or         a0, s11, s5
                   mulh       t0, t2, a7
                   remu       a4, t3, a7
-                  vfncvt.xu.f.w v0,v20
                   srl        s6, a1, t1
                   vsse8.v v2,(gp),s2 #end riscv_vector_load_store_instr_stream_78
                   la         t4, region_1+40040 #start riscv_vector_load_store_instr_stream_32
@@ -43242,7 +43134,6 @@ vec_loop_14:
                   or         a0, ra, gp
                   auipc      a5, 769149
                   sltiu      a7, t5, -588
-                  vfncvt.xu.f.w v20,v24,v0.t
                   li         a1, 0x52 #start riscv_vector_load_store_instr_stream_70
                   la         t3, region_0+704
                   slli       t1, s9, 17
@@ -43265,7 +43156,6 @@ vec_loop_14:
                   vle8.v v4,(s1) #end riscv_vector_load_store_instr_stream_98
                   la         a7, region_2+6592 #start riscv_vector_load_store_instr_stream_2
                   or         s4, ra, gp
-                  vfncvt.x.f.w v4,v24
                   ori        s7, tp, 274
                   xor        s9, s9, a1
                   mulhsu     a0, a6, s10
@@ -43316,13 +43206,10 @@ vec_loop_14:
                   add        s0, s1, a2
                   srli       t0, s0, 19
                   slti       t3, t5, 720
-                  vfncvt.x.f.w v20,v16
                   slti       t3, t3, 592
                   vse8.v v16,(a3) #end riscv_vector_load_store_instr_stream_43
                   li         a2, 0x61 #start riscv_vector_load_store_instr_stream_40
                   la         s1, region_1+21344
-                  vfncvt.xu.f.w v4,v28
-                  vfncvt.x.f.w v8,v16,v0.t
                   li         a0, 0x72 #start riscv_vector_load_store_instr_stream_28
                   la         t5, region_1+26712
                   add        t3, a0, a6
@@ -43330,7 +43217,6 @@ vec_loop_14:
                   mulh       t3, s5, t2
                   fence
                   ori        s2, a2, -967
-                  vfncvt.x.f.w v20,v28,v0.t
                   and        zero, t3, t3
                   la         t5, region_2+3184 #start riscv_vector_load_store_instr_stream_35
                   vle8.v v24,(t5) #end riscv_vector_load_store_instr_stream_35
@@ -43369,7 +43255,6 @@ vec_loop_14:
                   sll        a2, t3, t5
                   slti       gp, a1, 499
                   srl        t4, a4, t0
-                  vfncvt.x.f.w v0,v20
                   mul        ra, s10, t2
                   vs2r.v v24,(s2) #end riscv_vector_load_store_instr_stream_24
                   slli       s9, s6, 20
@@ -43385,7 +43270,6 @@ vec_loop_14:
                   div        s4, a3, s1
                   sltiu      s0, zero, -700
                   mulhsu     gp, a7, a6
-                  vfncvt.xu.f.w v4,v20,v0.t
                   srai       a3, s0, 9
                   andi       s6, a4, -254
                   srl        a4, s2, a6
@@ -43405,7 +43289,6 @@ vec_loop_14:
                   remu       a4, s8, s10
                   sltu       s6, t4, s7
                   srli       ra, a3, 30
-                  vfncvt.xu.f.w v20,v8
                   srli       t6, a3, 7
                   add        a1, a6, t4
                   and        s6, s10, s10
@@ -43455,7 +43338,6 @@ vec_loop_14:
                   slt        a3, ra, zero
                   addi       a4, sp, 975
                   rem        gp, s5, s0
-                  vfncvt.x.f.w v24,v12
                   sub        a3, a2, a6
                   remu       a4, sp, s7
                   xori       sp, a5, 619
@@ -43475,7 +43357,6 @@ vec_loop_14:
                   sll        t6, s8, s3
                   mulhu      t4, gp, zero
                   slt        s11, a2, t2
-                  vfncvt.xu.f.w v28,v0,v0.t
                   mulh       s11, s11, a6
                   xori       a1, t0, -26
                   srl        s4, s2, a5
@@ -43510,13 +43391,10 @@ vec_loop_14:
                   slt        s3, tp, s5
                   sltiu      s9, s10, -868
                   mulh       t3, a4, a0
-                  vfncvt.x.f.w v4,v24
                   remu       t3, t5, s8
                   slt        a4, s8, s1
                   mulhsu     s2, a7, t1
-                  vfncvt.x.f.w v0,v20
                   srai       zero, t0, 15
-                  vfncvt.x.f.w v8,v16,v0.t
                   fence
                   add        t6, s2, gp
                   slti       t1, s8, -460
@@ -43558,13 +43436,11 @@ vec_loop_14:
                   ori        t1, gp, 624
                   andi       s8, ra, 0
                   srl        a4, a2, t3
-                  vfncvt.x.f.w v28,v12,v0.t
                   div        s2, t2, sp
                   and        sp, sp, gp
                   rem        t6, s8, gp
                   rem        a0, a2, s8
                   slli       s2, a3, 3
-                  vfncvt.x.f.w v0,v8
                   divu       t4, s10, s1
                   lui        zero, 860723
                   fence
@@ -43578,7 +43454,6 @@ vec_loop_14:
                   mulh       a2, s10, a0
                   slli       zero, t5, 14
                   and        s11, s0, s5
-                  vfncvt.xu.f.w v16,v12,v0.t
                   li         s9, 0x12 #start riscv_vector_load_store_instr_stream_94
                   la         a0, region_1+2736
                   andi       t6, s1, -604
@@ -43588,21 +43463,17 @@ vec_loop_14:
                   vsse16.v v12,(a0),s9 #end riscv_vector_load_store_instr_stream_94
                   sll        t5, s10, a0
                   sltiu      gp, sp, 51
-                  vfncvt.xu.f.w v28,v4,v0.t
                   srai       t4, s3, 6
                   sltiu      a1, a4, -922
                   sltiu      t0, s10, -230
-                  vfncvt.x.f.w v8,v12
                   div        s3, s1, tp
                   srli       a5, a1, 6
-                  vfncvt.xu.f.w v4,v24,v0.t
                   add        t3, gp, a6
                   slt        s5, t0, s9
                   or         t1, a6, s8
                   remu       ra, a2, s5
                   fence
                   sub        a2, t4, tp
-                  vfncvt.xu.f.w v12,v24,v0.t
                   mulh       zero, a6, a2
                   sra        s4, a1, t2
                   sll        a5, s7, t5
@@ -43612,7 +43483,6 @@ vec_loop_14:
                   slt        a0, a3, s11
                   mulh       t5, a6, a3
                   or         s0, t4, s1
-                  vfncvt.x.f.w v12,v20,v0.t
                   add        t4, t5, zero
                   fence
                   or         t3, s5, s4
@@ -43662,7 +43532,6 @@ vec_loop_14:
                   slti       s7, t5, 616
                   sra        sp, s2, t4
                   srai       sp, t3, 1
-                  vfncvt.xu.f.w v16,v20,v0.t
                   divu       a5, a1, s2
                   divu       sp, t6, a0
                   xor        a5, a5, a6
@@ -43671,13 +43540,10 @@ vec_loop_14:
                   rem        a3, s8, t5
                   slli       s0, t2, 11
                   or         a5, a0, s0
-                  vfncvt.xu.f.w v28,v4,v0.t
                   sra        sp, a7, t0
                   or         t6, a2, s8
                   add        t5, t1, s1
                   mul        s9, t2, t1
-                  vfncvt.xu.f.w v8,v20
-                  vfncvt.x.f.w v28,v8
                   fence
                   and        a0, t0, s9
                   sltu       s6, s0, gp
@@ -43695,7 +43561,6 @@ vec_loop_14:
                   or         sp, a2, s11
                   srli       s5, s6, 9
                   div        t4, ra, gp
-                  vfncvt.x.f.w v24,v8,v0.t
                   andi       s2, a6, -728
                   mulhu      s5, zero, s11
                   slti       t0, a3, 718
@@ -43712,13 +43577,11 @@ vec_loop_14:
                   xori       t0, s3, 339
                   sltiu      s9, t5, 990
                   mulhsu     t4, t1, zero
-                  vfncvt.xu.f.w v20,v4
                   srli       a6, t0, 26
                   sltiu      a6, ra, 53
                   andi       s7, tp, -486
                   slti       a1, a6, -206
                   mulh       s9, tp, s9
-                  vfncvt.xu.f.w v8,v28,v0.t
                   mulhu      a4, s6, s11
                   sra        s9, a4, a6
                   slli       t3, t5, 20
@@ -43730,13 +43593,11 @@ vec_loop_14:
                   mulhsu     t3, a2, s11
                   xor        zero, a4, t1
                   and        s6, gp, t0
-                  vfncvt.x.f.w v4,v8
                   srli       t3, zero, 26
                   sltiu      s3, s5, 99
                   mul        t3, s9, s5
                   sll        t3, s2, a7
                   ori        a2, t0, -647
-                  vfncvt.xu.f.w v0,v28
                   sltu       t5, ra, t6
                   slt        s1, t5, s3
                   mul        a6, gp, tp
@@ -43747,7 +43608,6 @@ vec_loop_14:
                   lui        t1, 267027
                   srai       gp, a5, 2
                   sra        a2, gp, s5
-                  vfncvt.xu.f.w v4,v8,v0.t
                   mulh       ra, s4, gp
                   mul        s1, s4, s7
                   la         a5, region_1+47832 #start riscv_vector_load_store_instr_stream_41
@@ -43773,7 +43633,6 @@ vec_loop_14:
                   remu       sp, s9, a3
                   div        a3, a6, s1
                   srl        a5, s6, s6
-                  vfncvt.xu.f.w v8,v20,v0.t
                   andi       a2, s3, -229
                   mulh       t6, ra, s1
                   sub        s9, s0, s10
@@ -43788,8 +43647,6 @@ vec_loop_14:
                   remu       a0, s10, s6
                   or         s9, t3, zero
                   slt        s1, s6, s11
-                  vfncvt.x.f.w v28,v16
-                  vfncvt.xu.f.w v24,v8
                   rem        t3, s11, s2
                   rem        s6, a3, zero
                   div        t4, a2, s2
@@ -43800,25 +43657,20 @@ vec_loop_14:
                   sll        t1, a7, s2
                   slt        a2, ra, s9
                   xori       s9, s10, 459
-                  vfncvt.xu.f.w v20,v0,v0.t
                   mulh       s8, s4, t5
                   xor        s0, s3, a7
-                  vfncvt.xu.f.w v16,v0
                   remu       a1, a2, a2
                   slti       a3, s4, 841
                   divu       a6, a3, zero
                   remu       s7, s11, a5
                   div        s5, t1, a2
                   rem        s4, a2, t4
-                  vfncvt.x.f.w v0,v16
                   slt        sp, s3, s8
-                  vfncvt.x.f.w v16,v20,v0.t
                   xori       gp, s0, 269
                   mulhu      a3, a0, t2
                   lui        s11, 912366
                   sll        s2, a7, s7
                   auipc      s9, 339147
-                  vfncvt.x.f.w v8,v12,v0.t
                   sub        a2, a0, a0
                   slt        s11, zero, t0
                   mulhsu     a4, a4, t5
@@ -43860,7 +43712,6 @@ vec_loop_14:
                   andi       s11, tp, 887
                   slli       a1, s5, 10
                   sltiu      a0, sp, -118
-                  vfncvt.x.f.w v28,v12
                   mulhsu     a4, a5, s3
                   mulhu      a2, t6, s1
                   sub        t0, a3, s8
@@ -43870,18 +43721,13 @@ vec_loop_14:
                   remu       a7, t4, t1
                   slti       t4, s4, -350
                   srli       a1, s11, 12
-                  vfncvt.xu.f.w v0,v8
-                  vfncvt.xu.f.w v28,v4,v0.t
-                  vfncvt.xu.f.w v28,v4,v0.t
                   andi       ra, t3, 854
                   sltu       a1, zero, t0
                   and        a3, a7, zero
                   mulhsu     a7, t3, zero
-                  vfncvt.x.f.w v8,v20
                   srai       t0, a5, 23
                   la         s3, region_0+1568 #start riscv_vector_load_store_instr_stream_44
                   srai       ra, t1, 30
-                  vfncvt.xu.f.w v16,v4
                   lui        zero, 299283
                   xori       s7, a7, -601
                   rem        s5, s2, a1
@@ -43903,7 +43749,6 @@ vec_loop_14:
                   srli       t5, s0, 30
                   xori       t5, s6, -841
                   addi       s11, gp, 400
-                  vfncvt.xu.f.w v0,v20
                   sltu       a7, s7, gp
                   mul        zero, a1, sp
                   lui        s8, 343328
