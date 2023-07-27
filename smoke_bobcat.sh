@@ -1,7 +1,7 @@
 #!/bin/bash
 
 commands=(
-  #"make -C sims/vcs clean"
+  "make -C sims/vcs clean"
 
   "make -C sims/vcs run-binary-hex CONFIG=SmallBoomConfig BINARY=$RISCV/riscv64-unknown-elf/share/riscv-tests/isa/rv64ui-p-lb SIM_FLAGS=\"+cosim\""
   "make -C sims/vcs run-binary-hex CONFIG=SmallBoomConfig BINARY=$RISCV/riscv64-unknown-elf/share/riscv-tests/isa/rv64ui-p-sb SIM_FLAGS=\"+cosim\""
@@ -31,7 +31,11 @@ commands=(
   "make -C sims/vcs run-binary-hex CONFIG=SmallBobcatConfig BINARY=/root/my-chipyard/tests/rvv/bringup_tests/ms4p5_vle64_2.elf SIM_FLAGS=\"+cosim\""
   "make -C sims/vcs run-binary-hex CONFIG=SmallBobcatConfig BINARY=/root/my-chipyard/tests/rvv/bringup_tests/ms4p6_vle32_2.elf SIM_FLAGS=\"+cosim\""
   "make -C sims/vcs run-binary-hex CONFIG=SmallBobcatConfig BINARY=/root/my-chipyard/tests/rvv/bringup_tests/ms4p6_vle32_8.elf SIM_FLAGS=\"+cosim\""
+  "make -C sims/vcs run-binary-hex CONFIG=SmallBobcatConfig BINARY=/root/my-chipyard/tests/rvv/bringup_tests/ms4p7_vlnr_vsnr.elf SIM_FLAGS=\"+cosim\""
+  "make -C sims/vcs run-binary-hex CONFIG=SmallBobcatConfig BINARY=/root/my-chipyard/tests/rvv/bringup_tests/ms4p8_vlm.elf SIM_FLAGS=\"+cosim\""
+  "make -C sims/vcs run-binary-hex CONFIG=SmallBobcatConfig BINARY=/root/my-chipyard/tests/rvv/bringup_tests/ms4p9_vl.elf SIM_FLAGS=\"+cosim\""
   "make -C sims/vcs run-binary-hex CONFIG=SmallBobcatConfig BINARY=/root/my-chipyard/tests/rvv/isg/riscv_vector_arithmetic_smoke_test.elf SIM_FLAGS=\"+cosim\""
+  "make -C sims/vcs run-binary-hex CONFIG=SmallBobcatConfig BINARY=/root/my-chipyard/tests/rvv/isg/riscv_vector_ms4_smoke_lite.elf SIM_FLAGS=\"+cosim\""
 
 )
 
