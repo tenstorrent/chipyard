@@ -57,11 +57,10 @@ init:
                   csrwi vxsat, 0
                   csrwi vxrm, 0
 main:
-		  li x9, 3
+		  li x9, 5
                   vsetvli x8, x9, e64, m1
-                  vmv.v.i v0, 15
-                  viota.m v0, v0
-                  vsll.vi v24, v0, 3
+                  vid.v v1
+                  vsll.vi v24, v1, 3
                   la x6, user_stack_start
 		  li x7, 32
                   vmv.v.i v8, 13

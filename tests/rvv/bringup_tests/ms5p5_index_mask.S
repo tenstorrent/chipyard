@@ -59,9 +59,8 @@ init:
 main:
 		  li x9, 3
                   vsetvli x8, x9, e64, m1
-                  vmv.v.i v0, 15
-                  viota.m v0, v0
-                  vsll.vi v24, v0, 3
+                  vid.v v1
+                  vsll.vi v24, v1, 3
                   vmv.v.i v0, 5
                   la x6, user_stack_start
 		  li x7, 32
