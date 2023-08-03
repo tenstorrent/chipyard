@@ -105,4 +105,5 @@ clean-sim-debug:
 
 clean-cosim:
 	$(MAKE) -C $(cosimdir) clean
-	$(MAKE) -C $(whisperdir) -f GNUmakefile clean
+	$(MAKE) -C $(whisperdir) SOFT_FLOAT=1 clean
+	rm -rf $(sim_dir)/libcosim.so

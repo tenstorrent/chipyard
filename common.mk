@@ -297,7 +297,6 @@ COSIM_OPTS = -LDFLAGS "-L$(sim_dir) -Wl,-rpath,$(sim_dir) -l$(cosimsoname)"
 $(cosimso):
 	$(MAKE) -C $(cosimdir)
 	cp $(cosimdir)/lib/libcosim.so $(cosimso)
-	$(MAKE) -C $(whisperdir) -f GNUmakefile
 
 #########################################################################################
 # helper rules to run simulations
