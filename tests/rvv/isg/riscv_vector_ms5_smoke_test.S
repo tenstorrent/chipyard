@@ -580,7 +580,7 @@ vsoxei32.v v4,(s6),v20 #end riscv_vector_load_store_instr_stream_31
                   vredor.vs  v18,v12,v28
                   vfrsub.vf  v18,v4,ft3
                   vmaxu.vv   v10,v26,v0
-                  #vfredsum.vs v4,v28,v8,v0.t
+                  vfredsum.vs v4,v28,v8,v0.t
                   srli       s9, s8, 24
                   vmsif.m v26,v24
                   vmv2r.v v20,v4
@@ -609,12 +609,12 @@ vsoxei32.v v4,(s6),v20 #end riscv_vector_load_store_instr_stream_31
                   div        zero, tp, ra
                   sltiu      t0, a4, 1021
                   mulh       gp, t0, s11
-                  #vfsgnjn.vf v4,v18,fa4
+                  vfsgnjn.vf v4,v18,fa4
                   vfirst.m zero,v0,v0.t
                   vfredsum.vs v10,v28,v16
                   vsse32.v v20,(s2),a4,v0.t #end riscv_vector_load_store_instr_stream_22
                   la         a5, region_1+11072 #start riscv_vector_load_store_instr_stream_20
-                  #vfsgnjn.vf v30,v26,ft8,v0.t
+                  vfsgnjn.vf v30,v26,ft8,v0.t
                   vaaddu.vv  v18,v10,v10
                   vmflt.vv   v18,v22,v22,v0.t
                   vmv.v.i v24, 0x0
@@ -780,7 +780,7 @@ vsuxei32.v v8,(s3),v16,v0.t #end riscv_vector_load_store_instr_stream_82
                   vmaxu.vv   v2,v8,v26
                   vmv.v.v v22,v6
                   vrgatherei16.vv v20,v28,v28,v0.t
-                  #vfredsum.vs v24,v26,v30,v0.t
+                  vfredsum.vs v24,v26,v30,v0.t
                   vsra.vv    v16,v2,v16,v0.t
                   add        a0, a1, s1
                   vmandnot.mm v26,v10,v14
@@ -1175,7 +1175,7 @@ vsoxei32.v v16,(s9),v30 #end riscv_vector_load_store_instr_stream_43
                   vfredmin.vs v26,v26,v18,v0.t
                   vsub.vv    v10,v18,v20,v0.t
                   vmsof.m v30,v18,v0.t
-                  #vfredsum.vs v20,v24,v4,v0.t
+                  vfredsum.vs v20,v24,v4,v0.t
                   vle32.v v16,(s0),v0.t #end riscv_vector_load_store_instr_stream_73
                   la         s5, region_0+2976 #start riscv_vector_load_store_instr_stream_1
                   vmsif.m v4,v26,v0.t
@@ -1452,7 +1452,7 @@ vsuxei32.v v16,(t0),v24 #end riscv_vector_load_store_instr_stream_27
                   vmacc.vv   v8,v28,v12,v0.t
                   vslidedown.vx v20,v12,s10
                   and        s3, s7, s3
-                  #vfredsum.vs v4,v4,v26,v0.t
+                  vfredsum.vs v4,v4,v26,v0.t
                   sltiu      a2, a5, -670
                   vredand.vs v18,v16,v28
                   sltiu      zero, a3, 828
@@ -1481,7 +1481,7 @@ vsuxei32.v v16,(t0),v24 #end riscv_vector_load_store_instr_stream_27
                   vfmadd.vv  v6,v4,v14
                   vmax.vv    v24,v30,v26,v0.t
                   addi       s7, s3, -364
-                  #vfsgnjn.vf v18,v22,ft9,v0.t
+                  vfsgnjn.vf v18,v22,ft9,v0.t
                   vssubu.vx  v8,v0,s4
                   lui        s11, 484647
                   vmnand.mm  v20,v28,v24
@@ -1722,7 +1722,7 @@ vsuxei32.v v8,(s3),v22 #end riscv_vector_load_store_instr_stream_94
                   vfmsac.vf  v8,ft11,v18,v0.t
                   vfnmacc.vv v26,v8,v18,v0.t
                   vmerge.vxm v2,v14,a5,v0
-                  #vfredsum.vs v20,v30,v20,v0.t
+                  vfredsum.vs v20,v30,v20,v0.t
                   vmulhsu.vx v8,v12,a5
                   vredor.vs  v26,v18,v26
                   vmacc.vv   v14,v26,v0
@@ -1758,7 +1758,7 @@ vsuxei32.v v8,(s3),v22 #end riscv_vector_load_store_instr_stream_94
                   vfnmadd.vv v30,v6,v16,v0.t
                   vslide1down.vx v0,v2,t2
                   vmor.mm    v10,v20,v26
-                  #vfsgnjn.vf v0,v16,ft7
+                  vfsgnjn.vf v0,v16,ft7
                   vmv.x.s zero,v26
                   vmfge.vf   v24,v6,ft8
                   vminu.vx   v8,v0,t0,v0.t
@@ -1814,7 +1814,7 @@ vsuxei32.v v8,(s3),v22 #end riscv_vector_load_store_instr_stream_94
                   vmornot.mm v28,v8,v14
                   sltu       a5, s1, gp
                   sltu       s8, s9, s7
-                  #vfsgnjn.vf v12,v2,ft2,v0.t
+                  vfsgnjn.vf v12,v2,ft2,v0.t
                   vredsum.vs v4,v12,v26,v0.t
                   viota.m v18,v4
                   vmfgt.vf   v14,v6,fa6,v0.t
@@ -1838,7 +1838,7 @@ vsuxei32.v v8,(s3),v22 #end riscv_vector_load_store_instr_stream_94
                   slli       t0, gp, 5
                   vfmin.vf   v18,v2,fs7,v0.t
                   mul        s11, s4, tp
-                  #vfsgnjn.vf v6,v14,ft2
+                  vfsgnjn.vf v6,v14,ft2
                   vmin.vx    v22,v16,t3
                   vmsltu.vv  v14,v4,v6,v0.t
                   vfmadd.vv  v10,v26,v2
@@ -2115,7 +2115,7 @@ vloxei32.v v8,(s5),v24 #end riscv_vector_load_store_instr_stream_32
                   vle1.v v8,(s3) #end riscv_vector_load_store_instr_stream_20
                   la         a5, region_1+51424 #start riscv_vector_load_store_instr_stream_0
                   vmsltu.vv  v0,v16,v8
-                  #vfsgnjn.vf v16,v0,fs8,v0.t
+                  vfsgnjn.vf v16,v0,fs8,v0.t
                   vfmsub.vv  v24,v16,v0
                   vredminu.vs v0,v0,v24
                   vmadc.vx   v24,v16,sp
@@ -3003,7 +3003,7 @@ vsoxei32.v v8,(gp),v24,v0.t #end riscv_vector_load_store_instr_stream_97
                   slt        s4, s4, t5
                   vmand.mm   v24,v16,v8
                   vrsub.vi   v0,v0,0
-                  #vfredsum.vs v8,v24,v8,v0.t
+                  vfredsum.vs v8,v24,v8,v0.t
                   vmornot.mm v0,v16,v8
                   vfredmin.vs v16,v8,v0
                   vse32.v v8,(a3) #end riscv_vector_load_store_instr_stream_86
@@ -4618,7 +4618,7 @@ vluxei32.v v8,(s3),v24,v0.t #end riscv_vector_load_store_instr_stream_84
                   vpopc.m zero,v24
                   vmnand.mm  v0,v0,v8
                   and        a0, t1, t4
-                  #vfsgnjn.vf v8,v16,fs7,v0.t
+                  vfsgnjn.vf v8,v16,fs7,v0.t
                   vmaxu.vv   v0,v8,v0
                   vmnand.mm  v16,v24,v16
                   vmv.v.x v0,t0
@@ -4777,7 +4777,7 @@ vsuxei32.v v8,(s3),v24 #end riscv_vector_load_store_instr_stream_76
                   vmsbf.m v16,v0
                   vredminu.vs v8,v8,v16
                   mulhsu     a1, s2, s5
-                  #vfredsum.vs v16,v24,v24,v0.t
+                  vfredsum.vs v16,v24,v24,v0.t
                   vse32.v v8,(s0) #end riscv_vector_load_store_instr_stream_92
                   la         t4, region_1+46208 #start riscv_vector_load_store_instr_stream_73
                   vadd.vi    v8,v8,0,v0.t
@@ -5037,7 +5037,7 @@ vsuxei32.v v8,(s3),v24 #end riscv_vector_load_store_instr_stream_76
                   vmfgt.vf   v16,v8,fs4,v0.t
                   vfclass.v v8,v24
                   auipc      s1, 60810
-                  #vfsgnjn.vf v8,v16,fs10
+                  vfsgnjn.vf v8,v16,fs10
                   vfcvt.f.x.v v8,v8,v0.t
                   vor.vv     v0,v8,v8
                   vmfge.vf   v8,v16,fs10
@@ -5086,7 +5086,7 @@ vsuxei32.v v8,(s3),v24 #end riscv_vector_load_store_instr_stream_76
                   vfmax.vf   v16,v16,fs0,v0.t
                   vmulhu.vx  v0,v0,s10
                   vmv.s.x v0,zero
-                  #vfsgnjn.vf v0,v0,ft9
+                  vfsgnjn.vf v0,v0,ft9
                   sltiu      t1, s7, 1023
                   vfcvt.x.f.v v8,v8
                   mul        s11, gp, a6
@@ -5107,7 +5107,7 @@ vsuxei32.v v8,(s3),v24 #end riscv_vector_load_store_instr_stream_76
                   vasubu.vx  v8,v16,s1,v0.t
                   addi       t1, t3, 980
                   vredmaxu.vs v0,v8,v8
-                  #vfsgnjn.vf v0,v0,fa5
+                  vfsgnjn.vf v0,v0,fa5
                   vfcvt.f.x.v v16,v8
                   sra        t3, s3, t1
                   vfcvt.f.x.v v0,v16
@@ -18032,7 +18032,7 @@ vec_loop_6:
                   vmulhsu.vx v28,v25,s6
                   vmulh.vv   v18,v11,v21,v0.t
                   vmxnor.mm  v28,v0,v18
-                  #vfredsum.vs v24,v11,v31,v0.t
+                  vfredsum.vs v24,v11,v31,v0.t
                   vfwadd.vv  v28,v11,v17
                   vs1r.v v20,(t3) #end riscv_vector_load_store_instr_stream_5
                   la         t1, region_1+55840 #start riscv_vector_load_store_instr_stream_16
@@ -18321,7 +18321,7 @@ vec_loop_6:
                   vmax.vx    v6,v0,s6
                   vfsgnjn.vv v26,v25,v22,v0.t
                   vfncvt.f.x.w v2,v10
-                  #vfredsum.vs v2,v12,v20,v0.t
+                  vfredsum.vs v2,v12,v20,v0.t
                   vslideup.vi v13,v20,0
                   vfncvt.xu.f.w v13,v22,v0.t
                   mulhsu     t6, t4, s4
@@ -18450,7 +18450,7 @@ vec_loop_6:
                   vssub.vv   v19,v16,v7,v0.t
                   vmv.v.x v19,s0
                   vfnmadd.vv v5,v30,v20,v0.t
-                  #vfredsum.vs v19,v13,v29,v0.t
+                  vfredsum.vs v19,v13,v29,v0.t
                   vmv8r.v v24,v0
                   vfncvt.xu.f.w v13,v18
                   mulhu      a4, s2, s10
@@ -18619,7 +18619,7 @@ vec_loop_6:
                   sra        t1, s8, s9
                   vzext.vf2  v22,v4,v0.t
                   vcompress.vm v3,v4,v31
-                  #vfredsum.vs v27,v20,v13,v0.t
+                  vfredsum.vs v27,v20,v13,v0.t
                   vfwnmacc.vf v6,fs9,v18,v0.t
                   vwmulu.vv  v0,v21,v23
                   vfsub.vf   v25,v19,fa1
@@ -18727,7 +18727,7 @@ vec_loop_6:
                   vmadd.vx   v1,s7,v30
                   vfnmacc.vv v4,v2,v4
                   viota.m v5,v8,v0.t
-                  #vfsgnjn.vf v8,v7,ft1
+                  vfsgnjn.vf v8,v7,ft1
                   vsext.vf2  v8,v7,v0.t
                   vmin.vx    v18,v10,a2
                   vfwredosum.vs v0,v21,v13
@@ -18980,7 +18980,7 @@ vec_loop_6:
                   vnsra.wv   v20,v12,v29
                   vfredsum.vs v16,v5,v6
                   vmsif.m v18,v26,v0.t
-                  #vfredsum.vs v3,v2,v22,v0.t
+                  vfredsum.vs v3,v2,v22,v0.t
                   vmsleu.vi  v18,v26,0
                   vadc.vvm   v11,v8,v24,v0
                   vmxor.mm   v23,v16,v24
@@ -19025,7 +19025,7 @@ vec_loop_6:
                   vfclass.v v19,v13,v0.t
                   vssubu.vx  v6,v5,t6
                   ori        s11, t2, 737
-                  #vfsgnjn.vf v19,v30,ft8
+                  vfsgnjn.vf v19,v30,ft8
                   vmerge.vim v15,v10,0,v0
                   vmv1r.v v30,v1
                   vsadd.vv   v9,v6,v21,v0.t
@@ -22778,7 +22778,7 @@ vec_loop_8:
                   vasubu.vv  v7,v19,v17,v0.t
                   addi       s0, a0, 947
                   slt        gp, s8, t2
-                  #vfsgnjn.vf v29,v28,fs11
+                  vfsgnjn.vf v29,v28,fs11
                   vmv2r.v v12,v20
                   vpopc.m zero,v2,v0.t
                   or         t3, a1, s2
@@ -22789,7 +22789,7 @@ vec_loop_8:
                   la         t0, region_0+192 #start riscv_vector_load_store_instr_stream_56
                   vmxor.mm   v13,v5,v17
                   vmulhsu.vv v0,v15,v29
-                  #vfredsum.vs v23,v9,v3,v0.t
+                  vfredsum.vs v23,v9,v3,v0.t
                   and        a4, s5, s11
                   vfsgnj.vv  v4,v16,v28,v0.t
                   vslideup.vi v27,v16,0
@@ -23408,7 +23408,7 @@ vec_loop_8:
                   vfcvt.f.xu.v v29,v29,v0.t
                   vaadd.vv   v11,v26,v3,v0.t
                   vmv8r.v v0,v16
-                  #vfsgnjn.vf v27,v23,fa5,v0.t
+                  vfsgnjn.vf v27,v23,fa5,v0.t
                   srli       a0, s10, 9
                   vrgather.vi v28,v26,0,v0.t
                   remu       s7, a2, s7
@@ -23456,7 +23456,7 @@ vec_loop_8:
                   xori       a0, t2, 817
                   vxor.vx    v9,v28,s1
                   srli       t5, a6, 3
-                  #vfredsum.vs v28,v22,v5,v0.t
+                  vfredsum.vs v28,v22,v5,v0.t
                   vpopc.m zero,v23,v0.t
                   mulhsu     a7, t2, tp
                   vfsgnj.vv  v3,v21,v26,v0.t
@@ -23465,7 +23465,7 @@ vec_loop_8:
                   vslidedown.vi v12,v13,0,v0.t
                   li         s4, 0x8 #start riscv_vector_load_store_instr_stream_51
                   la         s9, region_2+4048
-                  #vfsgnjn.vf v7,v14,fs11
+                  vfsgnjn.vf v7,v14,fs11
                   vmxor.mm   v23,v14,v5
                   vfmul.vf   v7,v3,fs2
                   vlse16.v v22,(s9),s4 #end riscv_vector_load_store_instr_stream_51
@@ -23486,7 +23486,7 @@ vec_loop_8:
                   vfmsub.vv  v7,v14,v18
                   vfredosum.vs v20,v7,v7
                   vmornot.mm v14,v10,v31
-                  #vfsgnjn.vf v28,v30,fs7,v0.t
+                  vfsgnjn.vf v28,v30,fs7,v0.t
                   slli       s3, a0, 4
                   vrgather.vv v27,v13,v20
                   vxor.vv    v21,v22,v6,v0.t
@@ -23818,7 +23818,7 @@ vec_loop_8:
                   vsll.vv    v20,v16,v0,v0.t
                   la         t0, region_1+59648 #start riscv_vector_load_store_instr_stream_20
                   vmand.mm   v29,v6,v2
-                  #vfredsum.vs v15,v19,v0,v0.t
+                  vfredsum.vs v15,v19,v0,v0.t
                   vmv8r.v v24,v24
                   vssubu.vx  v16,v29,t0,v0.t
                   vmxnor.mm  v8,v28,v12
@@ -42501,7 +42501,7 @@ vec_loop_13:
                   mulhu      t6, t0, s3
                   srai       a1, t4, 15
                   vmxor.mm   v10,v0,v22
-                  #vfredsum.vs v8,v8,v22,v0.t
+                  vfredsum.vs v8,v8,v22,v0.t
                   vlse32.v v8,(t5),t0 #end riscv_vector_load_store_instr_stream_32
                   la         s0, region_0+2784 #start riscv_vector_load_store_instr_stream_48
                   srl        s1, s11, a6
@@ -42957,7 +42957,7 @@ vec_loop_13:
                   vmulh.vv   v18,v20,v22,v0.t
                   ori        t6, t4, -446
                   vsub.vx    v16,v28,tp
-                  #vfsgnjn.vf v8,v20,fa3,v0.t
+                  vfsgnjn.vf v8,v20,fa3,v0.t
                   mul        s1, s7, s2
                   sub        ra, s10, gp
                   slli       s5, a0, 17
@@ -43099,7 +43099,7 @@ vec_loop_13:
                   vfmin.vf   v0,v2,ft9
                   divu       s4, tp, s8
                   mulhu      a2, t5, s10
-                  #vfsgnjn.vf v30,v10,fa7,v0.t
+                  vfsgnjn.vf v30,v10,fa7,v0.t
                   ori        a5, s7, -869
                   vmsbc.vv   v2,v12,v16
                   vmaxu.vx   v12,v22,s8,v0.t
@@ -50866,7 +50866,7 @@ vsuxei16.v v24,(t0),v6 #end riscv_vector_load_store_instr_stream_71
                   vle1.v v8,(a3) #end riscv_vector_load_store_instr_stream_1
                   la         gp, region_2+2208 #start riscv_vector_load_store_instr_stream_41
                   vredmin.vs v15,v29,v23
-                  #vfsgnjn.vf v2,v9,fs0,v0.t
+                  vfsgnjn.vf v2,v9,fs0,v0.t
                   viota.m v5,v18,v0.t
                   slli       t4, s10, 26
                   vse32.v v20,(gp) #end riscv_vector_load_store_instr_stream_41
@@ -51097,7 +51097,7 @@ vloxei32.v v8,(t5),v24 #end riscv_vector_load_store_instr_stream_42
                   vle32ff.v v4,(s0) #end riscv_vector_load_store_instr_stream_92
                   la         t3, region_2+1920 #start riscv_vector_load_store_instr_stream_93
                   vmfne.vv   v13,v21,v9,v0.t
-                  #vfredsum.vs v19,v10,v17,v0.t
+                  vfredsum.vs v19,v10,v17,v0.t
                   sub        s9, s5, ra
                   vmsbc.vvm  v26,v31,v6,v0
                   vse1.v v8,(t3) #end riscv_vector_load_store_instr_stream_93
@@ -51520,7 +51520,7 @@ vsuxei16.v v26,(s3),v21,v0.t #end riscv_vector_load_store_instr_stream_82
                   vmin.vx    v15,v16,t6
                   vle32ff.v v8,(t4) #end riscv_vector_load_store_instr_stream_30
                   la         s0, region_0+1456 #start riscv_vector_load_store_instr_stream_81
-                  #vfredsum.vs v21,v13,v0,v0.t
+                  vfredsum.vs v21,v13,v0,v0.t
                   srai       a5, t0, 31
                   or         a6, t3, a6
                   and        t3, s4, a0
@@ -52354,7 +52354,7 @@ vloxei32.v v4,(s1),v24,v0.t #end riscv_vector_load_store_instr_stream_0
                   vmand.mm   v17,v2,v21
                   vsbc.vxm   v18,v15,s6,v0
                   vredsum.vs v9,v0,v3,v0.t
-                  #vfsgnjn.vf v17,v6,fa4,v0.t
+                  vfsgnjn.vf v17,v6,fa4,v0.t
                   vmor.mm    v15,v26,v20
                   vminu.vx   v25,v23,t1,v0.t
                   vrgather.vi v11,v21,0
@@ -52427,7 +52427,7 @@ vloxei32.v v4,(s1),v24,v0.t #end riscv_vector_load_store_instr_stream_0
                   vmv.s.x v23,s8
                   vmul.vx    v26,v19,s0
                   vfcvt.f.xu.v v7,v5,v0.t
-                  #vfsgnjn.vf v25,v29,ft3,v0.t
+                  vfsgnjn.vf v25,v29,ft3,v0.t
                   vredsum.vs v0,v24,v11
                   sub        s8, s8, s9
                   vmin.vx    v11,v11,s2,v0.t
@@ -52465,7 +52465,7 @@ vloxei32.v v4,(s1),v24,v0.t #end riscv_vector_load_store_instr_stream_0
                   vssra.vi   v0,v16,0
                   vand.vi    v0,v14,0
                   vfmerge.vfm v16,v4,fa3,v0
-                  #vfredsum.vs v30,v30,v9,v0.t
+                  vfredsum.vs v30,v30,v9,v0.t
                   divu       a4, s2, zero
                   vmulh.vv   v2,v5,v31
                   vmsle.vi   v5,v19,0,v0.t
@@ -52670,7 +52670,7 @@ vloxei32.v v4,(s1),v24,v0.t #end riscv_vector_load_store_instr_stream_0
                   vfnmsac.vf v4,fa3,v4
                   vmul.vv    v31,v11,v5,v0.t
                   vadc.vvm   v10,v25,v4,v0
-                  #vfredsum.vs v29,v7,v2,v0.t
+                  vfredsum.vs v29,v7,v2,v0.t
                   vfcvt.f.xu.v v0,v22
                   vslidedown.vx v21,v30,tp
                   la         t5, region_1+20160 #start riscv_vector_load_store_instr_stream_50
@@ -52870,7 +52870,7 @@ vsuxei32.v v20,(a0),v26,v0.t #end riscv_vector_load_store_instr_stream_4
                   vse32.v v20,(t0) #end riscv_vector_load_store_instr_stream_12
                   la         s7, region_1+58272 #start riscv_vector_load_store_instr_stream_33
                   vfredmin.vs v24,v28,v30,v0.t
-                  #vfredsum.vs v22,v8,v20,v0.t
+                  vfredsum.vs v22,v8,v20,v0.t
                   vse32.v v16,(s7) #end riscv_vector_load_store_instr_stream_33
                   la         s1, region_0+3136 #start riscv_vector_load_store_instr_stream_20
                   vmsne.vx   v30,v0,t5
@@ -53122,7 +53122,7 @@ vsoxei32.v v12,(s7),v22,v0.t #end riscv_vector_load_store_instr_stream_91
                   vor.vi     v4,v28,0
                   vredor.vs  v28,v14,v22,v0.t
                   vsbc.vxm   v8,v6,a7,v0
-                  #vfsgnjn.vf v6,v28,ft10
+                  vfsgnjn.vf v6,v28,ft10
                   vmaxu.vv   v4,v12,v22,v0.t
                   vmxor.mm   v8,v4,v18
                   vfnmacc.vv v12,v12,v6
@@ -53309,7 +53309,7 @@ vsoxei32.v v12,(s2),v16 #end riscv_vector_load_store_instr_stream_98
                   vmadc.vi   v0,v26,0
                   vadc.vvm   v24,v6,v22,v0
                   vmax.vx    v30,v0,s5,v0.t
-                  #vfsgnjn.vf v4,v30,ft4,v0.t
+                  vfsgnjn.vf v4,v30,ft4,v0.t
                   ori        a7, t5, 453
                   sub        t5, tp, s11
                   fence
@@ -53659,7 +53659,7 @@ vsuxei32.v v8,(s9),v2 #end riscv_vector_load_store_instr_stream_55
                   vfrsub.vf  v28,v22,fa2
                   andi       s8, s0, 874
                   vfcvt.f.xu.v v24,v30,v0.t
-                  #vfsgnjn.vf v0,v24,fs8
+                  vfsgnjn.vf v0,v24,fs8
                   sub        a0, s0, s4
                   vslide1down.vx v10,v0,a4,v0.t
                   vle1.v v20,(s1) #end riscv_vector_load_store_instr_stream_73
@@ -53882,7 +53882,7 @@ vluxei32.v v24,(t6),v10,v0.t #end riscv_vector_load_store_instr_stream_29
                   vmand.mm   v26,v20,v26
                   vadc.vim   v26,v16,0,v0
                   add        s4, s10, s7
-                  #vfredsum.vs v30,v4,v2,v0.t
+                  vfredsum.vs v30,v4,v2,v0.t
                   vfmadd.vv  v26,v12,v10,v0.t
                   vid.v v4
                   vmax.vv    v6,v26,v6,v0.t
@@ -53993,7 +53993,7 @@ vluxei32.v v24,(t6),v10,v0.t #end riscv_vector_load_store_instr_stream_29
                   la         t1, region_1+7008
                   vasubu.vv  v8,v0,v10,v0.t
                   vmulhsu.vv v26,v12,v20
-                  #vfsgnjn.vf v20,v4,fa0,v0.t
+                  vfsgnjn.vf v20,v4,fa0,v0.t
                   sll        s0, s3, s5
                   vfmacc.vf  v26,fs7,v22,v0.t
                   vpopc.m zero,v22
@@ -54106,7 +54106,7 @@ vluxei32.v v24,(t6),v10,v0.t #end riscv_vector_load_store_instr_stream_29
                   vmin.vv    v24,v24,v22,v0.t
                   vmsgtu.vx  v20,v8,s7,v0.t
                   vmsif.m v2,v0
-                  #vfredsum.vs v8,v24,v18,v0.t
+                  vfredsum.vs v8,v24,v18,v0.t
                   vfmsac.vf  v18,fa2,v20
                   remu       a7, s6, t0
                   vmax.vx    v20,v4,s10
@@ -56269,7 +56269,7 @@ vloxei16.v v16,(s0),v4 #end riscv_vector_load_store_instr_stream_36
                   xor        s5, tp, s4
                   vmsltu.vx  v25,v10,s8,v0.t
                   vmv8r.v v16,v0
-                  #vfsgnjn.vf v28,v31,ft7,v0.t
+                  vfsgnjn.vf v28,v31,ft7,v0.t
                   vaaddu.vv  v27,v12,v15,v0.t
                   vfsgnjn.vv v16,v25,v10,v0.t
                   vmnand.mm  v31,v30,v4
@@ -56666,7 +56666,7 @@ vsoxei16.v v16,(t0),v28 #end riscv_vector_load_store_instr_stream_33
                   vfmsac.vf  v20,ft8,v14,v0.t
                   vfnmsac.vf v31,ft0,v21,v0.t
                   vredmaxu.vs v14,v9,v6
-                  #vfredsum.vs v31,v9,v19,v0.t
+                  vfredsum.vs v31,v9,v19,v0.t
                   vmsbf.m v15,v27
                   vle32.v v24,(s9) #end riscv_vector_load_store_instr_stream_60
                   la         t1, region_0+608 #start riscv_vector_load_store_instr_stream_11
@@ -56824,7 +56824,7 @@ vsuxei16.v v28,(a1),v2,v0.t #end riscv_vector_load_store_instr_stream_39
                   vrgather.vx v19,v23,t0
                   vslidedown.vi v9,v28,0
                   vsaddu.vi  v29,v29,0
-                  #vfredsum.vs v15,v4,v20,v0.t
+                  vfredsum.vs v15,v4,v20,v0.t
                   vfmv.f.s ft0,v14
                   vmfge.vf   v25,v11,fs3
                                     li x2, 8
@@ -57149,7 +57149,7 @@ vluxei16.v v24,(s7),v19 #end riscv_vector_load_store_instr_stream_66
                   vor.vv     v24,v6,v4
                   vfmacc.vf  v8,ft0,v31
                   mulh       a5, s10, sp
-                  #vfredsum.vs v24,v30,v6,v0.t
+                  vfredsum.vs v24,v30,v6,v0.t
                   rem        s9, a0, s3
                   vfmv.f.s ft0,v23
                   vslidedown.vx v17,v1,s2
@@ -57233,7 +57233,7 @@ vsuxei16.v v24,(ra),v10 #end riscv_vector_load_store_instr_stream_89
                   vaaddu.vv  v25,v19,v7
                   vfclass.v v12,v6
                   vor.vi     v13,v26,0
-                  #vfredsum.vs v8,v26,v26,v0.t
+                  vfredsum.vs v8,v26,v26,v0.t
                   sra        a4, t4, t3
                   slt        gp, s10, t1
                   rem        ra, a5, gp
