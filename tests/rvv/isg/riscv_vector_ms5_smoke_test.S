@@ -57977,7 +57977,7 @@ vsuxei16.v v18,(t1),v28,v0.t #end riscv_vector_load_store_instr_stream_59
                   vfcvt.xu.f.v v27,v21,v0.t
                   vmsbf.m v25,v24
                                     li x2, 8
-                  vsetvli x16, x2, e16, m1
+                  vsetvli x16, x2, e32, m1
 vmv.v.i v18, 0x0
 li s5, 0x0
 vslide1up.vx v6, v18, s5
@@ -58031,7 +58031,7 @@ vloxei32.v v8,(a7),v18 #end riscv_vector_load_store_instr_stream_34
                   vfcvt.f.xu.v v1,v18,v0.t
                   vslidedown.vx v16,v8,a1
                                     li x2, 8
-                  vsetvli x16, x2, e16, m1
+                  vsetvli x16, x2, e32, m1
 vmv.v.i v10, 0x0
 li a3, 0x73b8
 vslide1up.vx v8, v10, a3
@@ -58153,7 +58153,7 @@ vsuxei16.v v24,(a2),v3,v0.t #end riscv_vector_load_store_instr_stream_27
                   vmnor.mm   v29,v0,v12
                   vasub.vv   v23,v16,v1,v0.t
                                     li x2, 8
-                  vsetvli x16, x2, e16, m1
+                  vsetvli x16, x2, e32, m1
 vmv.v.i v8, 0x0
 li t6, 0x0
 vslide1up.vx v27, v8, t6
@@ -58260,7 +58260,7 @@ vsuxei32.v v20,(a3),v8 #end riscv_vector_load_store_instr_stream_79
                   vsadd.vx   v9,v30,a2
                   vmv8r.v v0,v8
                                     li x2, 8
-                  vsetvli x16, x2, e16, m1
+                  vsetvli x16, x2, e32, m1
 vmv.v.i v18, 0x0
 li a2, 0x0
 vslide1up.vx v28, v18, a2
@@ -58342,7 +58342,7 @@ vsoxei32.v v12,(a7),v18 #end riscv_vector_load_store_instr_stream_22
                   vmnand.mm  v4,v23,v9
                   vfredosum.vs v12,v9,v27
                                     li x2, 8
-                  vsetvli x16, x2, e16, m1
+                  vsetvli x16, x2, e32, m1
 vmv.v.i v18, 0x0
 li s4, 0x0
 vslide1up.vx v2, v18, s4
@@ -58799,7 +58799,7 @@ vluxei16.v v28,(t3),v8 #end riscv_vector_load_store_instr_stream_84
                   la         a2, region_0+832 #start riscv_vector_load_store_instr_stream_82
                   vslide1up.vx v0,v1,gp
                                     li x2, 8
-                  vsetvli x16, x2, e16, m1
+                  vsetvli x16, x2, e32, m1
 vmv.v.i v8, 0x0
 li s5, 0x0
 vslide1up.vx v22, v8, s5
@@ -59062,7 +59062,7 @@ vsuxei16.v v28,(a1),v2,v0.t #end riscv_vector_load_store_instr_stream_39
                   vfmv.f.s ft0,v14
                   vmfge.vf   v25,v11,fs3
                                     li x2, 8
-                  vsetvli x16, x2, e16, m1
+                  vsetvli x16, x2, e32, m1
 vmv.v.i v6, 0x0
 li a6, 0x0
 vslide1up.vx v27, v6, a6
