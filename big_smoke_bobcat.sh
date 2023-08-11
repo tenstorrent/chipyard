@@ -55,13 +55,19 @@ for cmd in "${commands[@]}"
 do
   echo "Executing: $cmd"
   output=$(eval $cmd 2>&1)
-  if [[ $output == *"Assertion failed"* ]] || [[ $output == *"Core Arch Checker Mismatch"* ]] || [[ $output == *"Register Mismatch"* ]]; then
+
+  # Extract the last lines of the output using `tail`
+  last_lines=$(echo "$output" | tail -10)
+
+  if [[ $last_lines != *"$finish"* ]]; then
     echo "$output"
     echo "*******************FAILED*******************"
+    echo "Expected '$finish' at the end of the printout, but it was not found."
     echo "$cmd"
     exit 1
   fi
 done
 
 echo "PASSED"
+
 
