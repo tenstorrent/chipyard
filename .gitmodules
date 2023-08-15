@@ -123,7 +123,7 @@
 	url = https://github.com/chipsalliance/cde.git
 [submodule "sims/cosim"]
 	path = sims/cosim
-	url = git@github.com:tenstorrent/cosim-arch-checker.git
+	url = https://github.com/tenstorrent/cosim-arch-checker.git
 [submodule "sims/whisper"]
 	path = sims/whisper
-	url = git@github.com:tenstorrent/whisper.git
+	url = https://github.com/tenstorrent/whisper.git
