@@ -11,6 +11,7 @@ parser = argparse.ArgumentParser(description="")
 parser.add_argument("--model-hier-json", type=str, required=True, help="Path to hierarchy JSON emitted by firtool. Must include DUT as a module.")
 parser.add_argument("--top-hier-json", type=str, required=True, help="Path to hierarchy JSON emitted by firtool. Must include DUT as a module.")
 parser.add_argument('--in-all-filelist', type=str, required=True, help='Path to input filelist that has all modules (relative paths).')
+parser.add_argument('--in-bb-filelist', type=str, required=True, help='Path to input blackbox filelist')
 parser.add_argument("--dut", type=str, required=True, help="Name of the DUT module.")
 parser.add_argument("--model", type=str, required=True, help="Name of the Model module.")
 parser.add_argument('--out-dut-filelist', type=str, required=True, help='Path to output filelist including all modules under the DUT.')
@@ -21,6 +22,7 @@ parser.add_argument("--gcpath", type=str, required=True, help="Path to gen-colla
 args = parser.parse_args()
 
 MODEL_SFX=args.model + "_UNIQUIFIED"
+SED=os.environ.get("SED", "sed")
 
 
 def bash(cmd):
@@ -76,8 +78,8 @@ def get_modules_in_verilog_file(file):
 
   return module_names
 
-def get_modules_in_filelist(verilog_module_filename, cc_filelist):
-  with open(args.in_all_filelist) as fl:
+def get_modules_in_filelist(filelist, verilog_module_filename, cc_filelist):
+  with open(filelist) as fl:
     lines = fl.readlines()
     for line in lines:
       path = line.strip()
@@ -129,7 +131,7 @@ def generate_copy(c, sfx):
   new_file = os.path.join(args.gcpath, new_file)
 
   shutil.copy(cur_file, new_file)
-  bash(f"sed -i s/\"module {cur_name}\"/\"module {new_name}\"/ {new_file}")
+  bash(rf"{SED} -i 's/module\( \+\){cur_name}/module\1{new_name}/' {new_file}")
   return new_file
 
 def bfs_uniquify_modules(tree, common_fnames, verilog_module_filename):
@@ -156,7 +158,7 @@ def bfs_uniquify_modules(tree, common_fnames, verilog_module_filename):
         new_file = generate_copy(cur_file, MODEL_SFX)
         if parent is not None and ((parent, mod) not in updated_submodule):
           parent_file = os.path.join(args.gcpath, verilog_module_filename[parent])
-          bash(f"sed -i s/\"{mod} \"/\"{mod}_{MODEL_SFX} \"/ {parent_file}")
+          bash(rf"{SED} -i 's/\( \*\){mod}\( \+\)/\1{mod}_{MODEL_SFX}\2/' {parent_file}")
           updated_submodule.add((parent, mod))
 
         # add the uniquified module to the verilog_modul_filename dict
@@ -205,7 +207,8 @@ def uniquify_modules_under_model(modules_under_model, common_modules, verilog_mo
 def main():
   verilog_module_filename = dict()
   cc_filelist = list()
-  get_modules_in_filelist(verilog_module_filename, cc_filelist)
+  get_modules_in_filelist(args.in_all_filelist, verilog_module_filename, cc_filelist)
+  get_modules_in_filelist(args.in_bb_filelist , verilog_module_filename, cc_filelist)
 
   modules_under_model = get_modules_under_hier(args.model_hier_json, args.dut)
   modules_under_top   = get_modules_under_hier(args.top_hier_json)
@@ -221,7 +224,7 @@ def main():
   # write model filelist
   write_verilog_filelist(uniquified_modules_under_model, verilog_module_filename, args.out_model_filelist)
   write_cc_filelist     (cc_filelist, args.out_model_filelist)
-  
+
 
 if __name__=="__main__":
   main()

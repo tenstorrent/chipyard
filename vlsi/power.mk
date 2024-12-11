@@ -6,7 +6,7 @@ POWER_PAR_HIER_CONF = $(OBJ_DIR)/power-par-$(VLSI_TOP)-inputs.yml
 
 .PHONY: $(POWER_CONF) $(POWER_RTL_CONF) $(POWER_SYN_CONF) $(POWER_PAR_CONF) $(POWER_PAR_HIER_CONF)
 
-$(POWER_CONF): $(VLSI_RTL)
+$(POWER_CONF): $(VLSI_RTL) check-binary
 	mkdir -p $(dir $@)
 	echo "power.inputs:" > $@
 	echo "  top_module: $(VLSI_TOP)" >> $@
@@ -15,15 +15,15 @@ $(POWER_CONF): $(VLSI_RTL)
 ifneq ($(BINARY), )
 	echo "  waveforms: [" >> $@
 ifndef USE_VPD
-	echo "    '$(sim_out_name).fsdb'" >> $@
+	echo "    '$(call get_sim_out_name,$(BINARY)).fsdb'" >> $@
 else
-	echo "    '$(sim_out_name).vpd'" >> $@
+	echo "    '$(call get_sim_out_name,$(BINARY)).vpd'" >> $@
 endif
 	echo "  ]" >> $@
 endif
 	echo "  start_times: ['0ns']" >> $@
 	echo "  end_times: [" >> $@
-	echo "    '`bc <<< $(timeout_cycles)*$(CLOCK_PERIOD)`ns'" >> $@
+	echo "    '`bc <<< $(TIMEOUT_CYCLES)*$(CLOCK_PERIOD)`ns'" >> $@
 	echo "  ]" >> $@
 
 $(POWER_RTL_CONF): $(VLSI_RTL)

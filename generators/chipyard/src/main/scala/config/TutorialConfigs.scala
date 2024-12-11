@@ -12,10 +12,6 @@ import scala.collection.immutable.ListMap
 // For each of 4 phases, participants will customize and build a
 // small demonstration config.
 
-// This file is designed to be used after running chipyard/scripts/tutorial-setup.sh,
-// which removes the SHA3 accelerator RTL, and provides participants
-// the experience of integrating external RTL.
-
 // This file was originally developed for the cancelled ASPLOS-2020
 // Chipyard tutorial. While the configs here work, the corresponding
 // slideware has not yet been created.
@@ -31,8 +27,8 @@ class TutorialStarterConfig extends Config(
   // CUSTOMIZE THE CORE
   // Uncomment out one (or multiple) of the lines below, and choose
   // how many cores you want.
-  // new freechips.rocketchip.subsystem.WithNBigCores(1) ++    // Specify we want some number of Rocket cores
-  // new boom.common.WithNSmallBooms(1) ++                     // Specify we want some number of BOOM cores
+  // new freechips.rocketchip.rocket.WithNHugeCores(1) ++    // Specify we want some number of Rocket cores
+  // new boom.v3.common.WithNSmallBooms(1) ++                     // Specify we want some number of BOOM cores
 
   // CUSTOMIZE the L2
   // Uncomment this line, and specify a size if you want to have a L2
@@ -50,34 +46,14 @@ class TutorialMMIOConfig extends Config(
   // new chipyard.example.WithGCD(useAXI4=true) ++  // Use AXI4 version
 
   // For this demonstration we assume the base system is a single-core Rocket, for fast elaboration
-  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new freechips.rocketchip.rocket.WithNHugeCores(1) ++
   new chipyard.config.AbstractConfig
 )
 
-// Tutorial Phase 3: Integrate a SHA3 RoCC accelerator
-class TutorialSha3Config extends Config(
-  // Uncomment this line once you added SHA3 to the build.sbt, and cloned the SHA3 repo
-  // new sha3.WithSha3Accel ++
-
-  // For this demonstration we assume the base system is a single-core Rocket, for fast elaboration
-  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
-  new chipyard.config.AbstractConfig
-)
-
-// Tutorial Phase 4: Integrate a Black-box verilog version of the SHA3 RoCC accelerator
-class TutorialSha3BlackBoxConfig extends Config(
-  // Uncomment these lines once SHA3 is integrated
-  // new sha3.WithSha3BlackBox ++ // Specify we want the Black-box verilog version of Sha3 Ctrl
-  // new sha3.WithSha3Accel ++
-
-  // For this demonstration we assume the base system is a single-core Rocket, for fast elaboration
-  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
-  new chipyard.config.AbstractConfig
-)
 
 // Tutorial Phase 5: Map a multicore heterogeneous SoC with multiple cores and memory-mapped accelerators
 class TutorialNoCConfig extends Config(
-  new chipyard.iobinders.WithDontTouchIOBinders(false) ++
+  new chipyard.harness.WithDontTouchChipTopPorts(false) ++
   // Try changing the dimensions of the Mesh topology
   new constellation.soc.WithGlobalNoC(constellation.soc.GlobalNoCParams(
     NoCParams(
@@ -90,14 +66,14 @@ class TutorialNoCConfig extends Config(
   // The inNodeMapping and outNodeMapping values are the physical identifiers of
   // routers on the topology to map the agents to. Try changing these to any
   // value within the range [0, topology.nNodes)
-  new constellation.soc.WithPbusNoC(constellation.protocol.TLNoCParams(
+  new constellation.soc.WithPbusNoC(constellation.protocol.GlobalTLNoCParams(
     constellation.protocol.DiplomaticNetworkNodeMapping(
       inNodeMapping = ListMap("Core" -> 7),
       outNodeMapping = ListMap(
         "pbus" -> 8, "uart" -> 9, "control" -> 10, "gcd" -> 11,
         "writeQueue[0]" -> 0, "writeQueue[1]" -> 1, "tailChain[0]" -> 2))
-  ), true) ++
-  new constellation.soc.WithSbusNoC(constellation.protocol.TLNoCParams(
+  )) ++
+  new constellation.soc.WithSbusNoC(constellation.protocol.GlobalTLNoCParams(
     constellation.protocol.DiplomaticNetworkNodeMapping(
       inNodeMapping = ListMap(
         "Core 0" -> 0, "Core 1" -> 1,
@@ -105,7 +81,7 @@ class TutorialNoCConfig extends Config(
       outNodeMapping = ListMap(
         "system[0]" -> 3, "system[1]" -> 4, "system[2]" -> 5, "system[3]" -> 6,
         "pbus" -> 7))
-  ), true) ++
+  )) ++
   new chipyard.example.WithGCD ++
   new chipyard.harness.WithLoopbackNIC ++
   new icenet.WithIceNIC ++
@@ -114,6 +90,6 @@ class TutorialNoCConfig extends Config(
   new chipyard.example.WithStreamingPassthrough ++
 
   new freechips.rocketchip.subsystem.WithNBanks(4) ++
-  new freechips.rocketchip.subsystem.WithNBigCores(2) ++
+  new freechips.rocketchip.rocket.WithNHugeCores(2) ++
   new chipyard.config.AbstractConfig
 )

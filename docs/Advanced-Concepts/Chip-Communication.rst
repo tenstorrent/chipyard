@@ -47,12 +47,12 @@ Using the Tethered Serial Interface (TSI)
 By default, Chipyard uses the Tethered Serial Interface (TSI) to communicate with the DUT.
 TSI protocol is an implementation of HTIF that is used to send commands to the RISC-V DUT.
 These TSI commands are simple R/W commands that are able to access the DUT's memory space.
-During simulation, the host sends TSI commands to a simulation stub in the test harness called ``SimSerial``
-(C++ class) that resides in a ``SimSerial`` Verilog module (both are located in the ``generators/testchipip``
+During simulation, the host sends TSI commands to a simulation stub in the test harness called ``SimTSI``
+(C++ class) that resides in a ``SimTSI`` Verilog module (both are located in the ``generators/testchipip``
 project).
-This ``SimSerial`` Verilog module then sends the TSI command recieved by the simulation stub
+This ``SimTSI`` Verilog module then sends the TSI command recieved by the simulation stub
 to an adapter that converts the TSI command into a TileLink request.
-This conversion is done by the ``SerialAdapter`` module (located in the ``generators/testchipip`` project).
+This conversion is done by the ``TSIToTileLink`` module (located in the ``generators/testchipip`` project).
 After the transaction is converted to TileLink, the ``TLSerdesser`` (located in ``generators/testchipip``) serializes the
 transaction and sends it to the chip (this ``TLSerdesser`` is sometimes also referred to as a digital serial-link or SerDes).
 Once the serialized transaction is received on the chip, it is deserialized and masters a TileLink bus on the chip
@@ -76,7 +76,7 @@ simulation stub called ``SimDTM`` (C++ class) that resides in a ``SimDTM`` Veril
 sends the DMI command recieved by the simulation stub into the DUT which then converts the DMI
 command into a TileLink request. This conversion is done by the DTM named ``DebugModule`` in the ``generators/rocket-chip`` project.
 When the DTM receives the program to load, it starts to write the binary byte-wise into memory.
-This is considerably slower than the TSI protocol communication pipeline (i.e. ``SimSerial``/``SerialAdapter``/TileLink)
+This is considerably slower than the TSI protocol communication pipeline (i.e. ``SimTSI``/``TSIToTileLink``/TileLink)
 which directly writes the program binary to memory.
 
 Starting the TSI or DMI Simulation
@@ -183,43 +183,18 @@ This new setup (shown below) is a typical Chipyard test chip setup:
 Simulation Setup of the Example Test Chip
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To test this type of configuration (TSI/memory transactions over the serial-link), most of the same TSI collateral
-would be used.
-The main difference is that the TileLink-to-AXI converters and simulated AXI memory resides on the other side of the
-serial-link.
+The standard test-chip bringup procedure tethers the chip to a FPGA config with serialized tilelink.
 
 .. image:: ../_static/images/chip-bringup-simulation.png
 
-.. note::
-    Here the simulated AXI memory and the converters can be in a different clock domain in the test harness
-    than the reference clock of the DUT.
-    For example, the DUT can be clocked at 3.2GHz while the simulated AXI memory can be clocked at 1GHz.
-    This functionality is done in the harness binder that instantiates the TSI collateral, TL-to-AXI converters,
-    and simulated AXI memory.
-    See :ref:`Advanced-Concepts/Harness-Clocks:Creating Clocks in the Test Harness` on how to generate a clock
-    in a harness binder.
+The entire bringup procedure can be simulated using the Multi-ChipTop simulation feature, where
+one ``ChipTop`` is the design-to-be-taped-out, while the other is the FPGA bringup design.
 
-This type of simulation setup is done in the following multi-clock configuration:
+This system can be generated and simulated with the following example configuration, which marries
+a ``ChipLikeRocketConfig`` (the design to be taped-out) with the ``ChipBringupHostConfig`` (the FPGA
+bringup design).
 
-.. literalinclude:: ../../generators/chipyard/src/main/scala/config/RocketConfigs.scala
+.. literalinclude:: ../../generators/chipyard/src/main/scala/config/ChipConfigs.scala
     :language: scala
-    :start-after: DOC include start: MulticlockAXIOverSerialConfig
-    :end-before: DOC include end: MulticlockAXIOverSerialConfig
-
-Bringup Setup of the Example Test Chip after Tapeout
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Assuming this example test chip is taped out and now ready to be tested, we can communicate with the chip using this serial-link.
-For example, a common test setup used at Berkeley to evaluate Chipyard-based test-chips includes an FPGA running a RISC-V soft-core that is able to speak to the DUT (over an FMC).
-This RISC-V soft-core would serve as the host of the test that will run on the DUT.
-This is done by the RISC-V soft-core running FESVR, sending TSI commands to a ``SerialAdapter`` / ``TLSerdesser`` programmed on the FPGA.
-Once the commands are converted to serialized TileLink, then they can be sent over some medium to the DUT
-(like an FMC cable or a set of wires connecting FPGA outputs to the DUT board).
-Similar to simulation, if the chip requests offchip memory, it can then send the transaction back over the serial-link.
-Then the request can be serviced by the FPGA DRAM.
-The following image shows this flow:
-
-.. image:: ../_static/images/chip-bringup.png
-
-In fact, this exact type of bringup setup is what the following section discusses:
-:ref:`Prototyping/VCU118:Introduction to the Bringup Design`.
+    :start-after: DOC include start: TetheredChipLikeRocketConfig
+    :end-before: DOC include end: TetheredChipLikeRocketConfig

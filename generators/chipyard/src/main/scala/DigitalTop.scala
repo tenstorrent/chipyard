@@ -13,13 +13,17 @@ import freechips.rocketchip.devices.tilelink._
 
 // DOC include start: DigitalTop
 class DigitalTop(implicit p: Parameters) extends ChipyardSystem
-  with testchipip.CanHavePeripheryCustomBootPin // Enables optional custom boot pin
-  with testchipip.HasPeripheryBootAddrReg // Use programmable boot address register
-  with testchipip.CanHaveTraceIO // Enables optionally adding trace IO
-  with testchipip.CanHaveBackingScratchpad // Enables optionally adding a backing scratchpad
-  with testchipip.CanHavePeripheryBlockDevice // Enables optionally adding the block device
-  with testchipip.CanHavePeripheryTLSerial // Enables optionally adding the backing memory and serial adapter
+  with testchipip.tsi.CanHavePeripheryUARTTSI // Enables optional UART-based TSI transport
+  with testchipip.boot.CanHavePeripheryCustomBootPin // Enables optional custom boot pin
+  with testchipip.boot.CanHavePeripheryBootAddrReg // Use programmable boot address register
+  with testchipip.cosim.CanHaveTraceIO // Enables optionally adding trace IO
+  with testchipip.soc.CanHaveBankedScratchpad // Enables optionally adding a banked scratchpad
+  with testchipip.iceblk.CanHavePeripheryBlockDevice // Enables optionally adding the block device
+  with testchipip.serdes.CanHavePeripheryTLSerial // Enables optionally adding the tl-serial interface
+  with testchipip.serdes.old.CanHavePeripheryTLSerial // Enables optionally adding the DEPRECATED tl-serial interface
+  with testchipip.soc.CanHavePeripheryChipIdPin // Enables optional pin to set chip id for multi-chip configs
   with sifive.blocks.devices.i2c.HasPeripheryI2C // Enables optionally adding the sifive I2C
+  with sifive.blocks.devices.timer.HasPeripheryTimer // Enables optionally adding the timer device
   with sifive.blocks.devices.pwm.HasPeripheryPWM // Enables optionally adding the sifive PWM
   with sifive.blocks.devices.uart.HasPeripheryUART // Enables optionally adding the sifive UART
   with sifive.blocks.devices.gpio.HasPeripheryGPIO // Enables optionally adding the sifive GPIOs
@@ -32,20 +36,14 @@ class DigitalTop(implicit p: Parameters) extends ChipyardSystem
   with chipyard.example.CanHavePeripheryStreamingPassthrough // Enables optionally adding the DSPTools streaming-passthrough example widget
   with nvidia.blocks.dla.CanHavePeripheryNVDLA // Enables optionally having an NVDLA
   with chipyard.clocking.HasChipyardPRCI // Use Chipyard reset/clock distribution
+  with chipyard.clocking.CanHaveClockTap // Enables optionally adding a clock tap output port
   with fftgenerator.CanHavePeripheryFFT // Enables optionally having an MMIO-based FFT block
   with constellation.soc.CanHaveGlobalNoC // Support instantiating a global NoC interconnect
+  with rerocc.CanHaveReRoCCTiles // Support tiles that instantiate rerocc-attached accelerators
 {
   override lazy val module = new DigitalTopModule(this)
 }
 
-class DigitalTopModule[+L <: DigitalTop](l: L) extends ChipyardSystemModule(l)
-  with testchipip.CanHaveTraceIOModuleImp
-  with sifive.blocks.devices.i2c.HasPeripheryI2CModuleImp
-  with sifive.blocks.devices.pwm.HasPeripheryPWMModuleImp
-  with sifive.blocks.devices.uart.HasPeripheryUARTModuleImp
-  with sifive.blocks.devices.gpio.HasPeripheryGPIOModuleImp
-  with sifive.blocks.devices.spi.HasPeripherySPIFlashModuleImp
-  with sifive.blocks.devices.spi.HasPeripherySPIModuleImp
-  with chipyard.example.CanHavePeripheryGCDModuleImp
+class DigitalTopModule(l: DigitalTop) extends ChipyardSystemModule(l)
   with freechips.rocketchip.util.DontTouch
 // DOC include end: DigitalTop

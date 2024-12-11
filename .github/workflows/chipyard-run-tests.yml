@@ -13,11 +13,9 @@ defaults:
 
 env:
   tools-cache-version: v17
-  CI_DIR: ${{ secrets.BUILDDIR }}
   JVM_OPTS: -Xmx3200m # Customize the JVM maximum heap limit
   conda-env-name-no-time: cy-${{ github.run_id }}
   workflow-timestamp: ${{ github.event.pull_request.updated_at }}
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   cancel-prior-workflows:
@@ -25,9 +23,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.11.0
+        uses: styfle/cancel-workflow-action@0.12.1
         with:
           access_token: ${{ github.token }}
+
+  start-workflow:
+    name: start-workflow
+    # unable to access env context in job.if thus have to put gh-a context expression directly here.
+    # note that the check is using a boolean true instead of string 'true' since it's directly using
+    # the expression not a variable like if checking against the env context string.
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'ci:disable') != true }}
+    runs-on: ubuntu-22.04
+    steps:
+      - run: true
 
   # Set up a set of boolean conditions to control which branches of the CI
   # workflow will execute This is based off the conditional job execution
@@ -35,15 +43,15 @@ jobs:
   change-filters:
     name: filter-jobs-on-changes
     runs-on: ubuntu-latest
+    needs: start-workflow
     # Queried by downstream jobs to determine if they should run.
     outputs:
       needs-rtl: ${{ steps.filter.outputs.all_count != steps.filter.outputs.skip-rtl_count }}
-
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
@@ -61,128 +69,15 @@ jobs:
               - '**/*.md'
               - '**/.gitignore'
               - '.github/ISSUE_TEMPLATE/**'
+              - '.github/PULL_REQUEST_TEMPLATE.md'
+              - '.github/dependabot.yml'
+              - '.mergify.yml'
 
-  commit-on-master-check:
-    name: commit-on-master-check
-    needs: change-filters
-    if: needs.change-filters.outputs.needs-rtl == 'true'
-    runs-on: ubuntu-latest
-    container:
-      image: ucbbar/chipyard-ci-image:3f9150
-      options: --entrypoint /bin/bash
-    steps:
-      - name: Delete old checkout
-        run: |
-            ls -alh .
-            rm -rf ${{ github.workspace }}/* || true
-            rm -rf ${{ github.workspace }}/.* || true
-            ls -alh .
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Git workaround
-        uses: ./.github/actions/git-workaround
-      - name: Create conda env
-        uses: ./.github/actions/create-conda-env
-      - name: Check commits of each submodule
-        run: |
-            conda activate ${{ env.conda-env-name-no-time }}-$(date --date "${{ env.workflow-timestamp }}" +%Y%m%d)-riscv-tools
-            .github/scripts/check-commit.sh
-
-  tutorial-setup-check:
-    name: tutorial-setup-check
-    needs: change-filters
-    if: needs.change-filters.outputs.needs-rtl == 'true'
-    runs-on: ubuntu-latest
-    container:
-      image: ucbbar/chipyard-ci-image:3f9150
-      options: --entrypoint /bin/bash
-    steps:
-      - name: Delete old checkout
-        run: |
-            ls -alh .
-            rm -rf ${{ github.workspace }}/* || true
-            rm -rf ${{ github.workspace }}/.* || true
-            ls -alh .
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Git workaround
-        uses: ./.github/actions/git-workaround
-      - name: Create conda env
-        uses: ./.github/actions/create-conda-env
-      - name: Check that the tutorial-setup patches apply
-        run: |
-            conda activate ${{ env.conda-env-name-no-time }}-$(date --date "${{ env.workflow-timestamp }}" +%Y%m%d)-riscv-tools
-            scripts/tutorial-setup.sh
-
-  documentation-check:
-    name: documentation-check
-    needs: change-filters
-    runs-on: ubuntu-latest
-    container:
-      image: ucbbar/chipyard-ci-image:3f9150
-      options: --entrypoint /bin/bash
-    steps:
-      - name: Delete old checkout
-        run: |
-            ls -alh .
-            rm -rf ${{ github.workspace }}/* || true
-            rm -rf ${{ github.workspace }}/.* || true
-            ls -alh .
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Git workaround
-        uses: ./.github/actions/git-workaround
-      - name: Create conda env
-        uses: ./.github/actions/create-conda-env
-      - name: Check that documentation builds with no warnings/errors
-        run: |
-          conda activate ${{ env.conda-env-name-no-time }}-$(date --date "${{ env.workflow-timestamp }}" +%Y%m%d)-riscv-tools
-          make -C docs html
-      - name: Show error log from sphinx if failed
-        if: ${{ failure() }}
-        run: cat /tmp/sphinx-err*.log
-
-  build-extra-tests:
-    name: build-extra-tests
-    needs: [change-filters]
-    if: needs.change-filters.outputs.needs-rtl == 'true'
-    runs-on: ubuntu-latest
-    container:
-      image: ucbbar/chipyard-ci-image:3f9150
-      options: --entrypoint /bin/bash
-    steps:
-      - name: Delete old checkout
-        run: |
-            ls -alh .
-            rm -rf ${{ github.workspace }}/* || true
-            rm -rf ${{ github.workspace }}/.* || true
-            ls -alh .
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Git workaround
-        uses: ./.github/actions/git-workaround
-      - name: Create conda env
-        uses: ./.github/actions/create-conda-env
-      - name: Generate keys
-        id: genkey
-        run: |
-          echo "::set-output name=extra-tests-cache-key::extra-tests-${{ github.sha }}"
-      - uses: actions/cache@v3
-        id: build-extra-tools-cache
-        with:
-          path: extra-tests-install
-          key: ${{ steps.genkey.outputs.extra-tests-cache-key }}
-          restore-keys: ${{ steps.genkey.outputs.extra-tests-cache-key }}
-      - name: Build extra tests
-        run: |
-            conda activate ${{ env.conda-env-name-no-time }}-$(date --date "${{ env.workflow-timestamp }}" +%Y%m%d)-riscv-tools
-            .github/scripts/build-extra-tests.sh
-
-  create-conda-env-knight:
-    name: create-conda-env-knight
+  create-conda-env-as4:
+    name: create-conda-env-as4
     needs: [change-filters, cancel-prior-workflows]
     if: needs.change-filters.outputs.needs-rtl == 'true'
-    runs-on: knight
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -191,28 +86,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
-      - name: Git workaround
-        uses: ./.github/actions/git-workaround
-      - name: Cleanup conda
-        uses: ./.github/actions/cleanup-conda
-      - name: Create conda env
-        uses: ./.github/actions/create-conda-env
-
-  create-conda-env-ferry:
-    name: create-conda-env-ferry
-    needs: [change-filters, cancel-prior-workflows]
-    if: needs.change-filters.outputs.needs-rtl == 'true'
-    runs-on: ferry
-    steps:
-      - name: Delete old checkout
-        run: |
-            ls -alh .
-            rm -rf ${{ github.workspace }}/* || true
-            rm -rf ${{ github.workspace }}/.* || true
-            ls -alh .
-      - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Cleanup conda
@@ -225,7 +99,7 @@ jobs:
   # When adding new prep jobs, please add them to `needs` below
   setup-complete:
     name: setup-complete
-    needs: [create-conda-env-knight, create-conda-env-ferry, build-extra-tests]
+    needs: [create-conda-env-as4]
     runs-on: ubuntu-latest
     steps:
       - name: Set up complete
@@ -233,10 +107,11 @@ jobs:
 
   ##########################################################################
 
-  prepare-chipyard-cores:
-    name: prepare-chipyard-cores
-    needs: setup-complete
-    runs-on: self-hosted
+  commit-on-master-check:
+    name: commit-on-master-check
+    needs: [setup-complete]
+    if: needs.change-filters.outputs.needs-rtl == 'true'
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -245,7 +120,87 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Check commits of each submodule
+        run: |
+            conda activate ${{ env.conda-env-name-no-time }}-$(date --date "${{ env.workflow-timestamp }}" +%Y%m%d)
+            .github/scripts/check-commit.sh
+
+  documentation-check:
+    name: documentation-check
+    needs: [setup-complete]
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Check that documentation builds with no warnings/errors
+        run: |
+          conda activate ${{ env.conda-env-name-no-time }}-$(date --date "${{ env.workflow-timestamp }}" +%Y%m%d)
+          make -C docs html
+      - name: Show error log from sphinx if failed
+        if: ${{ failure() }}
+        run: cat /tmp/sphinx-err*.log
+
+  build-extra-tests:
+    name: build-extra-tests
+    needs: [setup-complete]
+    if: needs.change-filters.outputs.needs-rtl == 'true'
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Generate keys
+        id: genkey
+        run: |
+          echo "extra-tests-cache-key=extra-tests-${{ github.sha }}" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4
+        id: build-extra-tools-cache
+        with:
+          path: extra-tests-install
+          key: ${{ steps.genkey.outputs.extra-tests-cache-key }}
+          restore-keys: ${{ steps.genkey.outputs.extra-tests-cache-key }}
+      - name: Build extra tests
+        run: |
+            conda activate ${{ env.conda-env-name-no-time }}-$(date --date "${{ env.workflow-timestamp }}" +%Y%m%d)
+            .github/scripts/build-extra-tests.sh
+
+  prepare-chipyard-cores:
+    name: prepare-chipyard-cores
+    needs: setup-complete
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -258,7 +213,7 @@ jobs:
   prepare-chipyard-constellation:
     name: prepare-chipyard-constellation
     needs: setup-complete
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -267,7 +222,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -280,7 +235,7 @@ jobs:
   prepare-chipyard-peripherals:
     name: prepare-chipyard-peripherals
     needs: setup-complete
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -289,7 +244,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -302,7 +257,7 @@ jobs:
   prepare-chipyard-accels:
     name: prepare-chipyard-accels
     needs: setup-complete
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -311,7 +266,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -324,7 +279,7 @@ jobs:
   prepare-chipyard-tracegen:
     name: prepare-chipyard-tracegen
     needs: setup-complete
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -333,7 +288,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -346,7 +301,7 @@ jobs:
   prepare-chipyard-other:
     name: prepare-chipyard-other
     needs: setup-complete
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -355,7 +310,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -368,7 +323,7 @@ jobs:
   prepare-chipyard-fpga:
     name: prepare-chipyard-fpga
     needs: setup-complete
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -377,7 +332,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -393,7 +348,7 @@ jobs:
   chipyard-spike-gemmini-run-tests:
     name: chipyard-spike-gemmini-run-tests
     needs: prepare-chipyard-accels # technically doesn't depend on RTL but should be after the build.sh for Gemmini
-    runs-on: ferry
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -402,27 +357,27 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
         uses: ./.github/actions/create-conda-env
       - name: Build Gemmini FireMarshal
         run: |
-          conda activate ${{ env.conda-env-name-no-time }}-$(date --date "${{ env.workflow-timestamp }}" +%Y%m%d)-riscv-tools
-          cd ${{ github.workspace }} && ./scripts/init-submodules-no-riscv-tools.sh --force
+          conda activate ${{ env.conda-env-name-no-time }}-$(date --date "${{ env.workflow-timestamp }}" +%Y%m%d)
+          cd ${{ github.workspace }} && ./scripts/init-submodules-no-riscv-tools.sh
           cd ${{ github.workspace }} && source ./scripts/fix-open-files.sh
           git submodule update --init software/firemarshal && cd software/firemarshal && ./init-submodules.sh
           cd ${{ github.workspace }}/generators/gemmini/software && ${{ github.workspace }}/software/firemarshal/marshal -v -d build gemmini-smoke.json
       - name: Running Gemmini FireMarshal smoke test
         run: |
-          conda activate ${{ env.conda-env-name-no-time }}-$(date --date "${{ env.workflow-timestamp }}" +%Y%m%d)-riscv-tools
+          conda activate ${{ env.conda-env-name-no-time }}-$(date --date "${{ env.workflow-timestamp }}" +%Y%m%d)
           cd ${{ github.workspace }}/generators/gemmini/software && ${{ github.workspace }}/software/firemarshal/marshal -v -d launch -s gemmini-smoke.json
 
   chipyard-rocket-run-tests:
     name: chipyard-rocket-run-tests
     needs: prepare-chipyard-cores
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -431,7 +386,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -442,10 +397,10 @@ jobs:
           group-key: "group-cores"
           project-key: "chipyard-rocket"
 
-  chipyard-hetero-run-tests:
-    name: chipyard-hetero-run-tests
+  chipyard-prefetchers-run-tests:
+    name: chipyard-prefetchers-run-tests
     needs: prepare-chipyard-cores
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -454,7 +409,30 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Run tests
+        uses: ./.github/actions/run-tests
+        with:
+          group-key: "group-cores"
+          project-key: "chipyard-prefetchers"
+
+  chipyard-hetero-run-tests:
+    name: chipyard-hetero-run-tests
+    needs: prepare-chipyard-cores
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -465,10 +443,10 @@ jobs:
           group-key: "group-cores"
           project-key: "chipyard-hetero"
 
-  chipyard-boom-run-tests:
-    name: chipyard-boom-run-tests
+  chipyard-boomv3-run-tests:
+    name: chipyard-boomv3-run-tests
     needs: prepare-chipyard-cores
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -477,7 +455,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -486,12 +464,12 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           group-key: "group-cores"
-          project-key: "chipyard-boom"
+          project-key: "chipyard-boomv3"
 
-  chipyard-cva6-run-tests:
-    name: chipyard-cva6-run-tests
+  chipyard-boomv4-run-tests:
+    name: chipyard-boomv4-run-tests
     needs: prepare-chipyard-cores
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -500,7 +478,53 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Run tests
+        uses: ./.github/actions/run-tests
+        with:
+          group-key: "group-cores"
+          project-key: "chipyard-boomv4"
+
+  chipyard-shuttle-run-tests:
+    name: chipyard-shuttle-run-tests
+    needs: prepare-chipyard-cores
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Run tests
+        uses: ./.github/actions/run-tests
+        with:
+          group-key: "group-cores"
+          project-key: "chipyard-shuttle"
+
+  chipyard-cva6-run-tests:
+    name: chipyard-cva6-run-tests
+    needs: prepare-chipyard-cores
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -514,7 +538,7 @@ jobs:
   chipyard-ibex-run-tests:
     name: chipyard-ibex-run-tests
     needs: prepare-chipyard-cores
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -523,7 +547,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -534,10 +558,10 @@ jobs:
           group-key: "group-cores"
           project-key: "chipyard-ibex"
 
-  chipyard-sodor-run-tests:
-    name: chipyard-sodor-run-tests
+  chipyard-vexiiriscv-run-tests:
+    name: chipyard-vexiiriscv-run-tests
     needs: prepare-chipyard-cores
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -546,7 +570,30 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Run tests
+        uses: ./.github/actions/run-tests
+        with:
+          group-key: "group-cores"
+          project-key: "chipyard-vexiiriscv"
+
+  chipyard-sodor-run-tests:
+    name: chipyard-sodor-run-tests
+    needs: prepare-chipyard-cores
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -560,7 +607,7 @@ jobs:
   chipyard-spike-run-tests:
     name: chipyard-spike-run-tests
     needs: prepare-chipyard-cores
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -569,7 +616,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -583,7 +630,7 @@ jobs:
   chipyard-dmirocket-run-tests:
     name: chipyard-dmirocket-run-tests
     needs: prepare-chipyard-peripherals
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -592,7 +639,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -603,10 +650,56 @@ jobs:
           group-key: "group-peripherals"
           project-key: "chipyard-dmirocket"
 
+  chipyard-dmiboomv3-run-tests:
+    name: chipyard-dmiboomv3-run-tests
+    needs: prepare-chipyard-peripherals
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Run tests
+        uses: ./.github/actions/run-tests
+        with:
+          group-key: "group-peripherals"
+          project-key: "chipyard-dmiboomv3"
+
+  chipyard-dmiboomv4-run-tests:
+    name: chipyard-dmiboomv4-run-tests
+    needs: prepare-chipyard-peripherals
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Run tests
+        uses: ./.github/actions/run-tests
+        with:
+          group-key: "group-peripherals"
+          project-key: "chipyard-dmiboomv4"
+
   chipyard-spiflashwrite-run-tests:
     name: chipyard-spiflashwrite-run-tests
     needs: prepare-chipyard-peripherals
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -615,7 +708,7 @@ jobs:
           rm -rf ${{ github.workspace }}/.* || true
           ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -629,7 +722,7 @@ jobs:
   chipyard-manyperipherals-run-tests:
     name: chipyard-manyperipherals-run-tests
     needs: prepare-chipyard-peripherals
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -638,7 +731,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -649,10 +742,10 @@ jobs:
           group-key: "group-peripherals"
           project-key: "chipyard-manyperipherals"
 
-  chipyard-sha3-run-tests:
-    name: chipyard-sha3-run-tests
-    needs: prepare-chipyard-accels
-    runs-on: self-hosted
+  chipyard-tethered-run-tests:
+    name: chipyard-tethered-run-tests
+    needs: prepare-chipyard-peripherals
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -661,7 +754,76 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Run tests
+        uses: ./.github/actions/run-tests
+        with:
+          group-key: "group-peripherals"
+          project-key: "chipyard-tethered"
+
+  chipyard-symmetric-run-tests:
+    name: chipyard-symmetric-run-tests
+    needs: prepare-chipyard-peripherals
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Run tests
+        uses: ./.github/actions/run-tests
+        with:
+          group-key: "group-peripherals"
+          project-key: "chipyard-symmetric"
+
+  chipyard-llcchiplet-run-tests:
+    name: chipyard-llcchiplet-run-tests
+    needs: prepare-chipyard-peripherals
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Run tests
+        uses: ./.github/actions/run-tests
+        with:
+          group-key: "group-peripherals"
+          project-key: "chipyard-llcchiplet"
+
+  chipyard-rerocc-run-tests:
+    name: chipyard-rerocc-run-tests
+    needs: prepare-chipyard-accels
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -670,12 +832,12 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           group-key: "group-accels"
-          project-key: "chipyard-sha3"
+          project-key: "chipyard-rerocc"
 
-  chipyard-gemmini-run-tests:
-    name: chipyard-gemmini-run-tests
+  chipyard-rocketvector-run-tests:
+    name: chipyard-rocketvector-run-tests
     needs: prepare-chipyard-accels
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -684,7 +846,53 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Run tests
+        uses: ./.github/actions/run-tests
+        with:
+          group-key: "group-accels"
+          project-key: "chipyard-rocketvector"
+
+  chipyard-shuttlevector-run-tests:
+    name: chipyard-shuttlevector-run-tests
+    needs: prepare-chipyard-accels
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Run tests
+        uses: ./.github/actions/run-tests
+        with:
+          group-key: "group-accels"
+          project-key: "chipyard-shuttlevector"
+
+  chipyard-gemmini-run-tests:
+    name: chipyard-gemmini-run-tests
+    needs: prepare-chipyard-accels
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -698,7 +906,7 @@ jobs:
   chipyard-manymmioaccels-run-tests:
     name: chipyard-manymmioaccels-run-tests
     needs: prepare-chipyard-accels
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -707,7 +915,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -718,10 +926,33 @@ jobs:
           group-key: "group-accels"
           project-key: "chipyard-manymmioaccels"
 
+  # chipyard-nvdla-run-tests:
+  #   name: chipyard-nvdla-run-tests
+  #   needs: prepare-chipyard-accels
+  #   runs-on: as4
+  #   steps:
+  #     - name: Delete old checkout
+  #       run: |
+  #           ls -alh .
+  #           rm -rf ${{ github.workspace }}/* || true
+  #           rm -rf ${{ github.workspace }}/.* || true
+  #           ls -alh .
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #     - name: Git workaround
+  #       uses: ./.github/actions/git-workaround
+  #     - name: Create conda env
+  #       uses: ./.github/actions/create-conda-env
+  #     - name: Run tests
+  #       uses: ./.github/actions/run-tests
+  #       with:
+  #         group-key: "group-accels"
+  #         project-key: "chipyard-nvdla"
+
   chipyard-mempress-run-tests:
     name: chipyard-mempress-run-tests
     needs: prepare-chipyard-accels
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -730,7 +961,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -741,11 +972,10 @@ jobs:
           group-key: "group-accels"
           project-key: "chipyard-mempress"
 
-
-  tracegen-boom-run-tests:
-    name: tracegen-boom-run-tests
-    needs: prepare-chipyard-tracegen
-    runs-on: self-hosted
+  chipyard-compressacc-run-tests:
+    name: chipyard-compressacc-run-tests
+    needs: prepare-chipyard-accels
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -754,7 +984,31 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Run tests
+        uses: ./.github/actions/run-tests
+        with:
+          group-key: "group-accels"
+          project-key: "chipyard-compressacc"
+
+
+  tracegen-boomv3-run-tests:
+    name: tracegen-boomv3-run-tests
+    needs: prepare-chipyard-tracegen
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -763,12 +1017,12 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           group-key: "group-tracegen"
-          project-key: "tracegen-boom"
+          project-key: "tracegen-boomv3"
 
-  tracegen-run-tests:
-    name: tracegen-run-tests
+  tracegen-boomv4-run-tests:
+    name: tracegen-boomv4-run-tests
     needs: prepare-chipyard-tracegen
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -777,7 +1031,30 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Run tests
+        uses: ./.github/actions/run-tests
+        with:
+          group-key: "group-tracegen"
+          project-key: "tracegen-boomv4"
+
+  tracegen-run-tests:
+    name: tracegen-run-tests
+    needs: prepare-chipyard-tracegen
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -791,7 +1068,7 @@ jobs:
   icenet-run-tests:
     name: icenet-run-tests
     needs: prepare-chipyard-other
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -800,7 +1077,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -814,7 +1091,7 @@ jobs:
   testchipip-run-tests:
     name: testchipip-run-tests
     needs: prepare-chipyard-other
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -823,7 +1100,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -834,10 +1111,10 @@ jobs:
           group-key: "group-other"
           project-key: "testchipip"
 
-  constellation-run-tests:
-    name: constellation-run-tests
+  rocketchip-run-tests:
+    name: rocketchip-run-tests
     needs: prepare-chipyard-other
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -846,7 +1123,46 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+      - name: Git workaround
+        uses: ./.github/actions/git-workaround
+      - name: Create conda env
+        uses: ./.github/actions/create-conda-env
+      - name: Run amba tests
+        uses: ./.github/actions/run-tests
+        with:
+          group-key: "group-other"
+          project-key: "rocketchip-amba"
+      # Below tests segfault with verilator, work fine in VCS
+      # - name: Run tlsimple tests
+      #   uses: ./.github/actions/run-tests
+      #   with:
+      #     group-key: "group-other"
+      #     project-key: "rocketchip-tlsimple"
+      # - name: Run tlwidth tests
+      #   uses: ./.github/actions/run-tests
+      #   with:
+      #     group-key: "group-other"
+      #     project-key: "rocketchip-tlwidth"
+      # - name: Run tlxbar tests
+      #   uses: ./.github/actions/run-tests
+      #   with:
+      #     group-key: "group-other"
+      #     project-key: "rocketchip-tlxbar"
+
+  constellation-run-tests:
+    name: constellation-run-tests
+    needs: prepare-chipyard-other
+    runs-on: as4
+    steps:
+      - name: Delete old checkout
+        run: |
+            ls -alh .
+            rm -rf ${{ github.workspace }}/* || true
+            rm -rf ${{ github.workspace }}/.* || true
+            ls -alh .
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -860,7 +1176,7 @@ jobs:
   chipyard-constellation-run-tests:
     name: chipyard-constellation-run-tests
     needs: prepare-chipyard-constellation
-    runs-on: self-hosted
+    runs-on: as4
     steps:
       - name: Delete old checkout
         run: |
@@ -869,7 +1185,7 @@ jobs:
             rm -rf ${{ github.workspace }}/.* || true
             ls -alh .
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Git workaround
         uses: ./.github/actions/git-workaround
       - name: Create conda env
@@ -880,55 +1196,6 @@ jobs:
           group-key: "group-constellation"
           project-key: "chipyard-constellation"
 
-
-  firesim-run-tests:
-    name: firesim-run-tests
-    needs: setup-complete
-    runs-on: self-hosted
-    steps:
-      - name: Delete old checkout
-        run: |
-            ls -alh .
-            rm -rf ${{ github.workspace }}/* || true
-            rm -rf ${{ github.workspace }}/.* || true
-            ls -alh .
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Git workaround
-        uses: ./.github/actions/git-workaround
-      - name: Create conda env
-        uses: ./.github/actions/create-conda-env
-      - name: Run tests on self-hosted
-        uses: ./.github/actions/run-tests
-        with:
-          group-key: "extra-tests"
-          project-key: "firesim"
-          run-script: "remote-run-firesim-scala-tests.sh"
-
-  fireboom-run-tests:
-    name: fireboom-run-tests
-    needs: setup-complete
-    runs-on: self-hosted
-    steps:
-      - name: Delete old checkout
-        run: |
-            ls -alh .
-            rm -rf ${{ github.workspace }}/* || true
-            rm -rf ${{ github.workspace }}/.* || true
-            ls -alh .
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Git workaround
-        uses: ./.github/actions/git-workaround
-      - name: Create conda env
-        uses: ./.github/actions/create-conda-env
-      - name: Run tests on self-hosted
-        uses: ./.github/actions/run-tests
-        with:
-          group-key: "extra-tests"
-          project-key: "fireboom"
-          run-script: "remote-run-firesim-scala-tests.sh"
-
   # Sentinel job to simplify how we specify which checks need to pass in branch
   # protection and in Mergify
   #
@@ -936,29 +1203,41 @@ jobs:
   all_tests_passed:
     name: "all tests passed"
     needs: [commit-on-master-check,
-            tutorial-setup-check,
             documentation-check,
             chipyard-rocket-run-tests,
             chipyard-hetero-run-tests,
-            chipyard-boom-run-tests,
+            chipyard-boomv3-run-tests,
+            chipyard-boomv4-run-tests,
+            chipyard-shuttle-run-tests,
             chipyard-cva6-run-tests,
             chipyard-ibex-run-tests,
+            chipyard-vexiiriscv-run-tests,
             chipyard-sodor-run-tests,
+            chipyard-dmiboomv3-run-tests,
+            chipyard-dmiboomv4-run-tests,
             chipyard-dmirocket-run-tests,
             chipyard-spiflashwrite-run-tests,
             chipyard-manyperipherals-run-tests,
-            chipyard-sha3-run-tests,
+            chipyard-tethered-run-tests,
+            chipyard-symmetric-run-tests,
+            chipyard-llcchiplet-run-tests,
+            chipyard-rerocc-run-tests,
+            chipyard-rocketvector-run-tests,
+            chipyard-shuttlevector-run-tests,
             chipyard-gemmini-run-tests,
-            chipyard-manymmioaccels-run-tests,
+            chipyard-manymmioaccels-run-tests, # chipyard-nvdla-run-tests,
+            chipyard-prefetchers-run-tests,
             chipyard-mempress-run-tests,
+            chipyard-compressacc-run-tests,
             chipyard-constellation-run-tests,
-            tracegen-boom-run-tests,
+            tracegen-boomv3-run-tests,
+            tracegen-boomv4-run-tests,
             tracegen-run-tests,
             icenet-run-tests,
             testchipip-run-tests,
+            rocketchip-run-tests,
             constellation-run-tests,
-            prepare-chipyard-fpga, # firesim-run-tests,
-            fireboom-run-tests]
+            prepare-chipyard-fpga]
     runs-on: ubuntu-latest
     steps:
       - run: echo Success!

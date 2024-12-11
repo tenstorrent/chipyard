@@ -45,19 +45,10 @@ search () {
     done
 }
 
-submodules=("cva6" "boom" "ibex" "gemmini" "hwacha" "icenet" "nvdla" "rocket-chip" "sha3" "sifive-blocks" "sifive-cache" "testchipip" "riscv-sodor" "mempress")
+
+submodules=("cva6" "boom" "ibex" "gemmini" "icenet" "nvdla" "rocket-chip" "rocket-chip-blocks" "rocket-chip-inclusive-cache" "testchipip" "riscv-sodor" "mempress" "bar-fetchers" "shuttle" "constellation" "fft-generator" "hardfloat" "caliptra-aes-acc" "rocc-acc-utils" "diplomacy" "rerocc" "compress-acc" "saturn" "ara" "vexiiriscv")
 dir="generators"
 branches=("master" "main" "dev")
-search
-
-submodules=("esp-tools-feedstock")
-dir="toolchains/esp-tools"
-branches=("main")
-search
-
-submodules=("riscv-isa-sim" "riscv-pk" "riscv-tests")
-dir="toolchains/esp-tools"
-branches=("master")
 search
 
 submodules=("riscv-tools-feedstock")
@@ -81,19 +72,20 @@ dir="toolchains"
 branches=("master")
 search
 
+submodules=("firesim")
+dir="sims"
+branches=("main")
+search
+
+
 submodules=("coremark" "firemarshal" "nvdla-workload" "spec2017")
 dir="software"
 branches=("master" "dev")
 search
 
-submodules=("DRAMSim2" "axe" "barstools" "dsptools" "rocket-dsp-utils" "torture")
+submodules=("DRAMSim2" "axe" "dsptools" "rocket-dsp-utils" "torture" "fixedpoint" "cde" "firrtl2")
 dir="tools"
-branches=("master" "dev")
-search
-
-submodules=("firesim")
-dir="sims"
-branches=("master" "main" "dev" "1.13.x")
+branches=("master" "dev" "main")
 search
 
 submodules=("fpga-shells")

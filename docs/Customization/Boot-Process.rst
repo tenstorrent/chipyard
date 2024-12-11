@@ -12,7 +12,7 @@ Device Tree Binary (dtb) which details the components of the system.
 The assembly for the BootROM code is located in
 `generators/testchipip/src/main/resources/testchipip/bootrom/bootrom.S <https://github.com/ucb-bar/testchipip/blob/master/src/main/resources/testchipip/bootrom/bootrom.S>`_.
 The BootROM address space starts at ``0x10000`` (determined by the ``BootROMParams`` key in the configuration) and execution starts at address
-``0x10040`` (given by the linker script and reset vector in the ``BootROMParams``), which is marked by the ``_hang`` label in the BootROM assembly.
+``0x10000`` (given by the linker script and reset vector in the ``BootROMParams``), which is marked by the ``_hang`` label in the BootROM assembly.
 
 The Chisel generator encodes the assembled instructions into the BootROM
 hardware at elaboration time, so if you want to change the BootROM code, you
@@ -74,6 +74,6 @@ mode, thus starting userspace execution.
 The easiest way to build a BBL image that boots Linux is to use the FireMarshal
 tool that lives in the `firesim-software <https://github.com/firesim/firesim-software>`_
 repository. Directions on how to use FireMarshal can be found in the
-:fsim_doc:`FireSim documentation <Advanced-Usage/FireMarshal/index.html>`.
+:fsim_doc:`FireSim documentation <Advanced-Usage/Workloads/FireMarshal.html>`.
 Using FireMarshal, you can add custom kernel configurations and userspace software
 to your workload.

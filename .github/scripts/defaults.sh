@@ -6,9 +6,6 @@ CI_MAKE_NPROC=8
 REMOTE_MAKE_NPROC=4
 
 # remote variables
-# CI_DIR is defined externally based on the GH repository secret BUILDDIR
-
-REMOTE_PREFIX=$CI_DIR/${GITHUB_REPOSITORY#*/}-${GITHUB_REF_NAME//\//-}
 REMOTE_WORK_DIR=$GITHUB_WORKSPACE
 REMOTE_CHIPYARD_DIR=$GITHUB_WORKSPACE
 REMOTE_SIM_DIR=$REMOTE_CHIPYARD_DIR/sims/verilator
@@ -28,47 +25,70 @@ REMOTE_COURSIER_CACHE=$REMOTE_WORK_DIR/.coursier-cache
 
 # key value store to get the build groups
 declare -A grouping
-grouping["group-cores"]="chipyard-cva6 chipyard-ibex chipyard-rocket chipyard-hetero chipyard-boom chipyard-sodor chipyard-digitaltop chipyard-multiclock-rocket chipyard-nomem-scratchpad chipyard-spike chipyard-clone"
-grouping["group-peripherals"]="chipyard-dmirocket chipyard-spiflashwrite chipyard-mmios chipyard-nocores chipyard-manyperipherals chipyard-chiplike"
-grouping["group-accels"]="chipyard-mempress chipyard-sha3 chipyard-hwacha chipyard-gemmini chipyard-manymmioaccels"
+grouping["group-cores"]="chipyard-cva6 chipyard-ibex chipyard-rocket chipyard-hetero chipyard-boomv3 chipyard-boomv4 chipyard-sodor chipyard-digitaltop chipyard-multiclock-rocket chipyard-nomem-scratchpad chipyard-spike chipyard-clone chipyard-prefetchers chipyard-shuttle chipyard-vexiiriscv"
+grouping["group-peripherals"]="chipyard-dmirocket chipyard-dmiboomv3 chipyard-dmiboomv4 chipyard-spiflashwrite chipyard-mmios chipyard-nocores chipyard-manyperipherals chipyard-chiplike chipyard-tethered chipyard-symmetric chipyard-llcchiplet"
+grouping["group-accels"]="chipyard-compressacc chipyard-mempress chipyard-gemmini chipyard-manymmioaccels chipyard-nvdla chipyard-aes256ecb chipyard-rerocc chipyard-rocketvector chipyard-shuttlevector chipyard-hlsacc" # chipyard-shuttleara - Add when Ara works again
 grouping["group-constellation"]="chipyard-constellation"
-grouping["group-tracegen"]="tracegen tracegen-boom"
-grouping["group-other"]="icenet testchipip constellation"
-grouping["group-fpga"]="arty vcu118 vc707"
+grouping["group-tracegen"]="tracegen tracegen-boomv3 tracegen-boomv4"
+grouping["group-other"]="icenet testchipip constellation rocketchip-amba rocketchip-tlsimple rocketchip-tlwidth rocketchip-tlxbar chipyard-clusters"
+grouping["group-fpga"]="arty35t arty100t nexysvideo vc707 vcu118"
 
 # key value store to get the build strings
 declare -A mapping
-mapping["chipyard-rocket"]=""
+mapping["chipyard-rocket"]=" CONFIG=QuadChannelRocketConfig"
+# TODO: Verilator chokes on cospikeCheckpointingRocketConfig
+# mapping["chipyard-dmirocket"]=" CONFIG=dmiCospikeCheckpointingRocketConfig"
 mapping["chipyard-dmirocket"]=" CONFIG=dmiRocketConfig"
-mapping["chipyard-sha3"]=" CONFIG=Sha3RocketConfig"
 mapping["chipyard-mempress"]=" CONFIG=MempressRocketConfig"
+mapping["chipyard-compressacc"]=" CONFIG=ZstdCompressorRocketConfig"
+mapping["chipyard-hlsacc"]=" CONFIG=GCDHLSRocketConfig"
+mapping["chipyard-prefetchers"]=" CONFIG=PrefetchingRocketConfig"
 mapping["chipyard-digitaltop"]=" TOP=DigitalTop"
 mapping["chipyard-manymmioaccels"]=" CONFIG=ManyMMIOAcceleratorRocketConfig"
+mapping["chipyard-nvdla"]=" CONFIG=SmallNVDLARocketConfig verilog"
 mapping["chipyard-hetero"]=" CONFIG=LargeBoomAndRocketConfig"
-mapping["chipyard-boom"]=" CONFIG=MediumBoomCosimConfig"
-mapping["chipyard-spike"]=" CONFIG=SpikeFastUARTConfig EXTRA_SIM_FLAGS='+spike-ipc=10'"
-mapping["chipyard-hwacha"]=" CONFIG=HwachaRocketConfig"
+mapping["chipyard-boomv3"]=" CONFIG=MediumBoomV3CosimConfig"
+mapping["chipyard-dmiboomv3"]=" CONFIG=dmiCheckpointingMediumBoomV3Config"
+mapping["chipyard-boomv4"]=" CONFIG=MediumBoomV4CosimConfig"
+mapping["chipyard-dmiboomv4"]=" CONFIG=dmiCheckpointingMediumBoomV4Config"
+mapping["chipyard-spike"]=" CONFIG=SpikeZicntrConfig EXTRA_SIM_FLAGS='+spike-ipc=10'"
 mapping["chipyard-gemmini"]=" CONFIG=GemminiRocketConfig"
 mapping["chipyard-cva6"]=" CONFIG=CVA6Config"
 mapping["chipyard-ibex"]=" CONFIG=IbexConfig"
+mapping["chipyard-vexiiriscv"]=" CONFIG=VexiiRiscvConfig"
 mapping["chipyard-spiflashwrite"]=" CONFIG=SmallSPIFlashRocketConfig EXTRA_SIM_FLAGS='+spiflash0=${LOCAL_CHIPYARD_DIR}/tests/spiflash.img'"
 mapping["chipyard-manyperipherals"]=" CONFIG=ManyPeripheralsRocketConfig EXTRA_SIM_FLAGS='+spiflash0=${LOCAL_CHIPYARD_DIR}/tests/spiflash.img'"
-mapping["chipyard-chiplike"]=" CONFIG=ChipLikeQuadRocketConfig MODEL=FlatTestHarness MODEL_PACKAGE=chipyard.example verilog"
-mapping["chipyard-cloneboom"]=" CONFIG=Cloned64MegaBoomConfig verilog"
+mapping["chipyard-chiplike"]=" CONFIG=ChipLikeRocketConfig MODEL=FlatTestHarness MODEL_PACKAGE=chipyard.example verilog"
+mapping["chipyard-tethered"]=" CONFIG=VerilatorCITetheredChipLikeRocketConfig"
+mapping["chipyard-symmetric"]=" CONFIG=MultiSimSymmetricChipletRocketConfig"
+mapping["chipyard-llcchiplet"]=" CONFIG=MultiSimLLCChipletRocketConfig"
+mapping["chipyard-cloneboom"]=" CONFIG=Cloned64MegaBoomV3Config verilog"
 mapping["chipyard-nocores"]=" CONFIG=NoCoresConfig verilog"
 mapping["tracegen"]=" CONFIG=NonBlockingTraceGenL2Config"
-mapping["tracegen-boom"]=" CONFIG=BoomTraceGenConfig"
+mapping["tracegen-boomv3"]=" CONFIG=BoomV3TraceGenConfig"
+mapping["tracegen-boomv4"]=" CONFIG=BoomV4TraceGenConfig"
 mapping["chipyard-sodor"]=" CONFIG=Sodor5StageConfig"
+mapping["chipyard-shuttle"]=" CONFIG=ShuttleConfig"
 mapping["chipyard-multiclock-rocket"]=" CONFIG=MulticlockRocketConfig"
 mapping["chipyard-nomem-scratchpad"]=" CONFIG=MMIOScratchpadOnlyRocketConfig"
 mapping["chipyard-constellation"]=" CONFIG=SharedNoCConfig"
+mapping["chipyard-clusters"]=" CONFIG=ClusteredRocketConfig verilog"
+mapping["chipyard-aes256ecb"]=" CONFIG=AES256ECBRocketConfig"
+mapping["chipyard-rerocc"]=" CONFIG=ReRoCCTestConfig"
+mapping["chipyard-rocketvector"]=" CONFIG=MINV128D64RocketConfig"
+mapping["chipyard-shuttlevector"]=" CONFIG=GENV256D128ShuttleConfig"
+mapping["chipyard-shuttleara"]=" CONFIG=V4096Ara2LaneShuttleConfig USE_ARA=1 verilog"
 
 mapping["constellation"]=" SUB_PROJECT=constellation"
-mapping["firesim"]="SCALA_TEST=firesim.firesim.RocketNICF1Tests"
-mapping["fireboom"]="SCALA_TEST=firesim.firesim.BoomF1Tests"
 mapping["icenet"]="SUB_PROJECT=icenet"
 mapping["testchipip"]="SUB_PROJECT=testchipip"
+mapping["rocketchip-amba"]="SUB_PROJECT=rocketchip CONFIG=AMBAUnitTestConfig"
+mapping["rocketchip-tlsimple"]="SUB_PROJECT=rocketchip CONFIG=TLSimpleUnitTestConfig"
+mapping["rocketchip-tlwidth"]="SUB_PROJECT=rocketchip CONFIG=TLWidthUnitTestConfig"
+mapping["rocketchip-tlxbar"]="SUB_PROJECT=rocketchip CONFIG=TLXbarUnitTestConfig"
 
-mapping["arty"]="SUB_PROJECT=arty verilog"
-mapping["vcu118"]="SUB_PROJECT=vcu118 verilog"
+mapping["arty35t"]="SUB_PROJECT=arty35t verilog"
+mapping["arty100t"]="SUB_PROJECT=arty100t verilog"
+mapping["nexysvideo"]="SUB_PROJECT=nexysvideo verilog"
 mapping["vc707"]="SUB_PROJECT=vc707 verilog"
+mapping["vcu118"]="SUB_PROJECT=vcu118 verilog"

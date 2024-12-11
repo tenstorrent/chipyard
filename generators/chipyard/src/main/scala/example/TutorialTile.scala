@@ -14,7 +14,7 @@ import freechips.rocketchip.interrupts._
 import freechips.rocketchip.util._
 import freechips.rocketchip.tile._
 import freechips.rocketchip.amba.axi4._
-import freechips.rocketchip.prci.ClockSinkParameters
+import freechips.rocketchip.prci._
 
 // Example parameter class copied from CVA6, not included in documentation but for compile check only
 // If you are here for documentation, DO NOT copy MyCoreParams and MyTileParams directly - always figure
@@ -26,6 +26,8 @@ case class MyCoreParams(
   bhtEntries: Int = 16,
   enableToFromHostCaching: Boolean = false,
 ) extends CoreParams {
+  val xLen: Int = 32
+  val pgLevels: Int = 2
   val useVM: Boolean = true
   val useHypervisor: Boolean = false
   val useUser: Boolean = true
@@ -62,11 +64,11 @@ case class MyCoreParams(
   val decodeWidth: Int = 1 // TODO: Check
   val fetchWidth: Int = 1 // TODO: Check
   val retireWidth: Int = 2
-  val useBitManip: Boolean = false
-  val useBitManipCrypto: Boolean = false
-  val useCryptoNIST: Boolean = false
-  val useCryptoSM: Boolean = false
   val traceHasWdata: Boolean = false
+  val useConditionalZero = false
+  val useZba: Boolean = false
+  val useZbb: Boolean = false
+  val useZbs: Boolean = false
 }
 
 // DOC include start: CanAttachTile
@@ -81,7 +83,7 @@ case class MyTileAttachParams(
 
 case class MyTileParams(
   name: Option[String] = Some("my_tile"),
-  hartId: Int = 0,
+  tileId: Int = 0,
   trace: Boolean = false,
   val core: MyCoreParams = MyCoreParams()
 ) extends InstantiableTileParams[MyTile]
@@ -93,9 +95,11 @@ case class MyTileParams(
   val dcache: Option[DCacheParams] = Some(DCacheParams())
   val icache: Option[ICacheParams] = Some(ICacheParams())
   val clockSinkParams: ClockSinkParameters = ClockSinkParameters()
-  def instantiate(crossing: TileCrossingParamsLike, lookup: LookupByHartIdImpl)(implicit p: Parameters): MyTile = {
+  def instantiate(crossing: HierarchicalElementCrossingParamsLike, lookup: LookupByHartIdImpl)(implicit p: Parameters): MyTile = {
     new MyTile(this, crossing, lookup)
   }
+  val baseName = name.getOrElse("my_tile")
+  val uniqueName = s"${baseName}_$tileId"
 }
 
 // DOC include start: Tile class
@@ -110,11 +114,11 @@ class MyTile(
 {
 
   // Private constructor ensures altered LazyModule.p is used implicitly
-  def this(params: MyTileParams, crossing: TileCrossingParamsLike, lookup: LookupByHartIdImpl)(implicit p: Parameters) =
+  def this(params: MyTileParams, crossing: HierarchicalElementCrossingParamsLike, lookup: LookupByHartIdImpl)(implicit p: Parameters) =
     this(params, crossing.crossingType, lookup, p)
 
   // Require TileLink nodes
-  val intOutwardNode = IntIdentityNode()
+  val intOutwardNode = None
   val masterNode = visibilityNode
   val slaveNode = TLIdentityNode()
 
@@ -134,7 +138,7 @@ class MyTile(
   }
 
   ResourceBinding {
-    Resource(cpuDevice, "reg").bind(ResourceAddress(hartId))
+    Resource(cpuDevice, "reg").bind(ResourceAddress(tileId))
   }
 
   // TODO: Create TileLink nodes and connections here.
@@ -227,22 +231,21 @@ class MyTileModuleImp(outer: MyTile) extends BaseTileModuleImp(outer){
 }
 
 // DOC include start: Config fragment
-class WithNMyCores(n: Int = 1, overrideIdOffset: Option[Int] = None) extends Config((site, here, up) => {
+class WithNMyCores(n: Int = 1) extends Config((site, here, up) => {
   case TilesLocated(InSubsystem) => {
     // Calculate the next available hart ID (since hart ID cannot be duplicated)
     val prev = up(TilesLocated(InSubsystem), site)
-    val idOffset = overrideIdOffset.getOrElse(prev.size)
+    val idOffset = up(NumTiles)
     // Create TileAttachParams for every core to be instantiated
     (0 until n).map { i =>
       MyTileAttachParams(
-        tileParams = MyTileParams(hartId = i + idOffset),
+        tileParams = MyTileParams(tileId = i + idOffset),
         crossingParams = RocketCrossingParams()
       )
     } ++ prev
   }
   // Configurate # of bytes in one memory / IO transaction. For RV64, one load/store instruction can transfer 8 bytes at most.
   case SystemBusKey => up(SystemBusKey, site).copy(beatBytes = 8)
-  // The # of instruction bits. Use maximum # of bits if your core supports both 32 and 64 bits.
-  case XLen => 64
+  case NumTiles => up(NumTiles) + n
 })
 // DOC include end: Config fragment
