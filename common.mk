@@ -290,7 +290,14 @@ verilog: $(sim_common_files)
 cosimsoname = cosim
 cosimdir = $(base_dir)/sims/cosim
 cosimso = $(sim_dir)/lib$(cosimsoname).so
+
+# Set whisperdir based on whether we're in Docker or not
+ifeq ($(IN_IMAGE),1)
+whisperdir = $(base_dir)/../../chipyard/sims/whisper
+$(info Running inside Docker container - IN_IMAGE=1)
+else
 whisperdir = $(base_dir)/sims/whisper
+endif
 
 COSIM_OPTS = -LDFLAGS "-L$(sim_dir) -Wl,-rpath,$(sim_dir) -l$(cosimsoname)"
 
@@ -331,7 +338,9 @@ run-fast: run-asm-tests-fast run-bmark-tests-fast
 #########################################################################################
 # helper rules to run simulator with fast loadmem via hex files
 #########################################################################################
-WHISPER = /root/my-chipyard/sims/whisper/build-Linux/whisper
+# Set WHISPER path based on whether we're in Docker or not
+WHISPER = $(whisperdir)/build-Linux/whisper
+endif
 ifeq (,$(WHISPER))
 	$(error WHISPER variable is not set. Set it to the path to whisper executable.)
 endif
