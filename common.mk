@@ -292,9 +292,9 @@ cosimdir = $(base_dir)/sims/cosim
 cosimso = $(sim_dir)/lib$(cosimsoname).so
 
 # Set whisperdir based on whether we're in Docker or not
-ifeq ($(IN_IMAGE),1)
+ifeq ($(USE_IMAGE_WHISPER),1)
 whisperdir = $(base_dir)/../../chipyard/sims/whisper
-$(info Running inside Docker container - IN_IMAGE=1)
+$(info Running inside Docker container - USE_IMAGE_WHISPER=1)
 else
 whisperdir = $(base_dir)/sims/whisper
 endif
@@ -340,7 +340,6 @@ run-fast: run-asm-tests-fast run-bmark-tests-fast
 #########################################################################################
 # Set WHISPER path based on whether we're in Docker or not
 WHISPER = $(whisperdir)/build-Linux/whisper
-endif
 ifeq (,$(WHISPER))
 	$(error WHISPER variable is not set. Set it to the path to whisper executable.)
 endif
