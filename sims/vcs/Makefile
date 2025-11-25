@@ -17,6 +17,7 @@ include $(base_dir)/variables.mk
 # name of simulator (used to generate *.f arguments file)
 #########################################################################################
 sim_name = vcs
+export SIM_NAME = vcs
 
 #########################################################################################
 # vcs simulator types and rules
