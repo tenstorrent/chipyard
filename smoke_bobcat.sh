@@ -45,6 +45,7 @@ commands=(
   "make -C sims/vcs run-binary-hex CONFIG=SmallBobcatConfig BINARY=/root/my-chipyard/tests/rvv/speculation_tests/nested_branch.elf SIM_FLAGS=+cosim"
   "make -C sims/vcs run-binary-hex CONFIG=SmallBobcatConfig BINARY=/root/my-chipyard/tests/rvv/speculation_tests/simple_branch.elf SIM_FLAGS=+cosim"
   "make -C sims/vcs run-binary-hex CONFIG=SmallBobcatConfig BINARY=/root/my-chipyard/tests/rvv/speculation_tests/speculation_test.elf SIM_FLAGS=+cosim"
+  "make -C sims/vcs run-binary-hex CONFIG=SmallBobcatConfig BINARY=/root/my-chipyard/tests/rvv/speculation_tests/spec_vldst_test.elf SIM_FLAGS=+cosim"
   "make -C sims/vcs run-binary-hex CONFIG=SmallBobcatConfig BINARY=/root/my-chipyard/tests/rvv/vstart_test/vstart_ldst.elf SIM_FLAGS=+cosim" # vstart
   "make -C sims/vcs run-binary-hex CONFIG=SmallBobcatConfig BINARY=/root/my-chipyard/tests/rvv/isg/riscv_vector_arithmetic_smoke_test.elf SIM_FLAGS=+cosim" #isg
   "make -C sims/vcs run-binary-hex CONFIG=SmallBobcatConfig BINARY=/root/my-chipyard/tests/rvv/isg/riscv_vector_ms5_smoke_test.elf SIM_FLAGS=+cosim"
