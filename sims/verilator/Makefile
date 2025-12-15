@@ -20,6 +20,7 @@ include $(base_dir)/variables.mk
 # name of simulator (used to generate *.f arguments file)
 #########################################################################################
 sim_name = verilator
+export SIM_NAME = verilator
 
 #########################################################################################
 # verilator simulator types and rules
