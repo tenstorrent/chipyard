@@ -84,6 +84,11 @@ class MediumBoomV4Config extends Config(
   new boom.v4.common.WithNMediumBooms(1) ++                         // medium boom config
   new chipyard.config.AbstractConfig)
 
+class MediumBoomV4CommitLogConfig extends Config(
+  new boom.v4.common.WithBoomCommitLogPrintf ++                     // emit per-retired-uop commit log via Chisel printf
+  new boom.v4.common.WithNMediumBooms(1) ++
+  new chipyard.config.AbstractConfig)
+
 class LargeBoomV4Config extends Config(
   new boom.v4.common.WithNLargeBooms(1) ++                          // large boom config
   new chipyard.config.WithSystemBusWidth(128) ++

@@ -35,15 +35,18 @@ sim_name = xrun
 sim_prefix = simx
 sim = $(sim_dir)/$(sim_prefix)-$(MODEL_PACKAGE)-$(CONFIG)
 sim_debug = $(sim)-debug
+sim_debug_ida = $(sim)-debug-ida
 sim_workdir = $(build_dir)/xcelium.d
 sim_run_tcl = $(build_dir)/xcelium_run.tcl
 sim_debug_run_tcl = $(build_dir)/xcelium_debug_run.tcl
+sim_debug_ida_run_tcl = $(build_dir)/xcelium_debug_ida_run.tcl
 
 include $(base_dir)/sims/xcelium/xcelium.mk
 
-.PHONY: default debug
+.PHONY: default debug debug-ida
 default: $(sim)
 debug: $(sim_debug)
+debug-ida: $(sim_debug_ida)
 
 #########################################################################################
 # simulation requirements
@@ -123,12 +126,36 @@ $(sim_debug): $(sim_workdir) $(sim_debug_run_tcl)
 #########################################################################################
 .PRECIOUS: $(output_dir)/%.vcd %.vcd
 $(output_dir)/%.vcd: $(output_dir)/% $(sim_debug)
-	(set -o pipefail && $(sim_debug) $(PERMISSIVE_ON) $(SIM_FLAGS) $(EXTRA_SIM_FLAGS) $(SEED_FLAG) $(VERBOSE_FLAGS) +vcdplusfile=$@ $(PERMISSIVE_OFF) $< </dev/null 2> >(spike-dasm > $<.out) | tee $<.log)
+	(set -o pipefail && XCELIUM_WAVEFORM_FLAG=$@ $(sim_debug) $(PERMISSIVE_ON) $(SIM_FLAGS) $(EXTRA_SIM_FLAGS) $(SEED_FLAG) $(VERBOSE_FLAGS) $(PERMISSIVE_OFF) $< </dev/null 2> >(spike-dasm > $<.out) | tee $<.log)
+
+#########################################################################################
+# create indago/ida.db rules (for Verisium Debug)
+#########################################################################################
+$(sim_debug_ida_run_tcl): $(sim_workdir)
+	echo "$$CAD_INFO_HEADER" > $@
+	echo "database -open ida_db -indago -into \$$env(XCELIUM_WAVEFORM_FLAG)" >> $@
+	echo "set probe_packed_limit 64k" >> $@
+	echo "probe -create $(TB) -database ida_db -depth all -all" >> $@
+	echo "run" >> $@
+	echo "database -close ida_db" >> $@
+	echo "exit" >> $@
+
+$(sim_debug_ida): $(sim_workdir) $(sim_debug_ida_run_tcl)
+	echo "#!/usr/bin/env bash" > $@
+	echo "$$CAD_INFO_HEADER" >> $@
+	cat arg-reshuffle >> $@
+	echo "export XCELIUM_WAVEFORM_FLAG=\$$XCELIUM_WAVEFORM_FLAG" >> $@
+	echo "LD_PRELOAD=$(CONDA_PREFIX)/lib/libstdc++.so.6 $(XCELIUM) +permissive -R -input $(sim_debug_ida_run_tcl) $(XCELIUM_COMMON_ARGS) +permissive-off \$$INPUT_ARGS" >> $@
+	chmod +x $@
+
+.PRECIOUS: $(output_dir)/%.ida.db
+$(output_dir)/%.ida.db: $(output_dir)/% $(sim_debug_ida)
+	(set -o pipefail && XCELIUM_WAVEFORM_FLAG=$@ $(sim_debug_ida) $(PERMISSIVE_ON) $(SIM_FLAGS) $(EXTRA_SIM_FLAGS) $(SEED_FLAG) $(VERBOSE_FLAGS) $(PERMISSIVE_OFF) $< </dev/null 2> >(spike-dasm > $<.out) | tee $<.log)
 
 #########################################################################################
 # general cleanup rules
 #########################################################################################
-.PHONY: clean clean-sim clean-sim-debug
+.PHONY: clean clean-sim clean-sim-debug clean-sim-debug-ida
 clean:
 	rm -rf $(CLASSPATH_CACHE) $(gen_dir) $(sim_prefix)-*
 
@@ -137,3 +164,6 @@ clean-sim:
 
 clean-sim-debug:
 	rm -rf $(model_dir_debug) $(sim_debug) $(sim_workdir) $(sim_debug_run_tcl) ucli.key bpad_*.err sigusrdump.out dramsim*.log
+
+clean-sim-debug-ida:
+	rm -rf $(sim_debug_ida) $(sim_debug_ida_run_tcl) ucli.key bpad_*.err sigusrdump.out dramsim*.log
