@@ -305,6 +305,8 @@ get_out_name = $(subst $() $(),_,$(notdir $(basename $(1))))
 LOADMEM ?=
 LOADARCH ?=
 DUMP_BINARY ?= 1
+# Path to the smartelf2hex.sh-converted loadmem hex (consumed by run-binary*-hex cosim targets).
+binary_hex = $(call get_sim_out_name,$(firstword $(BINARY))).loadmem_hex
 
 ifneq ($(LOADARCH),)
 override BINARY = $(addsuffix /mem.elf,$(LOADARCH))

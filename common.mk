@@ -322,6 +322,28 @@ endif
 verilog: $(sim_common_files)
 
 #########################################################################################
+# cosim build (whisper-based cosim shared library; linked into VCS sim)
+#########################################################################################
+
+cosimsoname = cosim
+cosimdir = $(base_dir)/sims/cosim
+cosimso = $(sim_dir)/lib$(cosimsoname).so
+
+# Set whisperdir based on whether we're in Docker or not
+ifeq ($(USE_IMAGE_WHISPER),1)
+whisperdir = $(base_dir)/../../chipyard/sims/whisper
+$(info Running inside Docker container - USE_IMAGE_WHISPER=1)
+else
+whisperdir = $(base_dir)/sims/whisper
+endif
+
+COSIM_OPTS = -LDFLAGS "-L$(sim_dir) -Wl,-rpath,$(sim_dir) -l$(cosimsoname)"
+
+$(cosimso):
+	$(MAKE) -C $(cosimdir)
+	cp $(cosimdir)/lib/libcosim.so $(cosimso)
+
+#########################################################################################
 # helper rules to run simulations
 #########################################################################################
 .PHONY: run-binary run-binary-fast run-binary-debug run-fast
@@ -429,15 +451,53 @@ endif
 run-fast: run-asm-tests-fast run-bmark-tests-fast
 
 #########################################################################################
-# helper rules to run simulator with fast loadmem
-# LEGACY - use LOADMEM=1 instead
+# helper rules to run cosim with whisper
+# Passes +loadmem=<ELF> (SimDRAM calls fesvr's load_elf on it to pre-populate DRAM),
+# plus +testfile / +whisper_path / +whisper_json_path / +bootcode plusargs consumed by the cosim bridge.
+# Selects whisper JSON per CONFIG name (Ocelot / Bobcat / default Boom).
+# NOTE: bobtail's flow ran an ELF->hex conversion (smartelf2hex.sh) here, but the current chipyard
+# testchipip SimDRAM expects an ELF via +loadmem, not a hex file.
 #########################################################################################
-run-binary-hex: $(BINARY).run
-run-binary-hex: override SIM_FLAGS += +loadmem=$(BINARY)
-run-binary-debug-hex: $(BINARY).run.debug
-run-binary-debug-hex: override SIM_FLAGS += +loadmem=$(BINARY)
-run-binary-fast-hex: $(BINARY).run.fast
-run-binary-fast-hex: override SIM_FLAGS += +loadmem=$(BINARY)
+# Route through a wrapper that injects extra whisper args (e.g. --isa imcadf) without
+# editing the cosim submodule. The wrapper exec's the real whisper from
+# $(whisperdir)/build-Linux/whisper (or $WHISPER_REAL env var) with $WHISPER_EXTRA_ARGS
+# prepended. Override either env var at invocation time to change behavior.
+WHISPER = $(base_dir)/scripts/whisper-wrapper.sh
+WHISPER_REAL ?= $(whisperdir)/build-Linux/whisper
+export WHISPER_REAL
+ifeq (,$(WHISPER))
+	$(error WHISPER variable is not set. Set it to the path to whisper executable.)
+endif
+
+
+# adingtt Hardcoding this config for now.
+# ifneq (,$(findstring Ocelot,$(CONFIG)))
+#   WHISPER_JSON = $(cosimdir)/bridge/whisper/config/ocelot.json
+# else
+#   ifneq (,$(findstring Bobcat,$(CONFIG)))
+#     WHISPER_JSON = $(cosimdir)/bridge/whisper/config/bobcat.json
+#   else
+    WHISPER_JSON = $(cosimdir)/bridge/whisper/config/boom.json
+#   endif
+# endif
+
+BOOTCODE = $(cosimdir)/bootrom/bootrom
+
+run-binary-hex: check-binary
+run-binary-hex: $(SIM_PREREQ) | $(output_dir)
+run-binary-hex: run-binary
+run-binary-hex: override LOADMEM = $(firstword $(BINARY))
+run-binary-hex: override SIM_FLAGS += +cosim +harness_tracer +loadmem=$(LOADMEM) +testfile=$(firstword $(BINARY)) +whisper_path=$(WHISPER) +whisper_json_path=$(WHISPER_JSON) +bootcode=$(BOOTCODE)
+run-binary-debug-hex: check-binary
+run-binary-debug-hex: $(SIM_DEBUG_PREREQ) | $(output_dir)
+run-binary-debug-hex: run-binary-debug
+run-binary-debug-hex: override LOADMEM = $(firstword $(BINARY))
+run-binary-debug-hex: override SIM_FLAGS += +cosim +harness_tracer +loadmem=$(LOADMEM) +testfile=$(firstword $(BINARY)) +whisper_path=$(WHISPER) +whisper_json_path=$(WHISPER_JSON) +bootcode=$(BOOTCODE)
+run-binary-fast-hex: check-binary
+run-binary-fast-hex: $(SIM_PREREQ) | $(output_dir)
+run-binary-fast-hex: run-binary-fast
+run-binary-fast-hex: override LOADMEM = $(firstword $(BINARY))
+run-binary-fast-hex: override SIM_FLAGS += +cosim +harness_tracer +loadmem=$(LOADMEM) +testfile=$(firstword $(BINARY)) +whisper_path=$(WHISPER) +whisper_json_path=$(WHISPER_JSON) +bootcode=$(BOOTCODE)
 
 #########################################################################################
 # run assembly/benchmarks rules

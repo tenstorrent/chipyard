@@ -30,3 +30,8 @@ project/project/
 .classpath_cache/
 .vscode/
 tests/build/
+*.rc
+*.conf
+verdiLog/
+memory/
+.claude/

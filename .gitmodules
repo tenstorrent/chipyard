@@ -164,3 +164,9 @@
 [submodule "generators/radiance"]
 	path = generators/radiance
 	url = https://github.com/ucb-bar/radiance.git
+[submodule "sims/cosim"]
+	path = sims/cosim
+	url = git@github.com:tenstorrent/cosim-arch-checker.git
+[submodule "sims/whisper"]
+	path = sims/whisper
+	url = git@github.com:tenstorrent/whisper.git

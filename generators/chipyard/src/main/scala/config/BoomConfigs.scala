@@ -1,6 +1,17 @@
 package chipyard
 
 import org.chipsalliance.cde.config.{Config}
+import freechips.rocketchip.devices.tilelink.{BootROMLocated}
+import freechips.rocketchip.util.{ResourceFileName}
+
+// Swap default chipyard bootrom for the cosim-compatible one shipped with the BOOM submodule.
+// Required by the whisper-cosim flow (the cosim bootrom expects HTIF tohost/fromhost and CLINT-poke
+// boot for secondary harts). Once BOOM RTL gains the +cosim DPI hooks, mix `WithBoomDebugHarness`
+// in alongside this (see TODO markers on each Boom*Config below).
+class WithCustomBootROM extends Config((site, here, up) => {
+    case BootROMLocated(x) => up(BootROMLocated(x), site)
+        .map(_.copy(contentFileName = ResourceFileName("/bootrom/bootrom.rv64.img")))
+})
 
 // ---------------------
 // BOOM V3 Configs
@@ -77,10 +88,14 @@ class SimBlockDeviceMegaBoomV3Config extends Config(
 // ---------------------
 
 class SmallBoomV4Config extends Config(
+  new boom.v4.common.WithBoomDebugHarness ++                        // Attach whisper-cosim DPI harness
+  new WithCustomBootROM ++                                          // Custom BootROM for COSIM
   new boom.v4.common.WithNSmallBooms(1) ++                          // small boom config
   new chipyard.config.AbstractConfig)
 
 class MediumBoomV4Config extends Config(
+  new boom.v4.common.WithBoomDebugHarness ++                        // Attach whisper-cosim DPI harness
+  new WithCustomBootROM ++                                          // Custom BootROM for COSIM
   new boom.v4.common.WithNMediumBooms(1) ++                         // medium boom config
   new chipyard.config.AbstractConfig)
 
@@ -90,16 +105,22 @@ class MediumBoomV4CommitLogConfig extends Config(
   new chipyard.config.AbstractConfig)
 
 class LargeBoomV4Config extends Config(
+  new boom.v4.common.WithBoomDebugHarness ++                        // Attach whisper-cosim DPI harness
+  new WithCustomBootROM ++                                          // Custom BootROM for COSIM
   new boom.v4.common.WithNLargeBooms(1) ++                          // large boom config
   new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)
 
 class MegaBoomV4Config extends Config(
+  new boom.v4.common.WithBoomDebugHarness ++                        // Attach whisper-cosim DPI harness
+  new WithCustomBootROM ++                                          // Custom BootROM for COSIM
   new boom.v4.common.WithNMegaBooms(1) ++                           // mega boom config
   new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)
 
 class DualSmallBoomV4Config extends Config(
+  new boom.v4.common.WithBoomDebugHarness ++                        // Attach whisper-cosim DPI harness
+  new WithCustomBootROM ++                                          // Custom BootROM for COSIM
   new boom.v4.common.WithNSmallBooms(2) ++                          // 2 boom cores
   new chipyard.config.AbstractConfig)
 

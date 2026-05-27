@@ -69,17 +69,17 @@ model_dir_debug = $(build_dir)/$(long_name).debug
 #########################################################################################
 
 
-$(sim): $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS)
+$(sim): $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS) $(cosimso)
 	$(call require_cmd,vcs)
 	$(require_riscv)
 	rm -rf $(model_dir)
-	$(VCS) $(VCS_OPTS) $(EXTRA_SIM_SOURCES) -o $@ -Mdir=$(model_dir)
+	$(VCS) $(VCS_OPTS) $(EXTRA_SIM_SOURCES) -o $@ -Mdir=$(model_dir) $(COSIM_OPTS)
 
-$(sim_debug): $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS)
+$(sim_debug): $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS) $(cosimso)
 	$(call require_cmd,vcs)
 	$(require_riscv)
 	rm -rf $(model_dir_debug)
-	$(VCS) $(VCS_OPTS) $(EXTRA_SIM_SOURCES) -o $@ -Mdir=$(model_dir_debug)  \
+	$(VCS) $(VCS_OPTS) $(EXTRA_SIM_SOURCES) -o $@ -Mdir=$(model_dir_debug) $(COSIM_OPTS) \
 	+define+DEBUG -debug_access+all -kdb -lca
 
 #########################################################################################
@@ -106,3 +106,8 @@ clean-sim:
 
 clean-sim-debug:
 	rm -rf $(model_dir_debug) $(build_dir)/vc_hdrs.h $(sim_debug) $(sim_debug).daidir ucli.key
+
+clean-cosim:
+	$(MAKE) -C $(cosimdir) clean
+	-$(MAKE) -C $(whisperdir) SOFT_FLOAT=1 clean
+	rm -rf $(sim_dir)/libcosim.so
