@@ -1,0 +1,9 @@
+/root/my-chipyard/tests/rvv/kernels/_axpy/scalar.elf
+/root/my-chipyard/tests/rvv/kernels/arith_mean/arith-mean-scalar.elf
+/root/my-chipyard/tests/rvv/kernels/axpy/axpy-scalar.elf
+/root/my-chipyard/tests/rvv/kernels/conv1d/conv1d-scalar.elf
+/root/my-chipyard/tests/rvv/kernels/conv2d/conv2d-scalar.elf
+/root/my-chipyard/tests/rvv/kernels/inner_product/inner-prod-scalar.elf
+/root/my-chipyard/tests/rvv/kernels/relu/relu-scalar.elf
+/root/my-chipyard/tests/rvv/kernels/sgemm/sgemm-scalar.elf
+/root/my-chipyard/tests/rvv/kernels/transpose/transpose-scalar.elf

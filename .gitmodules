@@ -6,7 +6,7 @@
 	url = https://github.com/ucb-bar/bar-fetchers.git
 [submodule "generators/boom"]
 	path = generators/boom
-	url = https://github.com/tenstorrent/riscv-ocelot.git
+	url = git@github.com:tenstorrent/riscv-ocelot.git
 	branch = Caracal/main
 [submodule "generators/caliptra-aes-acc"]
 	path = generators/caliptra-aes-acc
