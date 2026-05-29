@@ -22,15 +22,19 @@ so changes to the generators themselves will automatically be used when building
    Rocket
    BOOM
    Constellation
-   Hwacha
    Gemmini
+   Saturn
    IceNet
    TestChipIP
-   SiFive-Generators
-   SHA3
+   Rocket-Chip-Generators
    CVA6
    Ibex
+   VexiiRiscv
    fft
    NVDLA
    Sodor
+   Shuttle
    Mempress
+   CompressAcc
+   Prefetchers
+   Ara

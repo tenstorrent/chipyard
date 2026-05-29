@@ -9,9 +9,6 @@ rm -rf $RDIR/toolchains/libgloss/build.log
 rm -rf $RDIR/toolchains/riscv-tools/riscv-isa-sim/build.log
 rm -rf $RDIR/toolchains/riscv-tools/riscv-pk/build.log
 rm -rf $RDIR/toolchains/riscv-tools/riscv-tests/build.log
-rm -rf $RDIR/toolchains/esp-tools/riscv-isa-sim/build.log
-rm -rf $RDIR/toolchains/esp-tools/riscv-pk/build.log
-rm -rf $RDIR/toolchains/esp-tools/riscv-tests/build.log
 (
     pushd $RDIR/generators/constellation
     if [ -d espresso ]
@@ -26,10 +23,13 @@ rm -rf $RDIR/toolchains/esp-tools/riscv-tests/build.log
     popd
 )
 (
-    pushd $RDIR/generators/cva6/src/main/resources/vsrc
-    if [ -d cva6 ]
+    if [ -d $RDIR/generators/cva6/src/main/resources/cva6/vsrc ]
     then
-	git submodule deinit -f cva6
+        pushd $RDIR/generators/cva6/src/main/resources/cva6/vsrc
+        if [ -d cva6 ]
+        then
+	    git submodule deinit -f cva6
+        fi
+        popd
     fi
-    popd
 )

@@ -2,7 +2,7 @@ package chipyard.clocking
 
 import chisel3._
 import chisel3.util._
-import chisel3.experimental.{Analog, IO}
+import chisel3.experimental.Analog
 
 import org.chipsalliance.cde.config._
 import freechips.rocketchip.subsystem._
@@ -60,14 +60,5 @@ class TileResetSetter(address: BigInt, beatBytes: Int, tileNames: Seq[String], i
         }
       }
     }
-  }
-}
-
-
-object TileResetSetter {
-  def apply(address: BigInt, tlbus: TLBusWrapper, tileNames: Seq[String], initResetHarts: Seq[Int])(implicit p: Parameters, v: ValName) = {
-    val setter = LazyModule(new TileResetSetter(address, tlbus.beatBytes, tileNames, initResetHarts))
-    tlbus.toVariableWidthSlave(Some("tile-reset-setter")) { setter.tlNode := TLBuffer() }
-    setter.clockNode
   }
 }

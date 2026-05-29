@@ -25,7 +25,7 @@ sim_prefix = simv
 sim = $(sim_dir)/$(sim_prefix)-$(MODEL_PACKAGE)-$(CONFIG)
 sim_debug = $(sim_dir)/$(sim_prefix)-$(MODEL_PACKAGE)-$(CONFIG)-debug
 
-include $(base_dir)/vcs.mk
+include $(sim_dir)/vcs.mk
 
 .PHONY: default debug
 default: $(sim)
@@ -56,7 +56,7 @@ include $(base_dir)/common.mk
 #########################################################################################
 VCS = vcs -full64
 
-VCS_OPTS = $(VCS_CC_OPTS) $(VCS_NONCC_OPTS) $(PREPROC_DEFINES)
+VCS_OPTS = $(VCS_CC_OPTS) $(VCS_NONCC_OPTS) $(SIM_PREPROC_DEFINES) $(VCS_PREPROC_DEFINES)
 
 #########################################################################################
 # vcs build paths
@@ -67,13 +67,19 @@ model_dir_debug = $(build_dir)/$(long_name).debug
 #########################################################################################
 # vcs simulator rules
 #########################################################################################
-$(sim): $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS)
-	rm -rf $(model_dir)
-	$(VCS) $(VCS_OPTS) $(EXTRA_SIM_SOURCES) -o $@ -Mdir=$(model_dir)
 
-$(sim_debug): $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS)
+
+$(sim): $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS) $(cosimso)
+	$(call require_cmd,vcs)
+	$(require_riscv)
+	rm -rf $(model_dir)
+	$(VCS) $(VCS_OPTS) $(EXTRA_SIM_SOURCES) -o $@ -Mdir=$(model_dir) $(COSIM_OPTS)
+
+$(sim_debug): $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS) $(cosimso)
+	$(call require_cmd,vcs)
+	$(require_riscv)
 	rm -rf $(model_dir_debug)
-	$(VCS) $(VCS_OPTS) $(EXTRA_SIM_SOURCES) -o $@ -Mdir=$(model_dir_debug)  \
+	$(VCS) $(VCS_OPTS) $(EXTRA_SIM_SOURCES) -o $@ -Mdir=$(model_dir_debug) $(COSIM_OPTS) \
 	+define+DEBUG -debug_access+all -kdb -lca
 
 #########################################################################################
@@ -93,10 +99,15 @@ $(output_dir)/%.fsdb: $(output_dir)/% $(sim_debug)
 #########################################################################################
 .PHONY: clean clean-sim clean-sim-debug
 clean:
-	rm -rf $(gen_dir) $(sim_prefix)-* ucli.key
+	rm -rf $(CLASSPATH_CACHE) $(gen_dir) $(sim_prefix)-* ucli.key
 
 clean-sim:
 	rm -rf $(model_dir) $(build_dir)/vc_hdrs.h $(sim) $(sim).daidir ucli.key
 
 clean-sim-debug:
 	rm -rf $(model_dir_debug) $(build_dir)/vc_hdrs.h $(sim_debug) $(sim_debug).daidir ucli.key
+
+clean-cosim:
+	$(MAKE) -C $(cosimdir) clean
+	-$(MAKE) -C $(whisperdir) SOFT_FLOAT=1 clean
+	rm -rf $(sim_dir)/libcosim.so

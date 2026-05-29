@@ -1,0 +1,21 @@
+/root/my-chipyard/tests/rvv/bringup_tests/ms2_vse64.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms2p5_loadblock.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms3p5_pureload.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4_vle64.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p5_vle64_2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p6_vle32_2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p6_vle32_8.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p7_vlnr_vsnr.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p8_vlm.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p9_vl.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p10_vl0.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms5p1_vse64_m.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms5p3_stride_m.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms5p4_index.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms5p5_index_mask.elf
+/root/my-chipyard/tests/rvv/segment_tests/stress_seg.elf
+/root/my-chipyard/tests/rvv/ovi_lsgen_tests/edge_ls_gen.elf
+# vsetvl coverage — exercise cracker-park / vtype-broadcast / serial-id machinery (Issue 12)
+/root/my-chipyard/tests/rvv/bringup_tests/vsetvl_basic.elf
+/root/my-chipyard/tests/rvv/bringup_tests/vsetvli_keep_vl.elf
+/root/my-chipyard/tests/rvv/bringup_tests/vsetvl_back_to_back.elf

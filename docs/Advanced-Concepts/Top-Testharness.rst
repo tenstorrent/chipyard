@@ -25,6 +25,8 @@ The default standard ``ChipTop`` provides a mimimal, barebones template for ``IO
 For tapeouts, integrating Analog IP, or other non-standard use cases, Chipyard supports specifying a custom ``ChipTop`` using the ``BuildTop`` key.
 An example of a custom ChipTop which uses non-standard IOCells is provided in `generators/chipyard/src/main/scala/example/CustomChipTop.scala <https://github.com/ucb-bar/chipyard/blob/main/generators/chipyard/src/main/scala/example/CustomChipTop.scala>`__
 
+You can also specify a fully custom ChipTop that does not use any RocketChip or Chipyard SoC components. An example of this is provided in `generators/chipyard/src/main/scala/example/EmptyChipTop.scala <https://github.com/ucb-bar/chipyard/blob/main/generators/chipyard/src/main/scala/example/EmptyChipTop.scala>`__. The ``EmptyChipTop`` example can be built with ``make CONFIG=EmptyChipTopConfig TOP=EmptyChipTop``.
+
 
 System/DigitalTop
 -------------------------
@@ -55,10 +57,10 @@ System
 
 ``generators/chipyard/src/main/scala/System.scala`` completes the definition of the ``System``.
 
-- ``HasHierarchicalBusTopology`` is defined in Rocket Chip, and specifies connections between the top-level buses
 - ``HasAsyncExtInterrupts`` and ``HasExtInterruptsModuleImp`` adds IOs for external interrupts and wires them appropriately to tiles
-- ``CanHave...AXI4Port`` adds various Master and Slave AXI4 ports, adds TL-to-AXI4 converters, and connects them to the appropriate buses
-- ``HasPeripheryBootROM`` adds a BootROM device
+- ``CanHaveMasterTLMemPort`` adds a TileLink port for outer memory
+- ``CanHave...AXI4...Port`` adds various Master and Slave AXI4 ports, adds TL-to-AXI4 converters, and connects them to the appropriate buses
+- ``HasRTCModuleImp`` adds a real time clock for the buses
 
 Tops
 ^^^^^^^^^^^^^^^^^^^^^^^^^

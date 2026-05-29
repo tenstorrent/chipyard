@@ -2,7 +2,7 @@ package chipyard.clocking
 
 import chisel3._
 import chisel3.util._
-import chisel3.experimental.{Analog, IO}
+import chisel3.experimental.Analog
 
 import org.chipsalliance.cde.config._
 import freechips.rocketchip.subsystem._
@@ -43,13 +43,5 @@ class TileClockGater(address: BigInt, beatBytes: Int)(implicit p: Parameters, va
     tlNode.regmap((0 until nSinks).map({i =>
       i*4 -> Seq(RegField.rwReg(1, regs(i).io))
     }): _*)
-  }
-}
-
-object TileClockGater {
-  def apply(address: BigInt, tlbus: TLBusWrapper)(implicit p: Parameters, v: ValName) = {
-    val gater = LazyModule(new TileClockGater(address, tlbus.beatBytes))
-    tlbus.toVariableWidthSlave(Some("clock-gater")) { gater.tlNode := TLBuffer() }
-    gater.clockNode
   }
 }

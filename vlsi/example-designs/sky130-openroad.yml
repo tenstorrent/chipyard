@@ -3,7 +3,7 @@
 # Specify clock signals
 # Relax the clock period for OpenROAD to meet timing
 vlsi.inputs.clocks: [
-  {name: "clock_clock", period: "50ns", uncertainty: "2ns"}
+  {name: "clock_uncore", period: "50ns", uncertainty: "2ns"}
 ]
 
 # Flow parameters that yield a routable design with reasonable timing
@@ -28,7 +28,7 @@ par.openroad:
   clock_tree_resize.setup_margin: 0.0
   clock_tree_resize.hold_margin: 0.20
   global_route_resize.hold_margin: 0.60
-  clock_tree_resize.hold_max_buffer_percent: 80  
+  clock_tree_resize.hold_max_buffer_percent: 80
 
   global_placement.routing_adjustment: 0.5
   global_route.routing_adjustment: 0.3
@@ -45,48 +45,42 @@ vlsi.inputs.placement_constraints:
     type: toplevel
     x: 0
     y: 0
-    width: 4000
-    height: 3000
+    width: 3588
+    height: 2992
     margins:
-      left: 10
-      right: 0
-      top: 10
-      bottom: 10
+      left: 10.12
+      right: 10.12
+      top: 10.88
+      bottom: 10.88
 
   # Place SRAM memory instances
-  # SRAM paths and configurations are slightly different due to ENABLE_YOSYS_FLOW flag
   # data cache
-  - path: "ChipTop/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0_0/data_arrays_0_0_ext/mem_0_0"
+  - path: "ChipTop/system/tile_prci_domain/element_reset_domain_rockettile/dcache/data/rockettile_dcache_data_arrays_0/rockettile_dcache_data_arrays_0_ext/mem_0_0"
     type: hardmacro
-    x: 50
-    y: 50
+    x: 49.68
+    y: 149.6
     orientation: r90
-  - path: "ChipTop/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0_1/data_arrays_0_0_ext/mem_0_0"
+  - path: "ChipTop/system/tile_prci_domain/element_reset_domain_rockettile/dcache/data/rockettile_dcache_data_arrays_1/rockettile_dcache_data_arrays_0_ext/mem_0_0"
     type: hardmacro
-    x: 50
-    y: 450
-    orientation: r90
-  - path: "ChipTop/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0_2/data_arrays_0_0_ext/mem_0_0"
-    type: hardmacro
-    x: 50
-    y: 850
-    orientation: r90
-  - path: "ChipTop/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0_3/data_arrays_0_0_ext/mem_0_0"
-    type: hardmacro
-    x: 50
-    y: 1250
-    orientation: r90
- 
-  # tag array
-  - path: "ChipTop/system/tile_prci_domain/tile_reset_domain_tile/frontend/icache/tag_array_0/tag_array_0_ext/mem_0_0"
-    type: hardmacro
-    x: 50
-    y: 1600
+    x: 49.68
+    y: 748
     orientation: r90
 
-  # instruction cache
-  - path: "ChipTop/system/tile_prci_domain/tile_reset_domain_tile/frontend/icache/data_arrays_0_0/data_arrays_0_0_0_ext/mem_0_0"
+  # tag array
+  - path: "ChipTop/system/tile_prci_domain/element_reset_domain_rockettile/frontend/icache/rockettile_icache_tag_array_0/rockettile_icache_tag_array_0_ext/mem_0_0"
     type: hardmacro
-    x: 50
-    y: 2100
-    orientation: r90
+    x: 2612.8
+    y: 1033.6
+    orientation: mx90
+
+  # instruction cache
+  - path: "ChipTop/system/tile_prci_domain/element_reset_domain_rockettile/frontend/icache/rockettile_icache_data_arrays_0_0/rockettile_icache_data_arrays_0_0_ext/mem_0_0"
+    type: hardmacro
+    x: 2612.8
+    y: 149.6
+    orientation: mx90
+  - path: "ChipTop/system/tile_prci_domain/element_reset_domain_rockettile/frontend/icache/rockettile_icache_data_arrays_1_0/rockettile_icache_data_arrays_0_0_ext/mem_0_0"
+    type: hardmacro
+    x: 2612.8
+    y: 598.4
+    orientation: mx90

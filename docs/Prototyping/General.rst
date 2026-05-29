@@ -1,18 +1,11 @@
 General Setup and Usage
 ==============================
 
-Sources and Submodule Setup
----------------------------
+Sources
+-------
 
 All FPGA prototyping-related collateral and sources are located in the ``fpga`` top-level Chipyard directory.
 This includes the ``fpga-shells`` submodule and the ``src`` directory that hold both Scala, TCL and other collateral.
-However, the ``fpga-shells`` submodule repository is not initialized by default.
-To initialize the ``fpga-shells`` submodule repository, run the included initialization script from the Chipyard top-level directory:
-
-.. code-block:: shell
-
-    # in the chipyard top level folder
-    ./scripts/init-fpga.sh
 
 Generating a Bitstream
 ----------------------
@@ -37,7 +30,7 @@ For example:
 
     # converts to
 
-    make SBT_PROJECT=fpga_platforms MODEL=VCU118FPGATestHarness VLOG_MODEL=VCU118FPGATestHarness MODEL_PACKAGE=chipyard.fpga.vcu118 CONFIG=RocketVCU118Config CONFIG_PACKAGE=chipyard.fpga.vcu118 GENERATOR_PACKAGE=chipyard TB=none TOP=ChipTop BOARD=vcu118 FPGA_BRAND=... bitstream
+    make SBT_PROJECT=chipyard_fpga MODEL=VCU118FPGATestHarness VLOG_MODEL=VCU118FPGATestHarness MODEL_PACKAGE=chipyard.fpga.vcu118 CONFIG=RocketVCU118Config CONFIG_PACKAGE=chipyard.fpga.vcu118 GENERATOR_PACKAGE=chipyard TB=none TOP=ChipTop BOARD=vcu118 FPGA_BRAND=... bitstream
 
 Some ``SUB_PROJECT`` defaults are already defined for use, including ``vcu118`` and ``arty``.
 These default ``SUB_PROJECT``'s setup the necessary test harnesses, packages, and more for the Chipyard make system.

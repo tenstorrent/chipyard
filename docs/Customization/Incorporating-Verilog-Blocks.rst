@@ -33,19 +33,6 @@ different directory from Chisel (Scala) sources.
                 vsrc/
                     YourFile.v
 
-In addition to the steps outlined in the previous section on adding a
-project to the ``build.sbt`` at the top level, it is also necessary to
-add any projects that contain Verilog IP as dependencies to the
-``tapeout`` project. This ensures that the Verilog sources are visible
-to the downstream FIRRTL passes that provide utilities for integrating
-Verilog files into the build process, which are part of the
-``tapeout`` package in ``barstools/tapeout``.
-
-.. code-block:: scala
-
-    lazy val tapeout = conditionalDependsOn(project in file("./tools/barstools/tapeout/"))
-      .dependsOn(chisel_testers, example, yourproject)
-      .settings(commonSettings)
 
 For this concrete GCD example, we will be using a ``GCDMMIOBlackBox``
 Verilog module that is defined in the ``chipyard`` project. The Scala
@@ -99,10 +86,16 @@ Instantiating the BlackBox and Defining MMIO
 
 Next, we must instantiate the blackbox. In order to take advantage of
 diplomatic memory mapping on the system bus, we still have to
-integrate the peripheral at the Chisel level by mixing
-peripheral-specific traits into a ``TLRegisterRouter``. The ``params``
-member and ``HasRegMap`` base trait should look familiar from the
-previous memory-mapped GCD device example.
+integrate the peripheral at the Chisel level by instantiating a LazyModule wrapper
+that instantiates a TileLink RegisterNode.
+
+.. literalinclude:: ../../generators/chipyard/src/main/scala/example/GCD.scala
+    :language: scala
+    :start-after: DOC include start: GCD router
+    :end-before: DOC include end: GCD router
+
+Within the LazyModule, the ``regmap`` function can be called to attach wires and
+registers to the MMIO port.
 
 .. literalinclude:: ../../generators/chipyard/src/main/scala/example/GCD.scala
     :language: scala
@@ -161,4 +154,31 @@ transformed or augmented by any Chipyard FIRRTL transform.
 As mentioned earlier in this section, ``BlackBox`` resource files must
 be integrated into the build process, so any project providing
 ``BlackBox`` resources must be made visible to the ``tapeout`` project
-in ``build.sbt``
+in ``build.sbt``.
+
+Differences between ``HasBlackBoxPath`` and ``HasBlackBoxResource``
+-------------------------------------------------------------------
+
+Chisel provides two mechanisms for integrating blackbox files into a Chisel project that work slightly differently in Chipyard: ``HasBlackBoxPath`` and ``HasBlackBoxResource``.
+
+``HasBlackBoxResource`` incorporates extra files by looking up the relative path of the files within the ``src/main/resources`` area of project.
+This requires that the file added by ``addResource`` is present in the ``src/main/resources`` area and is **not** auto-generated (the file is static throughout the lifetime of generating RTL).
+This is due to the fact that when the Chisel sources are compiled they are put in a ``jar`` file, along with the ``src/main/resources`` area, and that ``jar`` is used to run the Chisel generator.
+Files referenced by the ``addResource`` must be located within this ``jar`` file during the Chisel elaboration.
+Thus if a file is generated during Chisel generation it will not be present in the ``jar`` file until the next time the Chisel sources are compiled.
+
+``HasBlackBoxPath`` differs in that it incorporates extra files by using an absolute path to them.
+Later in the build process, the FIRRTL compiler will copy the file from that location to the generated sources directory.
+Thus, the file must be present before the FIRRTL compiler is run (i.e. the file doesn't need to be in the ``src/main/resources`` or it can be auto-generated during Chisel elaboration).
+
+Additionally, both mechanisms do not enforce the order of files added.
+For example:
+
+.. code-block:: scala
+
+    addResource("fileA")
+    addResource("fileB")
+
+In this case, ``fileA`` is not guaranteed to be before ``fileB`` when passed to downstream tools.
+To bypass this, it is recommended to auto-generate a single file with the ordering needed by concatenating the files and using ``addPath`` given by ``HasBlackBoxPath``.
+An example of this is https://github.com/ucb-bar/ibex-wrapper/blob/main/src/main/scala/IbexCoreBlackbox.scala.
