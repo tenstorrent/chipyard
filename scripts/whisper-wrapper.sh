@@ -7,18 +7,20 @@
 #                  --logfile ... --traceload --commandlog ... --server ... &
 # Because of --raw, whisper won't parse the ELF symbol table, so it can't
 # auto-locate tohost/fromhost. This wrapper:
-#   1. Prepends static extras (default: --isa imcadf to override misa.F gating)
+#   1. Prepends static extras (default: NONE -- the ISA/extensions come from the
+#      --configfile boom.json "isa"/"misa" so the V extension propagates. A
+#      command-line --isa would OVERRIDE the config and cannot express 'v'.)
 #   2. Extracts tohost/fromhost addresses from the testfile ELF and passes them
 #      as --tohost / --fromhost so HTIF stores match BOOM's HTIF interceptor.
 #
 # Override behavior via env vars (no code change):
 #   WHISPER_REAL        = path to the actual whisper executable
-#   WHISPER_EXTRA_ARGS  = always-prepended static args  (default: --isa imcadf)
+#   WHISPER_EXTRA_ARGS  = always-prepended static args  (default: none)
 #   WHISPER_NM          = riscv-elf nm binary used to read symbols
 #   WHISPER_NO_HTIF=1   = skip the auto-tohost/fromhost injection
 
 WHISPER_REAL="${WHISPER_REAL:-/chipyard/sims/whisper/build-Linux/whisper}"
-WHISPER_EXTRA_ARGS="${WHISPER_EXTRA_ARGS:---isa imcadf}"
+WHISPER_EXTRA_ARGS="${WHISPER_EXTRA_ARGS:-}"
 WHISPER_NM="${WHISPER_NM:-riscv64-unknown-elf-nm}"
 
 HTIF_ARGS=""
