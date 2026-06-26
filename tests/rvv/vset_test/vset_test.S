@@ -10,6 +10,11 @@
 #   * writes the new vtype CSR (exact, VLEN-independent), and
 #   * writes vl into rd according to vl = min(AVL, VLMAX).
 #
+# Config coverage (tests 6-16): all four SEW (e8/e16/e32/e64), LMUL m1/m2/m8 and
+# fractional mf2/mf4/mf8, the tu/mu policy bits, AVL at {0, mid, VLMAX-1, VLMAX,
+# >>VLMAX}, and a back-to-back reconfigure. Every VLMAX check is VLEN-independent:
+# VLMAX(elements) = LMUL * vlenb / SEW_bytes, computed from the vlenb CSR by shifts.
+#
 # vtype encoding (RVV 1.0):  [7]=vma [6]=vta [5:3]=vsew [2:0]=vlmul
 #   vsew:  e8=000 e16=001 e32=010 e64=011
 #   vlmul: m1=000 m2=001  m4=010  m8=011  mf2=111 mf4=110 mf8=101
@@ -104,6 +109,154 @@ _start:
     bnez    a1, fail                     # vl must be 0
     csrr    t1, vtype
     li      t0, 0xD0
+    bne     t1, t0, fail
+
+    #============================================================
+    # Test 6: SEW sweep clamp — e16/m1, AVL huge -> vl = VLMAX = vlenb/2
+    #============================================================
+    li      gp, 6
+    li      a0, 0x7fffffff
+    vsetvli a1, a0, e16, m1, ta, ma
+    csrr    a2, vlenb
+    srli    a2, a2, 1                    # VLMAX(e16,m1) = vlenb/2
+    bne     a1, a2, fail
+    csrr    t1, vtype
+    li      t0, 0xC8                     # e16,m1,ta,ma
+    bne     t1, t0, fail
+
+    #============================================================
+    # Test 7: e32/m1, AVL huge -> vl = VLMAX = vlenb/4
+    #============================================================
+    li      gp, 7
+    li      a0, 0x7fffffff
+    vsetvli a1, a0, e32, m1, ta, ma
+    csrr    a2, vlenb
+    srli    a2, a2, 2                    # VLMAX(e32,m1) = vlenb/4
+    bne     a1, a2, fail
+    csrr    t1, vtype
+    li      t0, 0xD0
+    bne     t1, t0, fail
+
+    #============================================================
+    # Test 8: e64/m1, AVL huge -> vl = VLMAX = vlenb/8
+    #============================================================
+    li      gp, 8
+    li      a0, 0x7fffffff
+    vsetvli a1, a0, e64, m1, ta, ma
+    csrr    a2, vlenb
+    srli    a2, a2, 3                    # VLMAX(e64,m1) = vlenb/8
+    bne     a1, a2, fail
+    csrr    t1, vtype
+    li      t0, 0xD8                     # e64,m1,ta,ma
+    bne     t1, t0, fail
+
+    #============================================================
+    # Test 9: LMUL grouping — e8/m8, AVL huge -> vl = VLMAX = vlenb*8
+    #============================================================
+    li      gp, 9
+    li      a0, 0x7fffffff
+    vsetvli a1, a0, e8, m8, ta, ma
+    csrr    a2, vlenb
+    slli    a2, a2, 3                    # VLMAX(e8,m8) = vlenb*8
+    bne     a1, a2, fail
+    csrr    t1, vtype
+    li      t0, 0xC3                     # e8,m8,ta,ma
+    bne     t1, t0, fail
+
+    #============================================================
+    # Test 10: fractional LMUL — e8/mf2, AVL huge -> vl = vlenb/2
+    #============================================================
+    li      gp, 10
+    li      a0, 0x7fffffff
+    vsetvli a1, a0, e8, mf2, ta, ma
+    csrr    a2, vlenb
+    srli    a2, a2, 1                    # VLMAX(e8,mf2) = vlenb/2
+    bne     a1, a2, fail
+    csrr    t1, vtype
+    li      t0, 0xC7                     # e8,mf2,ta,ma
+    bne     t1, t0, fail
+
+    #============================================================
+    # Test 11: fractional LMUL — e8/mf8, AVL huge -> vl = vlenb/8
+    #============================================================
+    li      gp, 11
+    li      a0, 0x7fffffff
+    vsetvli a1, a0, e8, mf8, ta, ma
+    csrr    a2, vlenb
+    srli    a2, a2, 3                    # VLMAX(e8,mf8) = vlenb/8
+    bne     a1, a2, fail
+    csrr    t1, vtype
+    li      t0, 0xC5                     # e8,mf8,ta,ma
+    bne     t1, t0, fail
+
+    #============================================================
+    # Test 12: tail/mask-undisturbed policy — e32/m1/tu/mu
+    #   AVL = 3 (< VLMAX) -> vl = 3, vtype = 0x10
+    #============================================================
+    li      gp, 12
+    li      a0, 3
+    vsetvli a1, a0, e32, m1, tu, mu
+    li      t0, 3
+    bne     a1, t0, fail
+    csrr    t1, vtype
+    li      t0, 0x10                     # e32,m1,tu,mu
+    bne     t1, t0, fail
+
+    #============================================================
+    # Test 13: AVL exactly VLMAX — e64/m8 (VLMAX = vlenb), AVL = vlenb -> vl = vlenb
+    #============================================================
+    li      gp, 13
+    csrr    a0, vlenb                    # AVL = vlenb == VLMAX(e64,m8)
+    vsetvli a1, a0, e64, m8, ta, ma
+    csrr    a2, vlenb
+    bne     a1, a2, fail
+    csrr    t1, vtype
+    li      t0, 0xDB                     # e64,m8,ta,ma
+    bne     t1, t0, fail
+
+    #============================================================
+    # Test 14: AVL = VLMAX-1 (no clamp) — e16/m2 (VLMAX = vlenb)
+    #============================================================
+    li      gp, 14
+    csrr    a0, vlenb
+    addi    a0, a0, -1                   # AVL = vlenb - 1 < VLMAX
+    vsetvli a1, a0, e16, m2, ta, ma
+    csrr    a2, vlenb
+    addi    a2, a2, -1
+    bne     a1, a2, fail
+    csrr    t1, vtype
+    li      t0, 0xC9                     # e16,m2,ta,ma
+    bne     t1, t0, fail
+
+    #============================================================
+    # Test 15: vsetvl with vtype in GPR — e8/mf4 (0xC6), AVL huge -> vl = vlenb/4
+    #============================================================
+    li      gp, 15
+    li      a0, 0x7fffffff
+    li      a2, 0xC6                     # e8,mf4,ta,ma
+    vsetvl  a1, a0, a2
+    csrr    a3, vlenb
+    srli    a3, a3, 2                    # VLMAX(e8,mf4) = vlenb/4
+    bne     a1, a3, fail
+    csrr    t1, vtype
+    li      t0, 0xC6
+    bne     t1, t0, fail
+
+    #============================================================
+    # Test 16: back-to-back reconfigure — vtype/vl reflect the LAST vset
+    #   e8/m1 (vl=vlenb) then e64/m1 (vl=vlenb/8)
+    #============================================================
+    li      gp, 16
+    li      a0, 0x7fffffff
+    vsetvli a1, a0, e8, m1, ta, ma
+    csrr    a2, vlenb
+    bne     a1, a2, fail                 # vl = vlenb
+    vsetvli a1, a0, e64, m1, ta, ma
+    csrr    a2, vlenb
+    srli    a2, a2, 3
+    bne     a1, a2, fail                 # vl = vlenb/8
+    csrr    t1, vtype
+    li      t0, 0xD8                     # e64,m1,ta,ma
     bne     t1, t0, fail
 
     # all tests passed
