@@ -120,6 +120,54 @@ make CONFIG=MediumBoomV4Config run-binary BINARY=/abs/path/to/your.riscv
 
 Outputs: `$OD/dhrystone.riscv.log` (stdout), `$OD/dhrystone.riscv.out` (spike-dasm decoded), `$OD/dhrystone.riscv` (symlink to the ELF).
 
+### Run a vector / RVV test under Whisper cosim (Caracal)
+
+RVV tests run on a vector config (e.g. `MediumBoomV4VectorConfig`) and are
+validated in lock-step against the Whisper ISS via cosim. **Always use the
+`-debug` cosim target — `run-binary-debug-hex`:**
+
+```bash
+cd /root/my-chipyard/sims/vcs
+USE_IMAGE_WHISPER=1 make CONFIG=MediumBoomV4VectorConfig run-binary-debug-hex \
+  BINARY=/root/my-chipyard/tests/rvv/vset_test/vset_test.elf
+```
+
+Hard rules — get any of these wrong and the run silently fails or hangs:
+
+- **Use `run-binary-debug-hex` (the debug simv), NOT `run-binary-hex`.** The
+  non-debug build hangs the per-instruction cosim handshake: it connects to
+  Whisper but no instructions retire into the trace (`iss_cosim.log` stays 0
+  bytes), so it runs to the `+max-cycles` limit and reports
+  `*** FAILED *** (timeout)`. The debug build cosims correctly. (`-debug` only
+  changes VCS compile flags, not the elaborated Verilog, so this is purely a
+  cosim-bridge timing issue with the faster non-debug binary.) Build the debug
+  simv first: `make CONFIG=MediumBoomV4VectorConfig -j$(nproc) debug`.
+- **`USE_IMAGE_WHISPER=1` is required.** Without it the in-container cosim
+  silently fails to connect to Whisper.
+- **One cosim test at a time.** Concurrent runs collide on the shared
+  `whisper_connect` socket — symptoms are `Failed to send socket command` or a
+  false `Pipeline has hung` (the DUT idles waiting for the stalled bridge until
+  `boom_timeout` fires). If a run was killed mid-flight, `rm -f
+  sims/vcs/whisper_connect` before retrying.
+- Add `EXTRA_SIM_FLAGS="+verbose"` for the per-instruction cosim trace +
+  `GPR write` lines in `$OD/<test>.out` (printfs are `verbose && !reset` gated).
+
+Pass criteria (in `$OD/<test>.out` / the run log):
+- `*** PASSED ***` and `$finish called from ... TestDriver.v` — clean tohost
+  teardown. A bare bring-up test (no riscv-test framework) instead spins at its
+  `tohost` write; a pass writes `gp=1` (`(0<<1)|1`), a fail writes an odd code.
+- **Bad signs:** `Pipeline has hung` (`BoomCore.sv` assertion — real stall or a
+  stalled cosim bridge), `*** FAILED *** (timeout)`, or `MISMATCH` lines (DUT vs
+  Whisper divergence).
+- A single `Socket connection failed` line is **harmless** — it's the bridge's
+  first 30 ms retry before Whisper's server is up; the decisive line is
+  `Whisper connect succeeded in N ms`.
+
+RVV test ELFs: `tests/rvv/bringup_tests/` (e.g. `ms11a2_pure_vle.elf` unit-stride
+load, `ms11a2_vse.elf` unit-stride store), `tests/rvv/vset_test/vset_test.elf`
+(vset smoke, 16 configs). Vector configs: `MediumBoomV4VectorConfig` and friends
+in `chipyard/src/main/scala/config/BoomConfigs.scala`.
+
 ### Run a single test, with waveform
 
 #### VCS — FSDB (default, recommended for Verdi)
