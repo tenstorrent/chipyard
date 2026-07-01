@@ -18,12 +18,12 @@ _start:
     csrs    mstatus, t0
 
     li      gp, 1
-    la      t0, src_data        # base set up EARLY (slack before the vector load)
     # establish a valid vtype (whole-reg ignores vl but keep the unit happy)
     li      a0, 4
     vsetvli a1, a0, e64, m1, ta, ma
 
-    vl1re64.v v4, (t0)          # whole-register load (4 e64)
+    la      t0, src_data        # base produced immediately before the load (0-slack;
+    vl1re64.v v4, (t0)          # whole-register load, relies on the writeback bypass)
     la      t1, vec_dst
     vs1r.v  v4, (t1)            # whole-register store (32 bytes)
 
