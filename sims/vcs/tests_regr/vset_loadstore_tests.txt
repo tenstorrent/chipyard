@@ -19,3 +19,32 @@
 /root/my-chipyard/tests/rvv/bringup_tests/vsetvl_basic.elf
 /root/my-chipyard/tests/rvv/bringup_tests/vsetvli_keep_vl.elf
 /root/my-chipyard/tests/rvv/bringup_tests/vsetvl_back_to_back.elf
+
+# ============================================================================
+# Caracal Step 11 M1 LSU suite — OoO vector load/store, validated end-to-end
+# against Whisper cosim on MediumBoomV4VectorConfig (all *** PASSED ***, 0
+# register mismatch). Run with: USE_IMAGE_WHISPER=1 CONFIG=MediumBoomV4VectorConfig
+# ./run_regr.sh tests_regr/vset_loadstore_tests.txt MediumBoomV4VectorConfig
+# ----------------------------------------------------------------------------
+# 11a.2 unit-stride load/store
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a2_pure_vle.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a2_vse.elf
+# 11a hardening: LMUL>1 unit-stride
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a3_vle_lmul2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a3_vse_lmul2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a3_vse_lmul4.elf
+# 11a hardening: masked + tail-undisturbed
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a4_vle_mask.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a4_vse_mask.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a4_vle_tail.elf
+# 11b strided (vlse/vsse) — Packer (good stride) + Walker (arbitrary stride)
+/root/my-chipyard/tests/rvv/bringup_tests/ms11b_vlse.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11b_vlse_walk.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11b_vsse.elf
+# 11b indexed (gather/scatter)
+/root/my-chipyard/tests/rvv/bringup_tests/ms11b_vluxei.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11b_vsuxei.elf
+# 11d whole-register (vl1r/vs1r), mask load/store (vlm/vsm), base-operand race repro
+/root/my-chipyard/tests/rvv/bringup_tests/ms11d_vl1r.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11d_vlm.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11d_race.elf
