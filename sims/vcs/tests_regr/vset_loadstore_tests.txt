@@ -16,9 +16,12 @@
 /root/my-chipyard/tests/rvv/segment_tests/stress_seg.elf
 /root/my-chipyard/tests/rvv/ovi_lsgen_tests/edge_ls_gen.elf
 # vsetvl coverage — exercise cracker-park / vtype-broadcast / serial-id machinery (Issue 12)
-/root/my-chipyard/tests/rvv/bringup_tests/vsetvl_basic.elf
-/root/my-chipyard/tests/rvv/bringup_tests/vsetvli_keep_vl.elf
-/root/my-chipyard/tests/rvv/bringup_tests/vsetvl_back_to_back.elf
+# NOTE: these three ELFs (and their sources) do not exist in the tree -- they were
+# listed here before the test files landed. Commented out so the regression does
+# not error on missing ELFs; re-enable if/when vsetvl_*.S are added and built.
+#/root/my-chipyard/tests/rvv/bringup_tests/vsetvl_basic.elf
+#/root/my-chipyard/tests/rvv/bringup_tests/vsetvli_keep_vl.elf
+#/root/my-chipyard/tests/rvv/bringup_tests/vsetvl_back_to_back.elf
 
 # ============================================================================
 # Caracal Step 11 M1 LSU suite — OoO vector load/store, validated end-to-end
