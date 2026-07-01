@@ -46,3 +46,21 @@
 /root/my-chipyard/tests/rvv/bringup_tests/ms11d_vlm.elf
 /root/my-chipyard/tests/rvv/bringup_tests/ms11d_vleff.elf
 /root/my-chipyard/tests/rvv/bringup_tests/ms11d_race.elf
+# Step 14 acceptance: SEW{8,16,32,64} x LMUL{1,2,4,8} unit-stride matrix + strip-mine
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e8_m1.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e16_m1.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e32_m1.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e64_m1.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e8_m2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e16_m2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e32_m2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e64_m2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e8_m4.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e16_m4.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e32_m4.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e64_m4.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e8_m8.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e16_m8.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e32_m8.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e64_m8.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_stripmine.elf
