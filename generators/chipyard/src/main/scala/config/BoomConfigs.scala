@@ -118,6 +118,35 @@ class MegaBoomV4Config extends Config(
   new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)
 
+// Caracal RVV 1.0 (Goal 1) vector-enabled configs.
+class MediumBoomV4VectorConfig extends Config(
+  new boom.v4.common.WithVector() ++                                // enable Caracal vector pipeline
+  new boom.v4.common.WithBoomDebugHarness ++                        // Attach whisper-cosim DPI harness
+  new WithCustomBootROM ++                                          // Custom BootROM for COSIM
+  new boom.v4.common.WithNMediumBooms(1) ++                         // medium boom config
+  new chipyard.config.AbstractConfig)
+
+// M2 Track B/C: enable the CII vector-arithmetic coprocessor (un-ties IQ_V_ALU,
+// instantiates VecCiiHost + the tt_cii_host_wrap BlackBox bridge to the SV VPU).
+class MediumBoomV4VectorArithConfig extends Config(
+  new boom.v4.common.WithVector(boom.v4.vec.common.VectorParams(
+    enableVectorArith = true)) ++
+  new boom.v4.common.WithBoomDebugHarness ++
+  new WithCustomBootROM ++
+  new boom.v4.common.WithNMediumBooms(1) ++
+  new chipyard.config.AbstractConfig)
+
+class MegaBoomV4VectorConfig extends Config(
+  new boom.v4.common.WithVector(boom.v4.vec.common.VectorParams(    // Mega-tier vector overrides
+    vecIssueGrantWidth = 2,
+    dcacheArbiterMode = "dual-dynamic",
+    vecScalarSnoopEnable = true)) ++
+  new boom.v4.common.WithBoomDebugHarness ++                        // Attach whisper-cosim DPI harness
+  new WithCustomBootROM ++                                          // Custom BootROM for COSIM
+  new boom.v4.common.WithNMegaBooms(1) ++                           // mega boom config
+  new chipyard.config.WithSystemBusWidth(128) ++
+  new chipyard.config.AbstractConfig)
+
 class DualSmallBoomV4Config extends Config(
   new boom.v4.common.WithBoomDebugHarness ++                        // Attach whisper-cosim DPI harness
   new WithCustomBootROM ++                                          // Custom BootROM for COSIM
