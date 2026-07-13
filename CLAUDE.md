@@ -15,6 +15,7 @@ Local patches (not on upstream branches):
 - `generators/shuttle/src/main/scala/exu/Core.scala` — added `io.trace_core_ingress.get.ctx := csr.io.ptbr.asid`
 - `sims/xcelium/Makefile` — added `debug-ida` target, `$(sim_debug_ida)`, `%.ida.db` pattern rule for Verisium Debug
 - `common.mk:462` — added `%.ida.db` to the `-include` filter
+- `common.mk:314` — added `vi` to the sim-filelist exclusion (`grep -v '…\|vi)$'`) so HardFloat `.vi` macro headers (pulled in for the M2 CII VPU) stay include-only, found via the gen-collateral incdir, not compiled as sources
 
 If `generators/boom`, `generators/rocket-chip`, or `generators/diplomacy` get reset, the build will fail with the Caracal trace-API errors documented in this file's `Troubleshooting` section.
 

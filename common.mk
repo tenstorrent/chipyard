@@ -311,7 +311,7 @@ ifneq (,$(EXT_FILELISTS))
 else
 	rm -f $@
 endif
-	sort -u $(sim_files) $(ALL_MODS_FILELIST) | grep -v '.*\.\(svh\|h\|conf\)$$' >> $@
+	sort -u $(sim_files) $(ALL_MODS_FILELIST) | grep -v '.*\.\(svh\|h\|conf\|vi\)$$' >> $@
 	echo "$(TOP_SMEMS_FILE)" >> $@
 	echo "$(MODEL_SMEMS_FILE)" >> $@
 
