@@ -150,7 +150,8 @@ class MegaBoomV4VectorConfig extends Config(
 // M2 Track B/C on the Mega tier: CII vector-arith coprocessor + Mega core.
 class MegaBoomV4VectorArithConfig extends Config(
   new boom.v4.common.WithVector(boom.v4.vec.common.VectorParams(
-    enableVectorArith = true)) ++
+    enableVectorArith = true,
+    dcacheArbiterMode = "dual-dynamic")) ++   // LSU Phase 2: 2nd load beat on an idle pipe
   new boom.v4.common.WithBoomDebugHarness ++                        // Attach whisper-cosim DPI harness
   new WithCustomBootROM ++                                          // Custom BootROM for COSIM
   new boom.v4.common.WithNMegaBooms(1) ++                           // mega boom config
