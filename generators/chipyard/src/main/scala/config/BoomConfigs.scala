@@ -147,6 +147,16 @@ class MegaBoomV4VectorConfig extends Config(
   new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)
 
+// M2 Track B/C on the Mega tier: CII vector-arith coprocessor + Mega core.
+class MegaBoomV4VectorArithConfig extends Config(
+  new boom.v4.common.WithVector(boom.v4.vec.common.VectorParams(
+    enableVectorArith = true)) ++
+  new boom.v4.common.WithBoomDebugHarness ++                        // Attach whisper-cosim DPI harness
+  new WithCustomBootROM ++                                          // Custom BootROM for COSIM
+  new boom.v4.common.WithNMegaBooms(1) ++                           // mega boom config
+  new chipyard.config.WithSystemBusWidth(128) ++
+  new chipyard.config.AbstractConfig)
+
 class DualSmallBoomV4Config extends Config(
   new boom.v4.common.WithBoomDebugHarness ++                        // Attach whisper-cosim DPI harness
   new WithCustomBootROM ++                                          // Custom BootROM for COSIM
