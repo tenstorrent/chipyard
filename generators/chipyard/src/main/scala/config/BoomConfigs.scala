@@ -136,6 +136,18 @@ class MediumBoomV4VectorArithConfig extends Config(
   new boom.v4.common.WithNMediumBooms(1) ++
   new chipyard.config.AbstractConfig)
 
+// Track A / A1: the modular disambiguation substrate (CrossLsuSnoop + vector memory
+// queues + DcacheArbiter) armed. vecScalarSnoopEnable moves the vector store->LDQ
+// disambiguation onto CrossLsuSnoop; must stay 0-mismatch and match the arith config.
+class MediumBoomV4VectorSnoopConfig extends Config(
+  new boom.v4.common.WithVector(boom.v4.vec.common.VectorParams(
+    enableVectorArith = true,
+    vecScalarSnoopEnable = true)) ++
+  new boom.v4.common.WithBoomDebugHarness ++
+  new WithCustomBootROM ++
+  new boom.v4.common.WithNMediumBooms(1) ++
+  new chipyard.config.AbstractConfig)
+
 class MegaBoomV4VectorConfig extends Config(
   new boom.v4.common.WithVector(boom.v4.vec.common.VectorParams(    // Mega-tier vector overrides
     vecIssueGrantWidth = 2,
