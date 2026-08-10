@@ -8,12 +8,21 @@ import freechips.rocketchip.util.{ResourceFileName}
 // Required by the whisper-cosim flow (the cosim bootrom expects HTIF tohost/fromhost and CLINT-poke
 // boot for secondary harts).
 //
-// The `WithBoomDebugHarness` mixin (the whisper-cosim DPI harness) was dropped from every
-// config below at plan v2 step A2: it exists only on the M1/M2 boom, not on the v2 branch,
-// and it was mixed into the PLAIN V4 configs too, so its absence broke every config here,
-// vector or not. It is not described by any Phase-N nlhdl spec, so re-creating it would be
-// unspecified RTL and out of A2's scope. It must come back as a specified node before
-// gate (e) — the end-to-end cosim regressions — can run, i.e. before step D3.
+// The `WithBoomDebugHarness` mixin (the whisper-cosim DPI harness) is RESTORED as of
+// 2026-08-10 and is mixed into every V4 config below that carries the COSIM bootrom. It was
+// dropped at plan v2 step A2 because it existed only on the M1/M2 boom; boom now carries it
+// again (`boom.v4.common.WithBoomDebugHarness` + `vsrc/core_harness*.v` + `DebugMicroOp`),
+// which clears the A2 blocker on gate (e), the end-to-end cosim regressions.
+//
+// It SELF-GATES to VCS: the fragment sets `enableDebugHarness = isVcs`, sniffing
+// SIMULATOR/SIM_NAME or the cwd, because the BlackBox SV uses `import "DPI-C"` that VCS
+// handles natively and Verilator does not. So a Verilator build of these configs simply
+// elaborates without the harness rather than failing. Force it on from a non-vcs path with
+// SIMULATOR=vcs.
+//
+// Gate (f) is unaffected: `docs_caracal/v2-rebaseline/regen.sh` strips this mixin before
+// elaborating its reference trees, precisely so the baseline comparison is not perturbed by
+// cosim scaffolding. Do not remove that stripping rule.
 class WithCustomBootROM extends Config((site, here, up) => {
     case BootROMLocated(x) => up(BootROMLocated(x), site)
         .map(_.copy(contentFileName = ResourceFileName("/bootrom/bootrom.rv64.img")))
@@ -94,11 +103,13 @@ class SimBlockDeviceMegaBoomV3Config extends Config(
 // ---------------------
 
 class SmallBoomV4Config extends Config(
+  new boom.v4.common.WithBoomDebugHarness ++                        // whisper-cosim DPI harness (self-gates to VCS)
   new WithCustomBootROM ++                                          // Custom BootROM for COSIM
   new boom.v4.common.WithNSmallBooms(1) ++                          // small boom config
   new chipyard.config.AbstractConfig)
 
 class MediumBoomV4Config extends Config(
+  new boom.v4.common.WithBoomDebugHarness ++                        // whisper-cosim DPI harness (self-gates to VCS)
   new WithCustomBootROM ++                                          // Custom BootROM for COSIM
   new boom.v4.common.WithNMediumBooms(1) ++                         // medium boom config
   new chipyard.config.AbstractConfig)
@@ -109,12 +120,14 @@ class MediumBoomV4CommitLogConfig extends Config(
   new chipyard.config.AbstractConfig)
 
 class LargeBoomV4Config extends Config(
+  new boom.v4.common.WithBoomDebugHarness ++                        // whisper-cosim DPI harness (self-gates to VCS)
   new WithCustomBootROM ++                                          // Custom BootROM for COSIM
   new boom.v4.common.WithNLargeBooms(1) ++                          // large boom config
   new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)
 
 class MegaBoomV4Config extends Config(
+  new boom.v4.common.WithBoomDebugHarness ++                        // whisper-cosim DPI harness (self-gates to VCS)
   new WithCustomBootROM ++                                          // Custom BootROM for COSIM
   new boom.v4.common.WithNMegaBooms(1) ++                           // mega boom config
   new chipyard.config.WithSystemBusWidth(128) ++
@@ -136,12 +149,14 @@ class MegaBoomV4Config extends Config(
 // (decision D2) and is what makes gate (c) reachable. SmallBoom is deliberately
 // absent from the vector matrix (decision D3).
 class MediumBoomV4VectorConfig extends Config(
+  new boom.v4.common.WithBoomDebugHarness ++                        // whisper-cosim DPI harness (self-gates to VCS)
   new boom.v4.common.WithVector() ++                                // enable Caracal vector pipeline
   new WithCustomBootROM ++                                          // Custom BootROM for COSIM
   new boom.v4.common.WithNMediumBooms(1) ++                         // medium boom config
   new chipyard.config.AbstractConfig)
 
 class MegaBoomV4VectorConfig extends Config(
+  new boom.v4.common.WithBoomDebugHarness ++                        // whisper-cosim DPI harness (self-gates to VCS)
   new boom.v4.common.WithMegaBoomsVector ++                         // Mega-tier vector overrides
   new WithCustomBootROM ++                                          // Custom BootROM for COSIM
   new boom.v4.common.WithNMegaBooms(1) ++                           // mega boom config
