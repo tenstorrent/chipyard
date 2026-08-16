@@ -150,6 +150,7 @@ class MegaBoomV4Config extends Config(
 // absent from the vector matrix (decision D3).
 class MediumBoomV4VectorConfig extends Config(
   new boom.v4.common.WithBoomDebugHarness ++                        // whisper-cosim DPI harness (self-gates to VCS)
+  new boom.v4.common.WithVecScalarSnoop ++                          // Phase G: scalar<-vector store forwarding
   new boom.v4.common.WithVector() ++                                // enable Caracal vector pipeline
   new WithCustomBootROM ++                                          // Custom BootROM for COSIM
   new boom.v4.common.WithNMediumBooms(1) ++                         // medium boom config
@@ -157,6 +158,7 @@ class MediumBoomV4VectorConfig extends Config(
 
 class MegaBoomV4VectorConfig extends Config(
   new boom.v4.common.WithBoomDebugHarness ++                        // whisper-cosim DPI harness (self-gates to VCS)
+  new boom.v4.common.WithVecScalarSnoop ++                          // Phase G: scalar<-vector store forwarding
   new boom.v4.common.WithMegaBoomsVector ++                         // Mega-tier vector overrides
   new WithCustomBootROM ++                                          // Custom BootROM for COSIM
   new boom.v4.common.WithNMegaBooms(1) ++                           // mega boom config
