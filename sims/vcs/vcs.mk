@@ -18,7 +18,7 @@ else
 SEED_FLAG=+ntb_random_seed_automatic
 endif
 
-CLOCK_PERIOD ?= 1.0
+CLOCK_PERIOD ?= 2.0
 RESET_DELAY ?= 777.7
 
 #----------------------------------------------------------------------------------------
