@@ -69,13 +69,13 @@ model_dir_debug = $(build_dir)/$(long_name).debug
 #########################################################################################
 
 
-$(sim): $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS) $(cosimso) $(base_dir)/sims/common-sim-flags.mk
+$(sim): $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS) $(cosimso) $(base_dir)/sims/common-sim-flags.mk $(sim_dir)/vcs.mk
 	$(call require_cmd,vcs)
 	$(require_riscv)
 	rm -rf $(model_dir)
 	$(VCS) $(VCS_OPTS) $(EXTRA_SIM_SOURCES) -o $@ -Mdir=$(model_dir) $(COSIM_OPTS)
 
-$(sim_debug): $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS) $(cosimso) $(base_dir)/sims/common-sim-flags.mk
+$(sim_debug): $(sim_common_files) $(dramsim_lib) $(EXTRA_SIM_REQS) $(cosimso) $(base_dir)/sims/common-sim-flags.mk $(sim_dir)/vcs.mk
 	$(call require_cmd,vcs)
 	$(require_riscv)
 	rm -rf $(model_dir_debug)
