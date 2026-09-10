@@ -8,8 +8,14 @@
 # CONFIG defaults to MediumBoomV4Config and can also be set via env.
 # SKIP_BUILD=1 to skip the upfront `make debug` (assumes simv already exists).
 # MAKE_JOBS=N to override the parallelism of the upfront build (default: nproc).
+# USE_IMAGE_WHISPER defaults to 1 (see below); set to 0 for a host-built whisper.
 
 set -uo pipefail   # NOT -e: one failing test must not abort the rest.
+
+# Required for cosim inside the container: without it common.mk points WHISPER_REAL
+# at $base_dir/sims/whisper, which does not exist there, so the whisper server never
+# starts and EVERY test reports ERROR with "Whisper connect failed" and 0 cycles.
+export USE_IMAGE_WHISPER="${USE_IMAGE_WHISPER:-1}"
 
 CONFIG="${1:-${CONFIG:-MediumBoomV4Config}}"
 SKIP_BUILD="${SKIP_BUILD:-0}"
