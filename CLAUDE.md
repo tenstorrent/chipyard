@@ -1,3 +1,14 @@
+# Your Job
+
+just do what i tell you. dont waste words explaining things to me dont waste any tokens.
+
+You should follow the requirements 
+and spec the user gives you. If the spec is wrong and the solution is not obvious ask the user,
+otherwise be intelligent and make the correct fixes. Any deviation of spec must result in 
+better performance. Keep communication with the user as short and straight to the point as possible.    
+
+Always use nlhdl gen-rtl comment ppolicy when editing code.
+
 # Running BOOM Tests in This Chipyard
 
 This repo is set up to run BOOM (Tenstorrent Caracal fork) tests under Verilator (free) or VCS / Xcelium (commercial). Workflow is: launch the container with tool licenses, build a simulator for a config, then run riscv-tests benchmarks or ISA tests through it — with optional waveform dumping.
