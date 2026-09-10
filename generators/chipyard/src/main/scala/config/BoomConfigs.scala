@@ -165,6 +165,38 @@ class MegaBoomV4VectorConfig extends Config(
   new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)
 
+// Wide-D$-lane variants: same machines with a 128-bit LSU<->D$ request lane, so
+// peak vector memory bandwidth doubles (128 b/cycle on Medium, 256 on Mega).
+// Separate configs so the narrow ones above stay the regression baseline.
+class MediumBoomV4VectorWideConfig extends Config(
+  new boom.v4.common.WithBoomDebugHarness ++                        // whisper-cosim DPI harness (self-gates to VCS)
+  new boom.v4.common.WithVecScalarSnoop ++                          // Phase G: scalar<-vector store forwarding
+  new boom.v4.common.WithMediumBoomsVectorWide ++                   // Caracal vector pipeline, 128-bit D$ lane
+  new WithCustomBootROM ++                                          // Custom BootROM for COSIM
+  new boom.v4.common.WithNMediumBooms(1) ++                         // medium boom config
+  new chipyard.config.AbstractConfig)
+
+class MegaBoomV4VectorWideConfig extends Config(
+  new boom.v4.common.WithBoomDebugHarness ++                        // whisper-cosim DPI harness (self-gates to VCS)
+  new boom.v4.common.WithVecScalarSnoop ++                          // Phase G: scalar<-vector store forwarding
+  new boom.v4.common.WithMegaBoomsVectorWide ++                     // Mega-tier vector overrides, 128-bit D$ lane
+  new WithCustomBootROM ++                                          // Custom BootROM for COSIM
+  new boom.v4.common.WithNMegaBooms(1) ++                           // mega boom config
+  new chipyard.config.WithSystemBusWidth(128) ++
+  new chipyard.config.AbstractConfig)
+
+// EXPERIMENT: MegaBoomV4VectorWideConfig with all LSU queues/buffers/FIFOs, the
+// vector register file and the ROB 4x deeper. Capacity-sensitivity probe for the
+// memory-bound vector kernels; not a shipping tier.
+class MegaBoomV4VectorWide4xConfig extends Config(
+  new boom.v4.common.WithBoomDebugHarness ++                        // whisper-cosim DPI harness (self-gates to VCS)
+  new boom.v4.common.WithVecScalarSnoop ++                          // Phase G: scalar<-vector store forwarding
+  new boom.v4.common.WithMegaBoomsVectorWide4x ++                   // 4x LSU queues / VRF / ROB, 128-bit D$ lane
+  new WithCustomBootROM ++                                          // Custom BootROM for COSIM
+  new boom.v4.common.WithNMegaBooms(1) ++                           // mega boom config
+  new chipyard.config.WithSystemBusWidth(128) ++
+  new chipyard.config.AbstractConfig)
+
 class DualSmallBoomV4Config extends Config(
   new WithCustomBootROM ++                                          // Custom BootROM for COSIM
   new boom.v4.common.WithNSmallBooms(2) ++                          // 2 boom cores
