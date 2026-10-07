@@ -119,6 +119,10 @@ class MediumBoomV4CommitLogConfig extends Config(
   new boom.v4.common.WithNMediumBooms(1) ++
   new chipyard.config.AbstractConfig)
 
+class MediumBoomV4PipeViewConfig extends Config(
+  new boom.v4.common.WithBoomPipeViewPrintf ++                      // per-stage O3PV printfs for catscan
+  new MediumBoomV4Config)
+
 class LargeBoomV4Config extends Config(
   new boom.v4.common.WithBoomDebugHarness ++                        // whisper-cosim DPI harness (self-gates to VCS)
   new WithCustomBootROM ++                                          // Custom BootROM for COSIM
@@ -156,6 +160,10 @@ class MediumBoomV4VectorConfig extends Config(
   new boom.v4.common.WithNMediumBooms(1) ++                         // medium boom config
   new chipyard.config.AbstractConfig)
 
+class MediumBoomV4VectorPipeViewConfig extends Config(
+  new boom.v4.common.WithBoomPipeViewPrintf ++                      // per-stage O3PV printfs for catscan
+  new MediumBoomV4VectorConfig)
+
 class MegaBoomV4VectorConfig extends Config(
   new boom.v4.common.WithBoomDebugHarness ++                        // whisper-cosim DPI harness (self-gates to VCS)
   new boom.v4.common.WithVecScalarSnoop ++                          // Phase G: scalar<-vector store forwarding
@@ -184,6 +192,10 @@ class MegaBoomV4VectorWideConfig extends Config(
   new boom.v4.common.WithNMegaBooms(1) ++                           // mega boom config
   new chipyard.config.WithSystemBusWidth(128) ++
   new chipyard.config.AbstractConfig)
+
+class MegaBoomV4VectorWidePipeViewConfig extends Config(
+  new boom.v4.common.WithBoomPipeViewPrintf ++                      // per-stage O3PV printfs for catscan
+  new MegaBoomV4VectorWideConfig)
 
 // EXPERIMENT: MegaBoomV4VectorWideConfig with all LSU queues/buffers/FIFOs, the
 // vector register file and the ROB 4x deeper. Capacity-sensitivity probe for the
