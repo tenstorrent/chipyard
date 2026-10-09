@@ -185,6 +185,14 @@ class MediumBoomV4VectorWideConfig extends Config(
   new chipyard.config.AbstractConfig)
 
 class MegaBoomV4VectorWideConfig extends Config(
+  new Config((site, here, up) => {
+    case freechips.rocketchip.subsystem.TilesLocated(freechips.rocketchip.subsystem.InSubsystem) =>
+      up(freechips.rocketchip.subsystem.TilesLocated(freechips.rocketchip.subsystem.InSubsystem), site) map {
+        case tp: boom.v4.common.BoomTileAttachParams => tp.copy(tileParams = tp.tileParams.copy(
+          core = tp.tileParams.core.copy(numRobEntries = 512, numLdqEntries = 128)))
+        case other => other
+      }
+  }) ++
   new boom.v4.common.WithBoomDebugHarness ++                        // whisper-cosim DPI harness (self-gates to VCS)
   new boom.v4.common.WithVecScalarSnoop ++                          // Phase G: scalar<-vector store forwarding
   new boom.v4.common.WithMegaBoomsVectorWide ++                     // Mega-tier vector overrides, 128-bit D$ lane
@@ -196,6 +204,26 @@ class MegaBoomV4VectorWideConfig extends Config(
 class MegaBoomV4VectorWidePipeViewConfig extends Config(
   new boom.v4.common.WithBoomPipeViewPrintf ++                      // per-stage O3PV printfs for catscan
   new MegaBoomV4VectorWideConfig)
+
+class MegaBoomV4VectorWideUSQ32PipeViewConfig extends Config(
+  new boom.v4.common.WithBoomPipeViewPrintf ++
+  new boom.v4.common.WithBoomDebugHarness ++
+  new boom.v4.common.WithVecScalarSnoop ++
+  new boom.v4.common.WithVector(usQueueEntries = 32, lsuWidth = 2, dcacheArbiterMode = "dual-dynamic", dcacheDataBits = 128) ++
+  new WithCustomBootROM ++
+  new boom.v4.common.WithNMegaBooms(1) ++
+  new chipyard.config.WithSystemBusWidth(128) ++
+  new chipyard.config.AbstractConfig)
+
+class MegaBoomV4VectorWideUSQ32VR256PipeViewConfig extends Config(
+  new boom.v4.common.WithBoomPipeViewPrintf ++
+  new boom.v4.common.WithBoomDebugHarness ++
+  new boom.v4.common.WithVecScalarSnoop ++
+  new boom.v4.common.WithVector(numVecPhysRegisters = 256, usQueueEntries = 32, lsuWidth = 2, dcacheArbiterMode = "dual-dynamic", dcacheDataBits = 128) ++
+  new WithCustomBootROM ++
+  new boom.v4.common.WithNMegaBooms(1) ++
+  new chipyard.config.WithSystemBusWidth(128) ++
+  new chipyard.config.AbstractConfig)
 
 // EXPERIMENT: MegaBoomV4VectorWideConfig with all LSU queues/buffers/FIFOs, the
 // vector register file and the ROB 4x deeper. Capacity-sensitivity probe for the
