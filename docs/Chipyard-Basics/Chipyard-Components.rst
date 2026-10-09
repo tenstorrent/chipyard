@@ -20,6 +20,10 @@ Processor Cores
   An out-of-order RISC-V core.
   See :ref:`Generators/BOOM:Berkeley Out-of-Order Machine (BOOM)` for more information.
 
+**Shuttle Core**
+  A superscalar in-order RISC-V core.
+  See :ref:`Generators/Shuttle:Shuttle RISC-V Core` for more information
+
 **CVA6 Core**
   An in-order RISC-V core written in System Verilog. Previously called Ariane.
   See :ref:`Generators/CVA6:CVA6 Core` for more information.
@@ -28,21 +32,16 @@ Processor Cores
   An in-order 32 bit RISC-V core written in System Verilog.
   See :ref:`Generators/Ibex:Ibex Core` for more information.
 
+**VexiiRiscv Core**
+  A dual-issue in-order 64 bit RISC-V core implemented in SpinalHDL
+  See :ref:`Generators/VexiiRiscv:VexiiRiscv Core` for more information.
+
+
 Accelerators
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**Hwacha**
-  A decoupled vector architecture co-processor.
-  Hwacha currently implements a non-standard RISC-V extension, using a vector architecture programming model.
-  Hwacha integrates with a Rocket or BOOM core using the RoCC (Rocket Custom Co-processor) interface.
-  See :ref:`Generators/Hwacha:Hwacha` for more information.
-
 **Gemmini**
   A matrix-multiply accelerator targeting neural-networks
-
-**SHA3**
-  A fixed-function accelerator for the SHA3 hash function. This simple accelerator is used as a demonstration for some of the
-  Chipyard integration flows using the RoCC interface.
 
 System Components:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -53,9 +52,9 @@ System Components:
 **icenet**
   A Network Interface Controller (NIC) designed to achieve up to 200 Gbps.
 
-**sifive-blocks**
-  System components implemented by SiFive and used by SiFive projects, designed to be integrated with the Rocket Chip generator.
-  These system and peripheral components include UART, SPI, JTAG, I2C, PWM, and other peripheral and interface devices.
+**rocket-chip-blocks**
+  System components originally implemented by SiFive and used by SiFive projects, designed to be integrated with the Rocket Chip generator.
+  Now maintained by Chips Alliance. These system and peripheral components include UART, SPI, JTAG, I2C, PWM, and other peripheral and interface devices.
 
 **AWL (Analog Widget Library)**
   Digital components required for integration with high speed serial links.
@@ -79,16 +78,12 @@ Tools
   FIRRTL enables digital circuits manipulation between Chisel elaboration and Verilog generation.
   See :ref:`Tools/FIRRTL:FIRRTL` for more information.
 
-**Barstools**
+**Tapeout-Tools (Formerly Barstools)**
   A collection of common FIRRTL transformations used to manipulate a digital circuit without changing the generator source RTL.
-  See :ref:`Tools/Barstools:Barstools` for more information.
+  See :ref:`Tools/Tapeout-Tools:Tapeout-Tools` for more information.
 
 **Dsptools**
   A Chisel library for writing custom signal processing hardware, as well as integrating custom signal processing hardware into an SoC (especially a Rocket-based SoC).
-
-**Dromajo**
-  A RV64GC emulator primarily used for co-simulation and was originally developed by Esperanto Technologies.
-  See :ref:`Tools/Dromajo:Dromajo` for more information.
 
 Toolchains
 -------------------------------------------
@@ -99,16 +94,15 @@ Toolchains
   The riscv-tools repository was previously required to run any RISC-V software, however, many of the riscv-tools components have since been upstreamed to their respective open-source projects (Linux, GNU, etc.).
   Nevertheless, for consistent versioning, as well as software design flexibility for custom hardware, we include the riscv-tools repository and installation in the Chipyard framework.
 
-**esp-tools**
-  A fork of riscv-tools, designed to work with the Hwacha non-standard RISC-V extension.
-  This fork can also be used as an example demonstrating how to add additional RoCC accelerators to the ISA-level simulation (Spike) and the higher-level software toolchain (GNU binutils, riscv-opcodes, etc.)
-
 Software
 -------------------------------------------
 
 **FireMarshal**
   FireMarshal is the default workload generation tool that Chipyard uses to create software to run on its platforms.
   See :ref:`fire-marshal` for more information.
+
+**Baremetal-IDE**
+  Baremetal-IDE is an all-in-one tool for baremetal-level C/C++ program development. See `Tutorial <https://ucb-bar.gitbook.io/chipyard/baremetal-ide/getting-started-with-baremetal-ide/>`_ for more information.
 
 Sims
 -------------------------------------------

@@ -1,0 +1,90 @@
+# ms11d_vleff.S
+#
+# Caracal Step 11d: fault-only-first unit-stride load (vle64ff.v).
+#
+# In M1 the LSU uses bare-mode PHYSICAL addressing (no TLB / page faults), so
+# vleff never actually faults -> it behaves like a normal vle AND leaves vl
+# unchanged (the fault-trim case cannot occur). Test: load v4 via vle64ff, store
+# it back, scalar self-check the data; then csrr vl and confirm it is still 4
+# (vleff with no fault does not change vl).
+
+.section .text
+.globl _start
+.option norvc
+
+_start:
+    la      sp, stack_top
+    la      t0, trap_vector
+    csrw    mtvec, t0
+    li      t0, (3 << 9) | (3 << 13)     # mstatus.VS=11, FS=11
+    csrs    mstatus, t0
+
+    li      gp, 1
+    la      t0, src_data
+    li      a0, 4
+    vsetvli a1, a0, e64, m1, ta, ma
+    vle64ff.v v4, (t0)                    # fault-only-first load
+
+    # vl should be unchanged (=4, no fault). Read it back.
+    csrr    a2, vl
+    li      a3, 4
+    bne     a2, a3, fail
+
+    # store v4 and self-check the loaded data
+    la      t1, vec_dst
+    li      a0, 4
+    vsetvli a1, a0, e64, m1, ta, ma
+    vse64.v v4, (t1)
+
+    fence
+    la      t1, vec_dst
+    la      t4, src_data
+    li      a0, 4
+1:
+    ld      t2, 0(t1)
+    ld      t3, 0(t4)
+    bne     t2, t3, fail
+    addi    t1, t1, 8
+    addi    t4, t4, 8
+    addi    a0, a0, -1
+    bnez    a0, 1b
+    j       pass
+
+pass:
+    li      gp, 1
+    j       write_tohost
+fail:
+    slli    gp, gp, 1
+    ori     gp, gp, 1
+    j       write_tohost
+write_tohost:
+    la      t5, tohost
+    sd      gp, 0(t5)
+1:  j       1b
+
+.align 2
+trap_vector:
+    li      gp, 0x1F
+    j       fail
+
+.section .data
+.align 6
+.global tohost
+tohost:   .dword 0
+.align 6
+.global fromhost
+fromhost: .dword 0
+.align 6
+src_data:
+    .dword 0x1122334455667788
+    .dword 0x99aabbccddeeff00
+    .dword 0x0102030405060708
+    .dword 0xdeadbeefcafef00d
+.align 6
+vec_dst:
+    .skip 32
+.section .bss
+.align 4
+stack_bottom:
+    .skip 4096
+stack_top:

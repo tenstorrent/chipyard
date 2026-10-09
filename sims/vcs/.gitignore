@@ -2,3 +2,6 @@
 !.gitignore
 !Makefile
 !dramsim2_ini
+!*.sh
+!tests_regr/
+!tests_regr/**

@@ -1,0 +1,66 @@
+/root/my-chipyard/tests/rvv/bringup_tests/ms2_vse64.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms2p5_loadblock.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms3p5_pureload.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4_vle64.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p5_vle64_2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p6_vle32_2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p6_vle32_8.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p7_vlnr_vsnr.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p8_vlm.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p9_vl.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p10_vl0.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms5p1_vse64_m.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms5p3_stride_m.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms5p4_index.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms5p5_index_mask.elf
+/root/my-chipyard/tests/rvv/segment_tests/stress_seg.elf
+/root/my-chipyard/tests/rvv/ovi_lsgen_tests/edge_ls_gen.elf
+
+# ============================================================================
+# Caracal Step 11 M1 LSU suite — OoO vector load/store, validated end-to-end
+# against Whisper cosim on MediumBoomV4VectorConfig (all *** PASSED ***, 0
+# register mismatch). Run with: USE_IMAGE_WHISPER=1 CONFIG=MediumBoomV4VectorConfig
+# ./run_regr.sh tests_regr/vset_loadstore_tests.txt MediumBoomV4VectorConfig
+# ----------------------------------------------------------------------------
+# 11a.2 unit-stride load/store
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a2_pure_vle.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a2_vse.elf
+# 11a hardening: LMUL>1 unit-stride
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a3_vle_lmul2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a3_vse_lmul2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a3_vse_lmul4.elf
+# 11a hardening: masked + tail-undisturbed
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a4_vle_mask.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a4_vse_mask.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a4_vle_tail.elf
+# 11b strided (vlse/vsse) — Packer (good stride) + Walker (arbitrary stride)
+/root/my-chipyard/tests/rvv/bringup_tests/ms11b_vlse.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11b_vlse_walk.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11b_vsse.elf
+# 11b indexed (gather/scatter)
+/root/my-chipyard/tests/rvv/bringup_tests/ms11b_vluxei.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11b_vsuxei.elf
+# 11d whole-register (vl1r/vs1r), mask load/store (vlm/vsm), fault-only-first
+# (vle64ff -- M1: no faults, behaves as vle + unchanged vl), base-operand race repro
+/root/my-chipyard/tests/rvv/bringup_tests/ms11d_vl1r.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11d_vlm.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11d_vleff.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms11d_race.elf
+# Step 14 acceptance: SEW{8,16,32,64} x LMUL{1,2,4,8} unit-stride matrix + strip-mine
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e8_m1.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e16_m1.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e32_m1.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e64_m1.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e8_m2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e16_m2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e32_m2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e64_m2.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e8_m4.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e16_m4.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e32_m4.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e64_m4.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e8_m8.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e16_m8.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e32_m8.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e64_m8.elf
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_stripmine.elf

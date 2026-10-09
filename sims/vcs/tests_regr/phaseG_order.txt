@@ -1,0 +1,37 @@
+# Phase G — memory ordering and disambiguation. A FOCUSED list, not a substitute
+# for vset_loadstore_tests.txt: it is what to run after each G step so a change
+# that alters store->load ordering is attributed in ~15 tests instead of 51.
+#
+# Baseline for every row below is regr_ls3_MegaBoomV4VectorConfig (2026-08-14,
+# 36 PASS / 13 ASSERT / 2 MISMATCH over the full 51). Verdicts noted per row are
+# from that run; read them with ./triage.sh, NOT with run_regr.sh's own column.
+#
+# ---- Group 1: the tests Phase G is supposed to MOVE ----------------------
+# A scalar access ordered against an in-flight vector store is exactly the pair
+# G1's snoop publishes, G2's replay floor catches and G3's forward accelerates.
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p5_vle64_2.elf     # MISMATCH: scalar ld reads uninit DRAM after vse64
+/root/my-chipyard/tests/rvv/bringup_tests/ms4p9_vl.elf          # MISMATCH
+/root/my-chipyard/tests/rvv/bringup_tests/ms2_vse64.elf         # PASS  — must stay PASS
+/root/my-chipyard/tests/rvv/bringup_tests/ms2p5_loadblock.elf   # ASSERT rob.scala:620
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a2_vse.elf        # PASS  — must stay PASS
+#
+# ---- Group 2: the AcquireBlock class ------------------------------------
+# All four share the generator prologue that seeds every GPR with non-DRAM
+# garbage, so a mis-ordered or mis-based vector access shows up here first.
+/root/my-chipyard/tests/rvv/bringup_tests/ms3p5_pureload.elf    # ASSERT tile.scala:136
+/root/my-chipyard/tests/rvv/bringup_tests/ms4_vle64.elf         # ASSERT tile.scala:136
+/root/my-chipyard/tests/rvv/bringup_tests/ms5p4_index.elf       # ASSERT tile.scala:136
+/root/my-chipyard/tests/rvv/ovi_lsgen_tests/edge_ls_gen.elf     # ASSERT tile.scala:136
+#
+# ---- Group 3: vleff and the fault path (G4) -----------------------------
+/root/my-chipyard/tests/rvv/bringup_tests/ms11d_vleff.elf       # PASS — but it never faults, so it does not exercise the trim
+/root/my-chipyard/tests/rvv/bringup_tests/ms11d_race.elf        # PASS — store/load race
+#
+# ---- Group 4: NO-REGRESSION CONTROLS. These must not move. --------------
+# Chosen for coverage, not convenience: the deepest group, the most commits,
+# the strided and the masked forms — the four shapes that broke during Phase E.
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_vls_e8_m8.elf    # PASS — deepest group (LMUL=8, e8)
+/root/my-chipyard/tests/rvv/bringup_tests/ms14_stripmine.elf    # PASS — most commits
+/root/my-chipyard/tests/rvv/bringup_tests/ms11b_vlse.elf        # PASS — strided (SSI)
+/root/my-chipyard/tests/rvv/bringup_tests/ms11a4_vse_mask.elf   # PASS — masked store
+/root/my-chipyard/tests/rvv/bringup_tests/ms11b_vsuxei.elf      # PASS — indexed store

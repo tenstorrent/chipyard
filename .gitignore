@@ -17,6 +17,7 @@ tags
 *~
 .bsp/
 .conda-env/
+.conda-lock-env/
 .#*
 first-clone-setup-fast-log
 .bloop/
@@ -26,3 +27,11 @@ project/metals.sbt
 project/project/
 .ivy2
 .sbt
+.classpath_cache/
+.vscode/
+tests/build/
+*.rc
+*.conf
+verdiLog/
+memory/
+.claude/
